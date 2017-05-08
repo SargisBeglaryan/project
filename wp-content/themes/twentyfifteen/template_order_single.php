@@ -155,7 +155,7 @@ if(isset($_POST["submit_status"])){ ?>
 					}
 				}
 			?>
-			<!---------------------------- roll side-------------------!-->
+			<!--- roll side-->
 			<?php } else if ($type == "roll" ) { ?>
 			<table>
 				<thead>

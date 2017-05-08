@@ -45,6 +45,25 @@ Template Name: Order paper all
 						<td><?php echo $print->printing_count;?></td>
 						<td><?php echo $print->size_x;?> x <?php echo $print->size_y;?></td>
 						<td><?php echo $print->type_of_order; ?></td>
+						<td onclick="window.event.cancelBubble = true">
+							<form method="POST" action="">
+								<p style="    margin-bottom: 10px; text-align: center;">
+									<select id="status" name="status" style="padding:0.48em;" autocomplete="off">
+										<option value="" disabled selected>Статус</option>
+										<option value="Склад">Выход со склада</option>
+										<option value="Резка">Выхол с резки</option>
+										<option value="Печать">Выход из печати</option>
+										<option value="Готово">Готово</option>
+									</select>
+								</p>
+								<input type="hidden" name="url" value="/all-paper-orders/">
+								<input type="hidden" name="product_table" value="wp_order_paper">
+								<input type="hidden" name="product_id" value="<? echo $print->id ?>">
+
+								<input type="submit" name="submit_status" value="Сохранить" style="    margin: 0px;width: 110px;height: 30px;padding: 5px">
+								<input type="submit" name="submit_remove" value="Удалить" style="width: 90px;height: 30px; padding: 5px">
+							</form>
+						</td>
 					</tr>
 					<?php }
 					} ?>
