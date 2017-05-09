@@ -8,7 +8,7 @@ Template Name: Create New Client
 <?php
 if(isset($_GET["id"])){
 	$id = filter_var($_GET["id"], FILTER_SANITIZE_STRING);
-	$customer =  $wpdb->get_results ( "SELECT * FROM wp_customers WHERE id=$id" );
+	$customer =  $wpdb->get_row ( "SELECT * FROM wp_customers WHERE id=$id" );
 	$buttonText = 'Изменить';
 } else {
 	$buttonText = 'Создать';
@@ -59,8 +59,8 @@ if(isset($_POST["submit_create"]))
 						<form method="POST" action="">
 							<p>
 								<?php  if(isset($_GET["id"])): ?>
-									<input type="text" name="clientName" placeholder="Имя клиента" style="width:46%;" value="<?= $customer[0]->name; ?>" required>
-									<input type="hidden" name="clientId" value="<?= $customer[0]->id; ?>">
+									<input type="text" name="clientName" placeholder="Имя клиента" style="width:46%;" value="<?= $customer->name; ?>" required>
+									<input type="hidden" name="clientId" value="<?= $customer->id; ?>">
 								<?php else: ?>
 									<input type="text" name="clientName" placeholder="Имя клиента" style="width:46%;" required>
 								<?php endif; ?>

@@ -16,8 +16,7 @@
 	</footer><!-- .site-footer -->
 
 </div><!-- .site -->
-
+<?php wp_enqueue_script( 'custom', get_template_directory_uri() . '/js/custom.js');?>
 <?php wp_footer(); ?>
-
 </body>
 </html>

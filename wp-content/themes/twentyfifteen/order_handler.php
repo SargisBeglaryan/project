@@ -66,10 +66,10 @@ webshims.polyfill('forms forms-ext');
 							</p>
 						
 							<p>
-								<input type="text" name="customer_name" placeholder="ФИО" style="width:46%;" required>
-								<input type="hidden" name="customer_id">
-								<select id="customer" name="customer"  required>
-									<option value="" disabled selected>Клиент</option>
+								<input type="text" name="customer_name" placeholder="ФИО" style="width:46%;" class="paperCustomerInput" required>
+								<input type="hidden" name="customer_id" class="paperCustomerId">
+								<select id="paper_customer" name="customer"  required style="width: 5px; margin-left: -25px">
+									<option disabled>Список клиентов</option>
 									<?php
 										foreach ( $clients as $client ) {
 									?>
@@ -179,11 +179,7 @@ webshims.polyfill('forms forms-ext');
 								<input type="text" name="lacquer_count" placeholder="Количество лака" style="width:46%;" <?php if(count($result_form) < 1) echo "disabled"; ?>>
 							</p>
 							<p>
-								<select name="type_of_order" required class="type_of_order">
-									<option value="" disabled selected>Выберите тип</option>
-									<option value="Продажа">Продажа</option>
-									<option value="Заказ">Заказ</option>
-								</select>
+								<input type="hidden" name="type_of_order" value="Заказ">
 							</p>
 							
 							<input type="submit" name="submit_create" value="Оформить" style="margin-top:30px;">
@@ -204,7 +200,6 @@ webshims.polyfill('forms forms-ext');
 							$data = array(
 								"date" => $_POST["date"],
 								"order_type" =>  $_POST["order_type"],
-								"customer" => $_POST["customer_name"],
 								"phone" => $_POST["phone_number"],
 								"printing_count" => $_POST["printing_count"],
 								"page_count" => $_POST["page_count"],
@@ -218,7 +213,11 @@ webshims.polyfill('forms forms-ext');
 								"type_of_order" => $_POST['type_of_order'],
 								"status" => "Оформлен"
 							);
-							
+							if($_POST["customer_id"] == ""){
+								$data["customer"] = $_POST["customer_name"];
+							} else {
+								$data["customer_id"] = $_POST["customer_id"];
+							}
 							$data['form'] = ($_POST["form_count"])?$_POST["form_count"]:'0';
 							$data['foil'] = ($_POST["foil_count"])?$_POST["foil_count"]:'0';
 							$data['rubber'] = ($_POST["rubber_count"])?$_POST["rubber_count"]:'0';
@@ -251,7 +250,16 @@ webshims.polyfill('forms forms-ext');
 							</p>
 						
 							<p>
-								<input type="text" name="customer_name" placeholder="ФИО" style="width:46%;" required>
+								<input type="text" name="customer_name" placeholder="ФИО" style="width:46%;" class="rollCustomerInput" required>
+								<input type="hidden" name="customer_id" class="rollCustomerId">
+								<select id="roll_customer" name="customer"  required style="width: 5px; margin-left: -25px">
+									<option disabled>Список клиентов</option>
+									<?php
+										foreach ( $clients as $client ) {
+									?>
+										<option id="<?php echo $client->id;?>" value="<?php echo $client->name;?>"><?php echo $client->name;?></option>
+									<?php } ?>
+								</select>
 								<input type="text" name="phone_number" placeholder="Номер телефона" style="width:46%;" >
 							</p>
 							
@@ -356,14 +364,9 @@ webshims.polyfill('forms forms-ext');
 								<input type="text" name="lacquer_count" placeholder="Количество лака" style="width:46%;" <?php if(count($result_form) < 1) echo "disabled"; ?>>
 							</p>
 							<p>
-								<select name="type_of_order" required class="type_of_order">
-									<option value="" disabled selected>Выберите тип</option>
-									<option value="Продажа">Продажа</option>
-									<option value="Заказ">Заказ</option>
-								</select>
+								<input type="hidden" name="type_of_order" value="Заказ">
 							</p>
-							
-							<input type="submit" name="submit_create" value="Оформить" style="margin-top:30px;">	
+							<input type="submit" name="submit_create" value="Оформить" style="margin-top:30px;">
 						
 						</form>
 						
@@ -382,7 +385,6 @@ webshims.polyfill('forms forms-ext');
 							$data = array(
 								"date" => $_POST["date"],
 								"order_type" =>  $_POST["order_type"],
-								"customer" => $_POST["customer_name"],
 								"phone" => $_POST["phone_number"],
 								"printing_count" => $_POST["printing_count"],
 								"count_per_page" => $_POST["count_per_page"],
@@ -392,6 +394,11 @@ webshims.polyfill('forms forms-ext');
 								"type_of_order" => $_POST['type_of_order'],
 								"status" => "Оформлен"
 							);
+							if($_POST["customer_id"] == ""){
+								$data["customer"] = $_POST["customer_name"];
+							} else {
+								$data["customer_id"] = $_POST["customer_id"];
+							}
 							$data['form'] = ($_POST["form_count"])?$_POST["form_count"]:'0';
 							$data['foil'] = ($_POST["foil_count"])?$_POST["foil_count"]:'0';
 							$data['rubber'] = ($_POST["rubber_count"])?$_POST["rubber_count"]:'0';
@@ -400,7 +407,6 @@ webshims.polyfill('forms forms-ext');
 							$data['foil_id'] = ($_POST["foil"])?$_POST["foil"]:'0';
 							$data['rubber_id'] = ($_POST["rubber"])?$_POST["rubber"]:'0';
 							$data['lacquer_id'] = ($_POST["lacquer"])?$_POST["lacquer"]:'0';
-
 							//Insert new row
 							$wpdb->insert("wp_order_roll", $data);
 						

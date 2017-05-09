@@ -30,6 +30,10 @@ Template Name: Order roll all
 						$allStatuses = ['Склад'=>'Выход со склада', 'Резка'=>'Выход с резки', 'Печать'=>'Выход из печати', 'Готово'=>'Готово'];
 						foreach ( $result as $print ) {
 							if($print->status == $userRoll || $userRoll=='all'){
+								if($print->customer == null){
+									$customerFromTable = $wpdb->get_row( "SELECT name FROM wp_customers WHERE id = '".$print->customer_id."'" );
+									$print->customer = $customerFromTable->name;
+								}
 					?>
 					<tr onclick="window.document.location='order-single/?type=roll&index=<?php echo $print->id;?>';">
 						<th><?php echo $print->id;?></th>

@@ -30,6 +30,10 @@ Template Name: Order paper all
 						$allStatuses = ['Склад'=>'Выход со склада', 'Резка'=>'Выхол с резки', 'Печать'=>'Выход из печати', 'Готово'=>'Готово'];
 						foreach ( $result as $print ) {
 							if($print->status == $userRoll || $userRoll=='all'){
+								if($print->customer == null){
+									$customerWithTable = $wpdb->get_row( "SELECT name FROM wp_customer WHERE id = $print->customer_id" );
+									$print->customer = $customerWithTable->name;
+								}
 					?>
 					<tr onclick="window.document.location='order-single/?type=paper&index=<?php echo $print->id;?>';">
 						<th><?php echo $print->id;?></th>
@@ -101,8 +105,7 @@ Template Name: Order paper all
 						materialTransaction($form,$foil,$rubber,$lacquer,$wpdb);
 						$wpdb->update("wp_order_paper", $data, $where);
 					}else {
-						$sss=$wpdb->update("wp_order_paper", $data, $where);
-						// var_dump($sss);
+						$wpdb->update("wp_order_paper", $data, $where);
 					}
 				}
 			?>
