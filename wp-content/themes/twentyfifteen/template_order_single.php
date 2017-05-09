@@ -43,7 +43,7 @@ if(isset($_POST["submit_status"])){ ?>
 						<td><?php $page_count = $print->page_count; echo $page_count; ?></td>
 						<td><?php echo $print->size_x;?> x <?php echo $print->size_y;?></td>
 					</tr>
-					<?php $material = $print->material; $orderIndex = $print->id;?>
+					<?php  $material = $print->material; $orderIndex = $print->id;?>
 					<?php } ?>
 				</tbody>
 				<thead>
@@ -69,7 +69,7 @@ if(isset($_POST["submit_status"])){ ?>
 						<td><?php echo $print->density;?></td>
 						<td><?php echo $print->type;?></td>
 						<td><?php echo $print->size_x;?> x <?php echo $print->size_y;?></td>
-						<td><? $material_id = $print->id; ?></td>
+						<td><?= $material_id = $print->id; ?></td>
 						
 					</tr>
 					<?php } ?>
@@ -210,7 +210,7 @@ if(isset($_POST["submit_status"])){ ?>
 						<td><?php echo $print->company;?></td>
 						<td><?php echo $print->type;?></td>
 						<td><?php echo $print->size_x;?> x <?php echo $print->size_y;?></td>
-						<td><? $material_id = $print->id; ?></td>
+						<td><?= $material_id = $print->id; ?></td>
 						<td></td>
 						
 					</tr>

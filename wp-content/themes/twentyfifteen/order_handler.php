@@ -51,7 +51,9 @@ webshims.polyfill('forms forms-ext');
 				<div class="page-content">
 					<h4 class="page-title"><?php _e('Оформления заказа'); ?></h4>
 
-					<?php if($printing_type == "paper"){ 
+					<?php
+					$clients = $wpdb->get_results ( "SELECT * FROM  wp_customers");
+					if($printing_type == "paper"){
 						$allPapers = $wpdb->get_results ( "SELECT * FROM wp_product_paper");
 						$material = $wpdb->get_results ( "SELECT * FROM wp_product_paper GROUP BY `name`");
 						$density = $wpdb->get_results ( "SELECT * FROM wp_product_paper GROUP BY `density`");
@@ -65,6 +67,15 @@ webshims.polyfill('forms forms-ext');
 						
 							<p>
 								<input type="text" name="customer_name" placeholder="ФИО" style="width:46%;" required>
+								<input type="hidden" name="customer_id">
+								<select id="customer" name="customer"  required>
+									<option value="" disabled selected>Клиент</option>
+									<?php
+										foreach ( $clients as $client ) {
+									?>
+										<option id="<?php echo $client->id;?>" value="<?php echo $client->name;?>"><?php echo $client->name;?></option>
+									<?php } ?>
+								</select>
 								<input type="text" name="phone_number" placeholder="Номер телефона" style="width:46%;" >
 							</p>
 							

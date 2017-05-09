@@ -27,6 +27,7 @@ Template Name: Order roll all
 						global $wpdb;
 						$result = $wpdb->get_results ( "SELECT * FROM wp_order_roll" );
 						$userRoll = apply_filters( 'wp_nav_menu_args', '' )['status'];
+						$allStatuses = ['Склад'=>'Выход со склада', 'Резка'=>'Выход с резки', 'Печать'=>'Выход из печати', 'Готово'=>'Готово'];
 						foreach ( $result as $print ) {
 							if($print->status == $userRoll || $userRoll=='all'){
 					?>
@@ -48,19 +49,24 @@ Template Name: Order roll all
 						<td onclick="window.event.cancelBubble = true">
 							<form method="POST" action="">
 								<p style="    margin-bottom: 10px; text-align: center;">
-									<select id="status" name="status" style="padding:0.48em;" autocomplete="off">
-										<option value="" disabled selected>Статус</option>
-										<option value="Склад">Выход со склада</option>
-										<option value="Резка">Выхол с резки</option>
-										<option value="Печать">Выход из печати</option>
-										<option value="Готово">Готово</option>
+									<select id="status" name="status" autocomplete="off">
+										<?php
+
+										foreach($allStatuses as $key=>$value){
+											if($print->status == $key){
+												echo "<option value=".$key." disabled selected>".
+														$value."</option>";
+											} else {
+												echo "<option value=".$key.">".$value."</option>";
+											}
+										}
+										?>
 									</select>
 								</p>
 								<input type="hidden" name="url" value="/all-roll-orders/">
 								<input type="hidden" name="product_table" value="wp_order_roll">
 								<input type="hidden" name="product_id" value="<?php echo $print->id ?>">
-								<input type="submit" name="submit_status" value="Сохранить" style="    margin: 0px;width: 110px;height: 30px;padding: 5px">
-								<input type="submit" name="submit_remove" value="Удалить" style="width: 90px;height: 30px; padding: 5px">
+								<input type="submit" name="submit_status" value="Сохранить" style="    margin: 0px auto;width: 110px;height: 30px;padding: 5px; display: block">
 							</form>
 						</td>
 					</tr>
