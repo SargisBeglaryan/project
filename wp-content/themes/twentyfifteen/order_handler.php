@@ -215,8 +215,10 @@ webshims.polyfill('forms forms-ext');
 							);
 							if($_POST["customer_id"] == ""){
 								$data["customer"] = $_POST["customer_name"];
+								$data["customer_id"] = null;
 							} else {
 								$data["customer_id"] = $_POST["customer_id"];
+								$data["customer"] = null;
 							}
 							$data['form'] = ($_POST["form_count"])?$_POST["form_count"]:'0';
 							$data['foil'] = ($_POST["foil_count"])?$_POST["foil_count"]:'0';
@@ -396,8 +398,10 @@ webshims.polyfill('forms forms-ext');
 							);
 							if($_POST["customer_id"] == ""){
 								$data["customer"] = $_POST["customer_name"];
+								$data["customer_id"] = null;
 							} else {
 								$data["customer_id"] = $_POST["customer_id"];
+								$data["customer"] = null;
 							}
 							$data['form'] = ($_POST["form_count"])?$_POST["form_count"]:'0';
 							$data['foil'] = ($_POST["foil_count"])?$_POST["foil_count"]:'0';
@@ -409,7 +413,6 @@ webshims.polyfill('forms forms-ext');
 							$data['lacquer_id'] = ($_POST["lacquer"])?$_POST["lacquer"]:'0';
 							//Insert new row
 							$wpdb->insert("wp_order_roll", $data);
-						
 						} else if(isset($_POST["submit_remove"])) {?>
 						 
 						 

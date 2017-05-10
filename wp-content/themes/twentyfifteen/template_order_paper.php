@@ -8,18 +8,45 @@ Template Name: Order paper all
 <?php get_header(); ?>
 	<div id="primary" class="content-area">	
 		<main id="main" class="site-main" role="main">
-			<table>
+			<table id="paperTableColums">
 				<thead>
 					<tr>
-						<th>Н/З</th>
-						<th>Дата</th>
-						<th>Клиент</th>
-						<th>Материал</th>
-						<th>Тип</th>
-						<th>Тираж</th>
-						<th>Формат</th>
-						<th>Тип заказа</th>
-						<th>Статус</th>
+						<th  class="tableId">Н/З<br>
+							<i class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th class="tableDate">Дата<br>
+							<i class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th class="tableCustomer">Клиент<br>
+							<i class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th class="tableMaterials">Материал<br>
+							<i class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th class="tableType">Тип<br>
+							<i class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th class="tableTipaj">Тираж<br>
+							<i class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th class="tableOrderFormat">Формат<br>
+							<i class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th class="tableOrderType">Тип заказа<br>
+							<i class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th class="tableStatus">Статус<br>
+							<i class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -31,7 +58,7 @@ Template Name: Order paper all
 						foreach ( $result as $print ) {
 							if($print->status == $userRoll || $userRoll=='all'){
 								if($print->customer == null){
-									$customerWithTable = $wpdb->get_row( "SELECT name FROM wp_customer WHERE id = $print->customer_id" );
+									$customerWithTable = $wpdb->get_row( "SELECT name FROM wp_customers WHERE id = $print->customer_id" );
 									$print->customer = $customerWithTable->name;
 								}
 					?>

@@ -4,22 +4,50 @@
 Template Name: Order roll all
 */
 ?>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+
 <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
 <?php get_header(); ?>
 	<div id="primary" class="content-area">	
 		<main id="main" class="site-main" role="main">
 			<table>
 				<thead>
-					<tr>
-						<th>Н/З</th>
-						<th>Дата</th>
-						<th>Клиент</th>
-						<th>Материал</th>
-						<th>Тип</th>
-						<th>Тираж</th>
-						<th>Тип заказа</th>
-						<th>Статус</th>
+					<tr id="rollTableColums">
+						<th  class="tableId">Н/З<br>
+							<i class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th class="tableDate">Дата<br>
+							<i class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th class="tableCustomer">Клиент<br>
+							<i class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th class="tableMaterials">Материал<br>
+							<i class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th class="tableType">Тип<br>
+							<i class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th class="tableTiraj">Тираж<br>
+							<i class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th class="tableOrderFormat">Формат<br>
+							<i class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th class="tableOrderType">Тип заказа<br>
+							<i class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th class="tableStatus">Статус<br>
+							<i class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
 					</tr>
 				</thead>
 				<tbody>
