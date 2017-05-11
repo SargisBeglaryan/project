@@ -33,6 +33,10 @@ if(isset($_POST["submit_status"])){ ?>
 					<?php
 						$result = $wpdb->get_results ( "SELECT * FROM wp_order_paper WHERE id={$index}" );
 						foreach ( $result as $print ) {
+							if($print->customer == null){
+								$customerWithTable = $wpdb->get_row( "SELECT name FROM wp_customers WHERE id = $print->customer_id" );
+								$print->customer = $customerWithTable->name;
+							}
 					?>
 					<tr>
 						<th><?php echo $print->date;?></th>

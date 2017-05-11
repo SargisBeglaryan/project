@@ -3,50 +3,45 @@
 Template Name: Order paper all
 */
 ?>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
 <?php get_header(); ?>
 	<div id="primary" class="content-area">	
 		<main id="main" class="site-main" role="main">
-			<table id="paperTableColums">
+			<table class="paperTable">
 				<thead>
-					<tr>
-						<th  class="tableId">Н/З<br>
-							<i class="fa fa-arrow-down" aria-hidden="true"></i>
-							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+					<tr id="paperTableColums">
+						<th  colum="0" class="tableId">Н/З<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
 						</th>
-						<th class="tableDate">Дата<br>
-							<i class="fa fa-arrow-down" aria-hidden="true"></i>
-							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						<th colum="1" class="tableDate">Дата<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
 						</th>
-						<th class="tableCustomer">Клиент<br>
-							<i class="fa fa-arrow-down" aria-hidden="true"></i>
-							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						<th colum="2" class="tableCustomer">Клиент<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
 						</th>
-						<th class="tableMaterials">Материал<br>
-							<i class="fa fa-arrow-down" aria-hidden="true"></i>
-							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						<th colum="3" class="tableMaterials">Материал<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
 						</th>
-						<th class="tableType">Тип<br>
-							<i class="fa fa-arrow-down" aria-hidden="true"></i>
-							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						<th colum="4" class="tableType">Тип<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
 						</th>
-						<th class="tableTipaj">Тираж<br>
-							<i class="fa fa-arrow-down" aria-hidden="true"></i>
-							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						<th colum="5" class="tableTiraj">Тираж<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
 						</th>
-						<th class="tableOrderFormat">Формат<br>
-							<i class="fa fa-arrow-down" aria-hidden="true"></i>
-							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						<th colum="6" class="tableOrderFormat">Формат<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
 						</th>
-						<th class="tableOrderType">Тип заказа<br>
-							<i class="fa fa-arrow-down" aria-hidden="true"></i>
-							<i class="fa fa-arrow-up" aria-hidden="true"></i>
+						<th colum="7" class="tableOrderType">Тип заказа<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
 						</th>
-						<th class="tableStatus">Статус<br>
-							<i class="fa fa-arrow-down" aria-hidden="true"></i>
-							<i class="fa fa-arrow-up" aria-hidden="true"></i>
-						</th>
+						<th class="tableStatus">Статус</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -63,7 +58,7 @@ Template Name: Order paper all
 								}
 					?>
 					<tr onclick="window.document.location='order-single/?type=paper&index=<?php echo $print->id;?>';">
-						<th><?php echo $print->id;?></th>
+						<td class="tableIdRows"><?php echo $print->id;?></td>
 						<td><?php echo $print->date;?></td>
 						<td><?php echo $print->customer;?></td>
 						<td><?php 
