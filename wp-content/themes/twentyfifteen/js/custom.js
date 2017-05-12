@@ -10,12 +10,14 @@ jQuery( document ).ready(function() {
     })
     var columNumber, sortingColum, checkAscOrDesc;
 	jQuery(".fa-arrow-down, .fa-arrow-up").on("click", function() {
-		debugger
-		var numberColums = ['tableId', 'tableDate', 'tableTiraj', 'tableOrderFormat'];
+		var numberColums = ['tableId', 'tableDate', 'tableTiraj', 'tableOrderFormat', 'tableMass',
+		'tableProcent', 'tablePrice', 'tableCount', 'tableWeight', 'tableList', 'tableDensity'];
 		checkAscOrDesc = jQuery(this).attr('sort');
 		sortingColum = jQuery(this).parent().attr('class');
 		columNumber = jQuery(this).parent().attr('colum');
 		var thisTable = '.'+ jQuery(this).closest('table').attr('class');
+		jQuery(thisTable).find('.activeSort').removeClass('activeSort');
+		jQuery(this).addClass('activeSort');
 		var rows = jQuery(thisTable +" tbody tr").detach().get();
 		if(numberColums.indexOf(sortingColum) > -1){
 			rows.sort(sortByNumber);

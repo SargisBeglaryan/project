@@ -69,7 +69,7 @@ webshims.polyfill('forms forms-ext');
 								<input type="text" name="customer_name" placeholder="ФИО" style="width:46%;" class="paperCustomerInput" required>
 								<input type="hidden" name="customer_id" class="paperCustomerId">
 								<select id="paper_customer" name="customer"  required style="width: 5px; margin-left: -25px">
-									<option disabled>Список клиентов</option>
+									<option selected disabled>Список клиентов</option>
 									<?php
 										foreach ( $clients as $client ) {
 									?>
@@ -255,7 +255,7 @@ webshims.polyfill('forms forms-ext');
 								<input type="text" name="customer_name" placeholder="ФИО" style="width:46%;" class="rollCustomerInput" required>
 								<input type="hidden" name="customer_id" class="rollCustomerId">
 								<select id="roll_customer" name="customer"  required style="width: 5px; margin-left: -25px">
-									<option disabled>Список клиентов</option>
+									<option selected disabled>Список клиентов</option>
 									<?php
 										foreach ( $clients as $client ) {
 									?>
