@@ -15,7 +15,7 @@ Template Name: Stock customer
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
 						</th>
-						<th colum="0" class="tableCustomer">Имя клиента<br>
+						<th colum="1" class="tableCustomer">Имя клиента<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
 						</th>

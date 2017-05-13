@@ -777,6 +777,10 @@ function my_custom_redirect() {
 		foreach ($order as $key=>$value) {
 			$returnResult[$key]['id'] = $value['id'];
 			$returnResult[$key]['customer'] = $value['customer'];
+			if($value['customer'] == null){
+				$customerWithTable = $wpdb->get_row( "SELECT name FROM wp_customers WHERE id ={$value['customer_id']}" );
+				$returnResult[$key]['customer'] = $customerWithTable->name;
+			}
 			$returnResult[$key]['status'] = $value['status'];
 			$returnResult[$key]['selling_price'] = $value['selling_price'];
 			$material_id = $value['material'];

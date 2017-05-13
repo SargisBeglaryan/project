@@ -11,7 +11,8 @@ jQuery( document ).ready(function() {
     var columNumber, sortingColum, checkAscOrDesc;
 	jQuery(".fa-arrow-down, .fa-arrow-up").on("click", function() {
 		var numberColums = ['tableId', 'tableDate', 'tableTiraj', 'tableOrderFormat', 'tableMass',
-		'tableProcent', 'tablePrice', 'tableCount', 'tableWeight', 'tableList', 'tableDensity'];
+		'tableProcent', 'tablePrice', 'tableCount', 'tableWeight', 'tableList', 'tableDensity',
+		'tableCostPrice', 'tableDept', 'tableIncome'];
 		checkAscOrDesc = jQuery(this).attr('sort');
 		sortingColum = jQuery(this).parent().attr('class');
 		columNumber = jQuery(this).parent().attr('colum');
@@ -65,6 +66,7 @@ jQuery( document ).ready(function() {
 		}
 	}
 	function sortByChars(row1, row2) {
+		debugger;
 		var r;
 		v1 = jQuery(row1).find("td:eq("+columNumber+")").text().toLowerCase();;
 		v2 = jQuery(row2).find("td:eq("+columNumber+")").text().toLowerCase();;

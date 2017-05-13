@@ -3,21 +3,39 @@
 Template Name: Finance paper all
 */
 ?>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script> -->
 <?php get_header(); ?>
 	<div id="primary" class="content-area">	
 		<main id="main" class="site-main" role="main">
-			<table cellspacing="0" cellpadding="0" border="0">
+			<table cellspacing="0" cellpadding="0" border="0" class="financePaper">
 				<thead>
 					<tr>
-						<th>Н/З</th>
-						<th>Клиент</th>
-						<th>Себестоимость</th>
-						<th>Цена продажи</th>
-						<th>Доход</th>
-						<th>Задолженность</th>
-						<th>Тип заказа</th>
+						<th  colum="0" class="tableId">Н/З<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th colum="1" class="tableCustomer">Клиент<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th colum="2" class="tableCostPrice">Себестоимость<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th colum="3" class="tablePrice">Цена продажи<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th colum="4" class="tableIncome">Доход<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th colum="5" class="tableDept">Задолженность<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th>Тип</th>
 						<th>Действия</th>
 					</tr>
 				</thead>
