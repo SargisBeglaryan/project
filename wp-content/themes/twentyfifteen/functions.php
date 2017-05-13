@@ -819,6 +819,63 @@ function my_custom_redirect() {
 		return $returnResult;
 	}
 
+	/*Calculate each order cost price*/
+	function costumerOrderPrice($tableName, $costumerName){
+		global $wpdb;
+		$orderTableName = "wp_order_".$tableName;
+		$productTableName = "wp_product_".$tableName;
+		$checkCustomer = $wpdb->get_row("SELECT id FROM wp_customers WHERE name ='$costumerName'");
+		if($checkCustomer->id != null){
+			$order = $wpdb->get_results("SELECT * FROM {$orderTableName} WHERE customer_id ={$checkCustomer->id}",ARRAY_A);
+		} else {
+			$order = $wpdb->get_results("SELECT * FROM {$orderTableName} WHERE customer = '".$costumerName."'",ARRAY_A);
+		}
+		$returnResult = [];
+		foreach ($order as $key=>$value) {
+			$returnResult[$key]['id'] = $value['id'];
+			if($value['customer'] == null){
+				$returnResult[$key]['customer'] = $costumerName;
+			} else {
+				$returnResult[$key]['customer'] = $value['customer'];;
+			}
+			$returnResult[$key]['status'] = $value['status'];
+			$returnResult[$key]['selling_price'] = $value['selling_price'];
+			$material_id = $value['material'];
+			$material = $wpdb->get_results("SELECT price,percent FROM {$productTableName} WHERE id = {$material_id}");
+			if($tableName == "roll"){
+				$totalCount = $value['count_per_page']*$material[0]->price;
+				$percent = ($material[0]->percent/100)*$totalCount;
+				$materialCost = $totalCount+$percent;
+			} else {
+				$totalSum = $value['page_count']*$material[0]->price;
+				$percent = ($material[0]->percent/100)*$totalSum;
+				$materialCost = $totalSum+$percent;
+			}
+			$otherPrices = otherProductPrice($value);
+			$otherCost = 0;
+			if(!empty($otherPrices)){
+				foreach ($otherPrices as $p_key=>$p_value) {
+					$totalSum = $value[$p_key]*$p_value['price'];
+					$percent = ($p_value['percent']/100)*$totalSum;
+					$otherCost += $totalSum+$percent;
+				}
+			}
+			$totalCost = $materialCost+$otherCost;
+			$returnResult[$key]['cost_price'] = $totalCost;
+			$returnResult[$key]['earnings'] = $value['selling_price']-$totalCost;
+			if($value['debt'] == 0 && $value['paid'] == 0){
+				$wpdb->update($orderTableName,array('debt'=>$value['selling_price']),array('id'=>$value['id']));
+				$returnResult[$key]['debt'] = $value['selling_price'];
+			}else {
+				$returnResult[$key]['debt'] = $value['debt'];
+			}
+			if($value['type'] != ''){
+				$returnResult[$key]['type'] = $value['type'];
+			}
+		}
+		return $returnResult;
+	}
+
 	function otherProductPrice($order_data) {
 		global $wpdb;
 		$otherTableName = "wp_product_other";
@@ -850,13 +907,22 @@ function my_custom_redirect() {
 		$selling_data = intval($_POST['content_selling']);
 		$debt_data = intval($_POST['debt']);
 		$orderId= intval($_POST['orderId']);
-		$orderData = $wpdb->get_results("SELECT debt,paid FROM {$table} WHERE id = {$orderId}",ARRAY_A);
+		$orderData = $wpdb->get_row("SELECT debt,paid FROM {$table} WHERE id = {$orderId}");
+		if(isset($_POST['customer_name']) && $_POST['customer_name'] != null){
+			$deptTable = 'wp_debt_'.$_POST['tableName'].'_statistic';
+			$deptData = array();
+			$deptData['payed_number'] = intval($orderData->debt) - $debt_data;
+			$deptData['order_id'] = $orderId;
+			$deptData['date'] = date("Y-m-d");
+			$deptData['customer'] = $_POST['customer_name'];
+			$wpdb->insert($deptTable,$deptData);
+		}
 		$orderType = $_POST['order_type'];
 		$data = array(
 			'selling_price'=>$selling_data,
 			'type'=>$orderType
 		);
-		if(intval($orderData[0]['debt']) != 0 && $debt_data == 0){
+		if(intval($orderData->debt) != 0 && $debt_data == 0){
 			$data['debt'] = $debt_data;
 			$data['paid'] = 1;
 		}else {

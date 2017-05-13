@@ -47,7 +47,7 @@ Template Name: Finance roll all
 					?>
 					<tr>
 						<td><?php echo $print['id'];?></td>
-						<td><?php echo $print['customer'];?></td>
+						<td onclick="window.document.location='customer-orders/?type=roll&customer=<?php echo $print['customer'];?>';"  class="customerName"><?php echo $print['customer'];?></td>
 						<td><?php echo $print['cost_price'];?></td>
 						<td contenteditable='true' id="selling_price"><?php echo $print['selling_price'];?></td>
 						<td><?php echo $print['earnings'];?></td>

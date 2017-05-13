@@ -113,7 +113,6 @@ webshims.polyfill('forms forms-ext');
 							"count" => $_POST["count"],
 							"status" => $_POST["Оформлен"]
 						);
-						var_dump($data);
 						$wpdb->insert("wp_sale_paper", $data);
 					
 					}?>

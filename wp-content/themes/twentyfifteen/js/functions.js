@@ -278,30 +278,33 @@ jQuery('select#form,select#foil,select#rubber,select#lacquer').on('change', func
 })
 var content_selling = jQuery('#selling_price').html();
 var content_debt = jQuery('#debt').html();
-jQuery('#selling_price,#debt').blur(function() {
+jQuery('#selling_price, #debt').blur(function() {
 	if (content_selling!=jQuery(this).html() || content_debt!=jQuery(this).html()){
 		var tableName = jQuery('#table_name').val();
 		tableName = "'"+tableName+"'";
 		var totalCost = jQuery(this).parent('tr').find('td:nth-child(3)').html();
 		var orderId = jQuery(this).parent('tr').find('td:nth-child(1)').html();
 		var order_type = jQuery(this).parent('tr').find(".order_type").val();
+		var customerName;
 		order_type = "'"+order_type+"'";
 		switch (jQuery(this).attr('id')) {
 			case "selling_price":
 				content_selling = jQuery(this).html();
-				content_debt = jQuery(this).parent('tr').find('#debt').html();;
-				jQuery(this).next('td').html(content_selling-totalCost)
+				content_debt = jQuery(this).parent('tr').find('#debt').html();
+				jQuery(this).next('td').html(content_selling-totalCost);
+				customerName = null;
 				// jQuery(this).parent('tr').find('td:nth-child(6)').html(content_selling);
 				break;
 			case "debt":
 				content_selling = jQuery(this).parent('tr').find('#selling_price').html();
 				content_debt = jQuery(this).html();
+				customerName = "'"+jQuery(this).parent('tr').find('.customerName').text()+"'";
 				break;
 		}
 		if(jQuery(this).parent('tr').find(".order-action").length == 0 ){
-			jQuery(this).parent('tr').append('<td class="order-action"><button type="button" onclick="saveOrderData('+content_selling+','+content_debt+','+tableName+','+orderId+','+order_type+')">Сохранять</button></td>');
+			jQuery(this).parent('tr').append('<td class="order-action"><button type="button" onclick="saveOrderData('+customerName+','+ content_selling+','+content_debt+','+tableName+','+orderId+','+order_type+')">Сохранять</button></td>');
 		}else {
-			jQuery(this).parent('tr').find(".order-action button").attr('onclick', 'saveOrderData('+content_selling+','+content_debt+','+tableName+','+orderId+','+order_type+')');
+			jQuery(this).parent('tr').find(".order-action button").attr('onclick', 'saveOrderData('+customerName+','+content_selling+','+content_debt+','+tableName+','+orderId+','+order_type+')');
 		}
 	}
 });
@@ -332,7 +335,7 @@ jQuery(".type_of_order").on('change', function(event) {
 	}
 });
 
-function saveOrderData(content_selling,debt,tableName,orderId,orderType){
+function saveOrderData(customer_name, content_selling,debt,tableName,orderId,orderType){
 	debt = (debt > content_selling)?0:debt;
 	jQuery.ajax({
 			url: "../../wp-admin/admin-ajax.php",
@@ -344,7 +347,8 @@ function saveOrderData(content_selling,debt,tableName,orderId,orderType){
 				debt: debt,
 				orderId: orderId,
 				order_type: orderType,
-				tableName: tableName
+				tableName: tableName,
+				customer_name: customer_name
 			},
 		})
 		.done(function(data) {
