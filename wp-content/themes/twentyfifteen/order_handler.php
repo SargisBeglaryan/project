@@ -111,7 +111,11 @@ webshims.polyfill('forms forms-ext');
 							
 							<p>
 								<input type="text" name="printing_count" placeholder="Тираж" style="width:46%;" required>
-								<input type="text" name="page_count" placeholder="Количество бумаги" style="width:46%;" required>
+								<input type="text" class="page_count" name="page_count" placeholder="Количество бумаги" style="width:46%;" required>
+							</p>
+							<p>
+								<label>Цена одной бумаги</label>
+								<input type="text" style="width:66%;" disabled class="oneCountPrice" name="oneCountPrice" placeholder="Цена одной бумаги + %">
 							</p>
 							
 							<p>
@@ -181,6 +185,15 @@ webshims.polyfill('forms forms-ext');
 							<p>
 								<input type="hidden" name="type_of_order" value="Заказ">
 							</p>
+							<p>
+								<select name="order_type" class="order_type">
+									<option value="" selected="" disabled="">Выберите тип</option>
+									<option value="Налич">Налич</option>
+									<option value="Фактура">Фактура</option>
+								</select>
+								<label>Общая цена</label>
+								<input type="text" class="orderPriceSum" name="orderPriceSum" style="width:30%;" placeholder="общая цена заказа">
+							</p>
 							
 							<input type="submit" name="submit_create" value="Оформить" style="margin-top:30px;">
 
@@ -210,6 +223,7 @@ webshims.polyfill('forms forms-ext');
 								"foil" => $_POST["foil_count"],
 								"rubber" => $_POST["rubber_count"],
 								"lacquer" => $_POST["lacquer_count"],
+								"type"=>$_POST["order_type"],
 								"type_of_order" => $_POST['type_of_order'],
 								"status" => "Оформлен"
 							);
@@ -303,7 +317,10 @@ webshims.polyfill('forms forms-ext');
 							
 							<p>
 								<input type="text" name="step_lenght" placeholder="Длина шага" style="width:46%;" required>
-								<input type="text" name="label_count" placeholder="Колличество этикеток" style="width:46%;" required>
+								<input type="text" class="page_count" name="label_count" placeholder="Колличество этикеток" style="width:46%;" required>
+							</p>
+							<p>
+								<input type="text" disabled name="oneCountPrice" placeholder="Цена одной рулона + %">
 							</p>
 							
 							<p>
@@ -368,6 +385,14 @@ webshims.polyfill('forms forms-ext');
 							<p>
 								<input type="hidden" name="type_of_order" value="Заказ">
 							</p>
+							<p>
+								<select name="order_type" class="order_type">
+									<option value="" selected="" disabled="">Выберите тип</option>
+									<option value="Налич">Налич</option>
+									<option value="Фактура">Фактура</option>
+								</select>
+								<input type="text" name="oneCountPrice" style="width:46%;" placeholder="общая цена заказа">
+							</p>
 							<input type="submit" name="submit_create" value="Оформить" style="margin-top:30px;">
 						
 						</form>
@@ -393,6 +418,7 @@ webshims.polyfill('forms forms-ext');
 								"step_lenght" => $_POST["step_lenght"],
 								"label_count" => $_POST["label_count"],
 								"material" => $material_id,
+								"type"=>$_POST["order_type"],
 								"type_of_order" => $_POST['type_of_order'],
 								"status" => "Оформлен"
 							);

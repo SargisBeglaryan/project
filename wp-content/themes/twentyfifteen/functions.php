@@ -502,28 +502,48 @@ function my_custom_redirect() {
 	if (isset($_POST['submit_remove'])) {
 		global $wpdb;
 		$deleteProductDetails = $wpdb->get_row("SELECT * From $var_table WHERE id = '$var_id'");
+		var_dump($deleteProductDetails); exit;
 		$wpdb->delete( $var_table, array( 'id' => $var_id ) );
 		if($deleteProductDetails->status == 'Склад'){
 			if($var_table == 'wp_order_paper'){
-				return_stock_values('wp_product_paper', $deleteProductDetails->material, $deleteProductDetails->page_count);
+				return_stock_values('wp_product_paper', $deleteProductDetails->material, $deleteProductDetails->page_count, $deleteProductDetails);
 			} else {
-				return_stock_values('wp_product_roll', $deleteProductDetails->material, $deleteProductDetails->page_count);
+				return_stock_values('wp_product_roll', $deleteProductDetails->material, $deleteProductDetails->page_count, $deleteProductDetails);
 			}
 		}
         wp_redirect($_POST['url']);
         exit;
     }
 }
-	function return_stock_values($db_name, $id, $cost_income_value){
+	function return_stock_values($db_name, $id, $cost_income_value, $deleteProductDetails){
 		global $wpdb;
+		if($deleteProductDetails->form_id != 0){
+			$forma = $wpdb->get_row("SELECT * FROM wp_product_other WHERE id={$deleteProductDetails->form_id}");
+			$newCount= array("count" => $deleteProductDetails->form + $forma->count);
+			$wpdb->update('wp_product_other', $newCount, $deleteProductDetails->form_id);
+		}
+		if($deleteProductDetails->foil_id != 0){
+			$foil = $wpdb->get_row("SELECT * FROM wp_product_other WHERE id={$deleteProductDetails->foil_id}");
+			$newCount= array("count" => $deleteProductDetails->foil + $foil->count);
+			$wpdb->update('wp_product_other', $newCount, $deleteProductDetails->foil_id);
+		}
+		if($deleteProductDetails->rubber_id != 0){
+			$ruber = $wpdb->get_row("SELECT * FROM wp_product_other WHERE id={$deleteProductDetails->rubber_id}");
+			$newCount= array("count" => $deleteProductDetails->rubber + $ruber->count);
+			$wpdb->update('wp_product_other', $newCount, $deleteProductDetails->rubber_id);
+		}
+		if($deleteProductDetails->lacquer_id != 0){
+			$lacquer = $wpdb->get_row("SELECT * FROM wp_product_other WHERE id={$deleteProductDetails->lacquer_id}");
+			$newCount= array("count" => $deleteProductDetails->form + $lacquer->count);
+			$wpdb->update('wp_product_other', $newCount, $deleteProductDetails->lacquer_id);
+		}
 		$result_db = $wpdb->get_results ("SELECT * FROM {$db_name} WHERE id={$id}");
 		if ($db_name == "wp_product_paper")
 		{
-			foreach($result_db as $item)
-				{
-					$page_count = $item->page_count;
-					$one_page = $item->one_page_weight;
-				}
+			foreach($result_db as $item) {
+				$page_count = $item->page_count;
+				$one_page = $item->one_page_weight;
+			}
 			$page_count += $cost_income_value;
 			$weight =  $page_count * $one_page;
 			$data = array(
@@ -749,6 +769,31 @@ function my_custom_redirect() {
 	}
 	add_action('wp_ajax_nopriv_ajaxConversion', 'material_filter_html');
 	add_action('wp_ajax_ajaxConversion', 'material_filter_html');
+
+	function getMaterialPrice() {
+		global $wpdb;
+		if($_POST['type'] == 'paper') {
+			$size_x = $_POST["size_x"];
+			$size_y = $_POST["size_y"];
+			$materialName = $_POST["material"];
+			$density = $_POST["density"];
+			$material_price = $wpdb->get_row( "SELECT price, percent FROM wp_product_paper WHERE name = '$materialName' and size_x = '$size_x' and size_y = '$size_y' and density = '$density'");
+		}
+		wp_send_json($material_price);
+		wp_die();
+	}
+	add_action('wp_ajax_nopriv_ajaxGetMaterialPrice', 'getMaterialPrice');
+	add_action('wp_ajax_ajaxGetMaterialPrice', 'getMaterialPrice');
+
+	function getOtherProductPrice() {
+		global $wpdb;
+		$productId = $_POST["otherProductId"];
+		$product_price = $wpdb->get_row( "SELECT price, percent FROM wp_product_other WHERE id = '$productId' ");
+		wp_send_json($product_price);
+		wp_die();
+	}
+	add_action('wp_ajax_nopriv_ajaxGetOtherProductPrice', 'getOtherProductPrice');
+	add_action('wp_ajax_ajaxGetOtherProductPrice', 'getOtherProductPrice');
 
 	function materialTransaction($form,$foil,$rubber,$lacquer,$db) {
 		try {
