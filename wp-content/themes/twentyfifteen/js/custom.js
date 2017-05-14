@@ -1,4 +1,8 @@
 jQuery( document ).ready(function() {
+	jQuery(".button_content button").on("click", function (){
+		var formPrefix = jQuery(this).attr('id')
+		jQuery('.'+formPrefix+'FormContent').append('<div>'+formPrefix+'</div>');
+				    });''
     jQuery("#roll_customer").on("change", function (){
     	changeCustomerId(this, 'roll');
     });
@@ -94,4 +98,8 @@ jQuery( document ).ready(function() {
 function changeCustomerId(thisInput, topic) {
 	jQuery("."+topic+"CustomerId").val(jQuery(thisInput).find("[value='"+jQuery(thisInput).val()+"']").attr("id"));
 	jQuery("."+topic+"CustomerInput").val(jQuery(thisInput).val());
+}
+
+function createTypeForm(button) {
+
 }

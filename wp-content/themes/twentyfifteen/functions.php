@@ -500,15 +500,52 @@ function my_custom_redirect() {
         exit;
     }
 	if (isset($_POST['submit_remove'])) {
-		
 		global $wpdb;
-		$wpdb->query( 
-		$wpdb->prepare("DELETE FROM {$var_table} WHERE id = {$var_id}"));
+		$deleteProductDetails = $wpdb->get_row("SELECT * From $var_table WHERE id = '$var_id'");
+		$wpdb->delete( $var_table, array( 'id' => $var_id ) );
+		if($deleteProductDetails->status == 'Склад'){
+			if($var_table == 'wp_order_paper'){
+				return_stock_values('wp_product_paper', $deleteProductDetails->material, $deleteProductDetails->page_count);
+			} else {
+				return_stock_values('wp_product_roll', $deleteProductDetails->material, $deleteProductDetails->page_count);
+			}
+		}
         wp_redirect($_POST['url']);
         exit;
-		
     }
 }
+	function return_stock_values($db_name, $id, $cost_income_value){
+		global $wpdb;
+		$result_db = $wpdb->get_results ("SELECT * FROM {$db_name} WHERE id={$id}");
+		if ($db_name == "wp_product_paper")
+		{
+			foreach($result_db as $item)
+				{
+					$page_count = $item->page_count;
+					$one_page = $item->one_page_weight;
+				}
+			$page_count += $cost_income_value;
+			$weight =  $page_count * $one_page;
+			$data = array(
+			"page_count" => $page_count,
+			"weight" => $weight
+			);
+		}
+		else if($db_name == "wp_product_roll")
+		{
+			foreach($result_db as $item){
+				$page_count = $item->area;
+			}
+			$page_count += $cost_income_value;
+			$data = array(
+				"area" => $page_count
+			);
+		}
+		$where = array(
+		'id' => $id
+		);
+		$wpdb->update($db_name, $data, $where);
+	}
 
 	function calculate_stock_values($db_name, $id, $cost_income_value){
 		global $wpdb;
@@ -623,8 +660,6 @@ function my_custom_redirect() {
 
 		if ( ! isset( $wp_roles ) )
 			$wp_roles = new WP_Roles();
-
-		var_dump($wp_roles->get_names()); 
 	
 	}
 

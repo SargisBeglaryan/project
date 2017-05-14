@@ -119,8 +119,8 @@ if(isset($_POST["submit_status"])){ ?>
 					</select>
 				</p>
 				<input type="hidden" name="url" value="/all-<?php echo $type; ?>-orders/">
-				<input type="hidden" name="product_table" value="wp_order_<? echo $type; ?>">
-				<input type="hidden" name="product_id" value="<? echo $orderIndex; ?>">
+				<input type="hidden" name="product_table" value="wp_order_<?php echo $type; ?>">
+				<input type="hidden" name="product_id" value="<?php echo $orderIndex; ?>">
 
 				<input type="submit" name="submit_status" value="Сохранить" style="margin:30px;">
 				<?php if(get_current_user_role() == 'administrator' || get_current_user_role() == 'subscriber'){ ?>
@@ -263,8 +263,8 @@ if(isset($_POST["submit_status"])){ ?>
 					</select>
 				</p>
 				<input type="hidden" name="url" value="/all-<?php echo $type; ?>-orders/">
-				<input type="hidden" name="product_table" value="wp_order_<? echo $type; ?>">
-				<input type="hidden" name="product_id" value="<? echo $orderIndex ?>">
+				<input type="hidden" name="product_table" value="wp_order_<?php echo $type; ?>">
+				<input type="hidden" name="product_id" value="<?php echo $orderIndex ?>">
 
 				<input type="submit" name="submit_status" value="Сохранить" style="margin:30px;">
 				<input type="submit" name="submit_remove" value="Удалить" style="margin-top:30px;">

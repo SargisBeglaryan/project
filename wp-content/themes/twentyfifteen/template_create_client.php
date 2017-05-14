@@ -58,11 +58,20 @@ if(isset($_POST["submit_create"]))
 					<div class="DbRequesAction">
 						<form method="POST" action="">
 							<p>
-								<?php  if(isset($_GET["id"])): ?>
+								<?php  if(isset($_GET["id"])):
+										if(isset($_POST['clientName'])){
+											$customer->name = $_POST['clientName'];
+										}
+								?>
 									<input type="text" name="clientName" placeholder="Имя клиента" style="width:46%;" value="<?= $customer->name; ?>" required>
 									<input type="hidden" name="clientId" value="<?= $customer->id; ?>">
+								<?php else:
+								if(isset($_POST['clientName'])):
+								?>
+								<input type="text" value="<?= $_POST['clientName'] ?>" name="clientName" placeholder="Имя клиента" style="width:46%;" required>
 								<?php else: ?>
 									<input type="text" name="clientName" placeholder="Имя клиента" style="width:46%;" required>
+								<?php endif; ?>
 								<?php endif; ?>
 							</p>	
 							<input type="submit" name="submit_create" value="<?= $buttonText; ?>" style="margin-top:30px;">
@@ -71,12 +80,14 @@ if(isset($_POST["submit_create"]))
 						if($_POST["submit_create"]){
 							if($_GET["id"]) {
 								if($updateResult) {
-									echo "<p style='margin-top: 25px;color: #008000;'>".$var_name. " удачно именено"."</p>";
+									echo "<p style='margin-top: 25px;color: #008000;'>".$var_name. " удачно изменено"."</p>";
 								} else {
 									echo "<p style='margin-top: 25px;color: #b30000;'>".$var_name. " не изменено! Возможно это имя уже существует."."</p>";
 								}
 							} else {
 								if($insertResult) {
+									// wp_redirect( 'stock-customer' );
+									// wp_die();
 									echo "<p style='margin-top: 25px;color: #008000;'>".$var_name. " удачно добавлено"."</p>";
 								} else {
 									echo "<p style='margin-top: 25px;color: #b30000;'>".$var_name. " не добавлено! Возможно это имя уже существует."."</p>";
