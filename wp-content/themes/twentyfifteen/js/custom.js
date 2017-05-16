@@ -93,7 +93,7 @@ jQuery( document ).ready(function() {
 		return r;
 	}
 
-	jQuery("#material_size, #material, #density").on("change", function(){
+	jQuery("#material_size, #material, #density, #type").on("change", function(){
 		var formName = jQuery(this).closest("form");
 		jQuery(formName).find(".page_count").trigger("blur");
 	});
@@ -111,7 +111,6 @@ jQuery( document ).ready(function() {
 		}
 		})
 		.done(function(otherProductDetails) {
-			debugger;
 			if(otherProductDetails != null){
 				jQuery(thisSelect).attr({
 				    price: otherProductDetails.price,
@@ -122,33 +121,97 @@ jQuery( document ).ready(function() {
 		.fail(function(xhr) {
 			console.log(xhr.responseText);
 		});
-
-
 	});
+
+	jQuery(".form_count, .foil_count, .rubber_count, .lacquer_count").on('blur', function(){
+		var formName = jQuery(this).closest("form");
+		if(jQuery(formName).find('.orderPriceSum').val() == null || jQuery(formName).find('.orderPriceSum').val() == ""){
+			return false;
+		} else {
+			var otherProductPrice = parseInt(jQuery(this).prev().attr("price"));
+			var otherProductPercent = parseInt(jQuery(this).prev().attr("percent"));
+			var otherProductCount = parseInt(jQuery(this).val());
+			var currentPrice = parseInt(jQuery(formName).find('.orderPriceSum').val());
+			var productPricePercentSum = otherProductPrice * otherProductPercent / 100;
+			var sum = (productPricePercentSum + otherProductPrice) * otherProductCount + currentPrice;
+			jQuery(formName).find('.orderPriceSum').val(sum);
+		}
+	});
+
 	jQuery(".page_count").on("blur", function(){
 		var formName = jQuery(this).closest("form");
 		if(jQuery(".page_count").val() != null) {
 			var oneCountPrice = jQuery(formName).find('.oneCountPrice');
-			if( jQuery(oneCountPrice).val() != null){
+			if( jQuery(oneCountPrice).val() != null && jQuery(oneCountPrice).val() != ""){
+				"#form, #foil, #rubber, #lacquer"
 				var percent = jQuery(oneCountPrice).attr('percent');
 				var percentPrice = parseInt(jQuery(".page_count").val()) * parseInt(percent) / 100;
-				var sum = parseInt(jQuery(".page_count").val()) * parseInt(jQuery(oneCountPrice).val()) + percentPrice;
+				var sum = parseInt(jQuery(".page_count").val()) * (parseInt(jQuery(oneCountPrice).val()) + percentPrice);
 				jQuery(formName).find('.orderPriceSum').val(sum);
+				if(jQuery(formName).find("#form").val() != undefined){
+					addedToPrice(jQuery(formName).find("#form").attr("price"),
+							jQuery(formName).find("#form").attr("percent"),
+							jQuery(formName).find(".form_count").val(),
+							sum, jQuery(formName)
+						);
+				} else if(jQuery(formName).find("#foil").val() != undefined){
+					addedToPrice(jQuery(formName).find("#foil").attr("price"),
+							jQuery(formName).find("#foil").attr("percent"),
+							jQuery(formName).find(".foil_count").val(),
+							sum, jQuery(formName)
+						);
+				} else if(jQuery(formName).find("#rubber").val() != undefined){
+					addedToPrice(jQuery(formName).find("#rubber").attr("price"),
+							jQuery(formName).find("#rubber").attr("percent"),
+							jQuery(formName).find(".rubber_count").val(),
+							sum, jQuery(formName)
+						);
+				} else if(jQuery(formName).find("#lacquer").val() != undefined){
+					addedToPrice(jQuery(formName).find("#lacquer").attr("price"),
+							jQuery(formName).find("#lacquer").attr("percent"),
+							jQuery(formName).find(".lacquer_count").val(),
+							sum, jQuery(formName)
+						);
+				}
 			}
 		}
-		if(jQuery(formName).find("#material").val() != null && jQuery(formName).find("#material_size").val() != null
-			&&	jQuery(formName).find("#density").val() != null) {
+		if(jQuery(formName).attr("class") == "orderPaper"){
+			if(jQuery(formName).find("#material").val() != null && jQuery(formName).find("#material_size").val() != null
+			&&	jQuery(formName).find("#density").val() != null && jQuery(formName).find(".oneCountPrice").val() == "") {
 				var data = {};
-				data["type"] = "paper";
+				data["orderType"] = "paper";
 				data["material"] = jQuery(formName).find("#material").val();
 				var xIndex = jQuery(formName).find("#material_size").val().indexOf('x');
 				data["size_y"] = jQuery(formName).find("#material_size").val().slice(xIndex+1);
 				data["size_x"] = jQuery(formName).find("#material_size").val().slice(0, xIndex);
 				data["density"] = jQuery(formName).find("#density").val();
 				getMaterialOnePagePrice(data);
+			}
+		} else {
+			if(jQuery(formName).find("#material").val() != null && jQuery(formName).find("#material_size").val() != null
+			&&	jQuery(formName).find("#type").val() != null && jQuery(formName).find(".oneCountPrice").val() == "") {
+				var data = {};
+				data["orderType"] = "roll";
+				data["material"] = jQuery(formName).find("#material").val();
+				var xIndex = jQuery(formName).find("#material_size").val().indexOf('x');
+				data["size_y"] = jQuery(formName).find("#material_size").val().slice(xIndex+1);
+				data["size_x"] = jQuery(formName).find("#material_size").val().slice(0, xIndex);
+				data["type"] = jQuery(formName).find("#type").val();
+				getMaterialOnePagePrice(data);
+			}
 		}
 	});
 });
+
+function addedToPrice(price, percent, count, currentSum, formName){
+	var otherProductPrice = parseInt(price);
+	var otherProductPercent = parseInt(percent);
+	var otherProductCount = parseInt(count);
+	var currentPrice = parseInt(currentSum);
+	var productPricePercentSum = otherProductPrice * otherProductPercent / 100;
+	var sum = (productPricePercentSum + otherProductPrice) * otherProductCount + currentPrice;
+	jQuery(formName).find('.orderPriceSum').val(sum);
+}
 
 function changeCustomerId(thisInput, topic) {
 	jQuery("."+topic+"CustomerId").val(jQuery(thisInput).find("[value='"+jQuery(thisInput).val()+"']").attr("id"));
@@ -170,7 +233,9 @@ function getMaterialOnePagePrice (data){
 		.done(function(material) {
 			if(material != null){
 				if(data.type == 'paper'){
-					jQuery('.oneCountPrice').val(material.price).attr('percent', material.percent);
+					jQuery('.orderPaper').find('.oneCountPrice').val(material.price).attr('percent', material.percent);
+				} else {
+					jQuery('.orderRoll').find('.oneCountPrice').val(material.price).attr('percent', material.percent);
 				}
 			}
 		})

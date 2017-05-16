@@ -59,7 +59,7 @@ webshims.polyfill('forms forms-ext');
 						$density = $wpdb->get_results ( "SELECT * FROM wp_product_paper GROUP BY `density`");
 					?>
 					<div class="order_paper">
-						<form method="POST" action="" autocomplete="off">
+						<form method="POST" action="" autocomplete="off" class="orderPaper">
 						
 							<p>
 								<input type="date" name="date" data-date='{"startView": 2, "openOnMouseFocus": true}' placeholder="mm/dd/yyyy" required>
@@ -135,7 +135,7 @@ webshims.polyfill('forms forms-ext');
 									<option value="<?php echo $item->id;?>"><?php echo $item->name;?></option>
 									<?php } ?>
 								</select>
-								<input type="text" name="form_count" placeholder="Количество форм" style="width:46%;" <?php if(count($result_form) < 1) echo "disabled"; ?>>
+								<input type="text" name="form_count" class="form_count" placeholder="Количество форм" style="width:46%;" <?php if(count($result_form) < 1) echo "disabled"; ?>>
 							</p>
 							
 							<p>
@@ -150,7 +150,7 @@ webshims.polyfill('forms forms-ext');
 									<option value="<?php echo $item->id;?>"><?php echo $item->name;?></option>
 									<?php } ?>
 								</select>
-								<input type="text" name="foil_count" placeholder="Количество фольги" style="width:46%;" <?php if(count($result_form) < 1) echo "disabled"; ?>>
+								<input type="text" name="foil_count" class="foil_count" placeholder="Количество фольги" style="width:46%;" <?php if(count($result_form) < 1) echo "disabled"; ?>>
 							</p>
 							
 							<p>
@@ -165,7 +165,7 @@ webshims.polyfill('forms forms-ext');
 									<option value="<?php echo $item->id;?>"><?php echo $item->name;?></option>
 									<?php } ?>
 								</select>
-								<input type="text" name="rubber_count" placeholder="Количество резины" style="width:46%;" <?php if(count($result_form) < 1) echo "disabled"; ?>>
+								<input type="text" name="rubber_count" class="rubber_count" placeholder="Количество резины" style="width:46%;" <?php if(count($result_form) < 1) echo "disabled"; ?>>
 							</p>
 							
 							<p>
@@ -180,7 +180,7 @@ webshims.polyfill('forms forms-ext');
 									<option value="<?php echo $item->id;?>"><?php echo $item->name;?></option>
 									<?php } ?>
 								</select>
-								<input type="text" name="lacquer_count" placeholder="Количество лака" style="width:46%;" <?php if(count($result_form) < 1) echo "disabled"; ?>>
+								<input type="text" name="lacquer_count" class="lacquer_count" placeholder="Количество лака" style="width:46%;" <?php if(count($result_form) < 1) echo "disabled"; ?>>
 							</p>
 							<p>
 								<input type="hidden" name="type_of_order" value="Заказ">
@@ -193,6 +193,9 @@ webshims.polyfill('forms forms-ext');
 								</select>
 								<label>Общая цена</label>
 								<input type="text" class="orderPriceSum" name="orderPriceSum" style="width:30%;" placeholder="общая цена заказа">
+							</p>
+							<p>
+								<input type="text" name="debt" style="width:46%;" placeholder="Задолженность">
 							</p>
 							
 							<input type="submit" name="submit_create" value="Оформить" style="margin-top:30px;">
@@ -224,6 +227,8 @@ webshims.polyfill('forms forms-ext');
 								"rubber" => $_POST["rubber_count"],
 								"lacquer" => $_POST["lacquer_count"],
 								"type"=>$_POST["order_type"],
+								"debt" => $_POST["debt"],
+								"selling_price" => $_POST["orderPriceSum"],
 								"type_of_order" => $_POST['type_of_order'],
 								"status" => "Оформлен"
 							);
@@ -259,7 +264,7 @@ webshims.polyfill('forms forms-ext');
 						$type = $wpdb->get_results ( "SELECT * FROM wp_product_roll GROUP BY `type`");
 					?>
 					<div class="order_roll">
-						<form method="POST" action="">
+						<form method="POST" action="" class="orderRoll">
 						
 							<p>
 								<input type="date" name="date" data-date='{"startView": 2, "openOnMouseFocus": true}' placeholder="mm/dd/yyyy" required>
@@ -317,10 +322,11 @@ webshims.polyfill('forms forms-ext');
 							
 							<p>
 								<input type="text" name="step_lenght" placeholder="Длина шага" style="width:46%;" required>
-								<input type="text" class="page_count" name="label_count" placeholder="Колличество этикеток" style="width:46%;" required>
+								<input type="text" name="label_count" class="page_count" placeholder="Колличество этикеток" style="width:46%;" required>
 							</p>
 							<p>
-								<input type="text" disabled name="oneCountPrice" placeholder="Цена одной рулона + %">
+							<label>Цена одного рулона</label>
+								<input type="text" disabled name="oneCountPrice" placeholder="Цена одного рулона + %" class="oneCountPrice" class="page_count" style="width:66%;">
 							</p>
 							
 							<p>
@@ -335,7 +341,7 @@ webshims.polyfill('forms forms-ext');
 									<option value="<?php echo $item->id;?>"><?php echo $item->name;?></option>
 									<?php } ?>
 								</select>
-								<input type="text" name="form_count" placeholder="Количество форм" style="width:46%;" <?php if(count($result_form) < 1) echo "disabled"; ?>>
+								<input type="text" name="form_count" class="form_count" placeholder="Количество форм" style="width:46%;" <?php if(count($result_form) < 1) echo "disabled"; ?>>
 							</p>
 							
 							<p>
@@ -350,7 +356,7 @@ webshims.polyfill('forms forms-ext');
 									<option value="<?php echo $item->id;?>"><?php echo $item->name;?></option>
 									<?php } ?>
 								</select>
-								<input type="text" name="foil_count" placeholder="Количество фольги" style="width:46%;" <?php if(count($result_form) < 1) echo "disabled"; ?>>
+								<input type="text" name="foil_count" class="foil_count" placeholder="Количество фольги" style="width:46%;" <?php if(count($result_form) < 1) echo "disabled"; ?>>
 							</p>
 							
 							<p>
@@ -365,7 +371,7 @@ webshims.polyfill('forms forms-ext');
 									<option value="<?php echo $item->id;?>"><?php echo $item->name;?></option>
 									<?php } ?>
 								</select>
-								<input type="text" name="rubber_count" placeholder="Количество резины" style="width:46%;" <?php if(count($result_form) < 1) echo "disabled"; ?>>
+								<input type="text" name="rubber_count" class="rubber_count" placeholder="Количество резины" style="width:46%;" <?php if(count($result_form) < 1) echo "disabled"; ?>>
 							</p>
 							
 							<p>
@@ -380,7 +386,7 @@ webshims.polyfill('forms forms-ext');
 										<option value="<?php echo $item->id;?>"><?php echo $item->name;?></option>
 										<?php } ?>
 								</select>
-								<input type="text" name="lacquer_count" placeholder="Количество лака" style="width:46%;" <?php if(count($result_form) < 1) echo "disabled"; ?>>
+								<input type="text" name="lacquer_count" class="lacquer_count"placeholder="Количество лака" style="width:46%;" <?php if(count($result_form) < 1) echo "disabled"; ?>>
 							</p>
 							<p>
 								<input type="hidden" name="type_of_order" value="Заказ">
@@ -391,7 +397,11 @@ webshims.polyfill('forms forms-ext');
 									<option value="Налич">Налич</option>
 									<option value="Фактура">Фактура</option>
 								</select>
-								<input type="text" name="oneCountPrice" style="width:46%;" placeholder="общая цена заказа">
+								<label>Общая цена</label>
+								<input type="text" class="orderPriceSum" name="orderPriceSum" style="width:30%;" placeholder="общая цена заказа">
+							</p>
+							<p>
+								<input type="text" name="debt" style="width:46%;" placeholder="Задолженность">
 							</p>
 							<input type="submit" name="submit_create" value="Оформить" style="margin-top:30px;">
 						
@@ -417,6 +427,8 @@ webshims.polyfill('forms forms-ext');
 								"count_per_page" => $_POST["count_per_page"],
 								"step_lenght" => $_POST["step_lenght"],
 								"label_count" => $_POST["label_count"],
+								"debt" => $_POST["debt"],
+								"selling_price" => $_POST["orderPriceSum"],
 								"material" => $material_id,
 								"type"=>$_POST["order_type"],
 								"type_of_order" => $_POST['type_of_order'],

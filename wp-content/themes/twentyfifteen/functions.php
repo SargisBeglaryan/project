@@ -772,12 +772,18 @@ function my_custom_redirect() {
 
 	function getMaterialPrice() {
 		global $wpdb;
-		if($_POST['type'] == 'paper') {
+		if($_POST['orderType'] == 'paper') {
 			$size_x = $_POST["size_x"];
 			$size_y = $_POST["size_y"];
 			$materialName = $_POST["material"];
 			$density = $_POST["density"];
 			$material_price = $wpdb->get_row( "SELECT price, percent FROM wp_product_paper WHERE name = '$materialName' and size_x = '$size_x' and size_y = '$size_y' and density = '$density'");
+		} else {
+			$size_x = $_POST["size_x"];
+			$size_y = $_POST["size_y"];
+			$materialName = $_POST["material"];
+			$type = $_POST["type"];
+			$material_price = $wpdb->get_row( "SELECT price, percent FROM wp_product_roll WHERE name = '$materialName' and size_x = '$size_x' and size_y like '{$size_y}%' and type = '$type'");
 		}
 		wp_send_json($material_price);
 		wp_die();
