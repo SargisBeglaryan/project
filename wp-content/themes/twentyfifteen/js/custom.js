@@ -201,6 +201,43 @@ jQuery( document ).ready(function() {
 			}
 		}
 	});
+
+	jQuery("#status").on("change", function(){
+		var formName = jQuery(this).closest("form");
+		jQuery(formName).find(".submitStatus").css("display", "block");
+	});
+	jQuery(".submitStatus").on("click", function(){
+		var formName = jQuery(this).closest("form");
+		var data = {};
+		if(jQuery(formName).attr('class') == "rollTable"){
+			data["orderType"] = "roll"
+		} else {
+			data["orderType"] = "paper";
+		}
+		data["status"] = jQuery(formName).find("#status").val();
+		data["product_id"] = jQuery(formName).find(".orderProductId").val();
+		data["action"] = "ajaxChangeOrderStatus";
+	jQuery.ajax({
+		url: "../../wp-admin/admin-ajax.php",
+		type: 'POST',
+		dataType: 'json',
+		data: data,
+		})
+		.done(function(material) {
+			if(material != true){
+				if(data.orderType == 'paper'){
+					jQuery('.paperTable').find('#status').html(material.options);
+					jQuery('.paperTable').find(".submitStatus").hide();
+				} else {
+					jQuery('.rollTable').find('#status').html(material.options);
+					jQuery('.rollTable').find(".submitStatus").hide();
+				}
+			}
+		})
+		.fail(function(xhr) {
+			console.log(xhr.responseText);
+		});
+	});
 });
 
 function addedToPrice(price, percent, count, currentSum, formName){
@@ -232,7 +269,7 @@ function getMaterialOnePagePrice (data){
 		})
 		.done(function(material) {
 			if(material != null){
-				if(data.type == 'paper'){
+				if(data.orderType == 'paper'){
 					jQuery('.orderPaper').find('.oneCountPrice').val(material.price).attr('percent', material.percent);
 				} else {
 					jQuery('.orderRoll').find('.oneCountPrice').val(material.price).attr('percent', material.percent);

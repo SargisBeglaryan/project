@@ -791,6 +791,76 @@ function my_custom_redirect() {
 	add_action('wp_ajax_nopriv_ajaxGetMaterialPrice', 'getMaterialPrice');
 	add_action('wp_ajax_ajaxGetMaterialPrice', 'getMaterialPrice');
 
+	function changeOrderStatus() {
+		global $wpdb;
+		$productId = $_POST["id"];
+		$allStatuses = ['Склад'=>'Выход со склада', 'Резка'=>'Выхол с резки', 'Печать'=>'Выход из печати', 'Готово'=>'Готово'];
+		if($_POST['orderType'] == 'paper') {
+			$result = $wpdb->get_row( "SELECT * FROM wp_product_paper WHERE id = '$productId' ");
+			if($_POST["status"] == 'Склад')	{
+					calculate_stock_values('wp_product_paper', $_POST["product_id"], $result->page_count);
+				}
+				$data = array(
+					"status" =>$_POST["status"]
+				);
+				$where = array(
+					"id" =>  $_POST["product_id"]
+				);
+				$materialCountArray = array();
+				$form = ($result->form_id)?[$result->form_id => $result->form]:'';
+				$foil = ($result->foil_id)?[$result->foil_id => $result->foil]:'';
+				$rubber = ($result->rubber_id)?[$result->rubber_id => $result->rubber]:'';
+				$lacquer = ($result->lacquer_id)?[$result->lacquer_id => $result->lacquer]:'';
+				array_push($materialCountArray,$form,$foil,$rubber,$lacquer);
+
+				$countStatus = checkProductCount($materialCountArray);
+				if($_POST["status"] == 'Склад' && $countStatus){
+					materialTransaction($form,$foil,$rubber,$lacquer,$wpdb);
+					$wpdb->update("wp_order_paper", $data, $where);
+				}else {
+					$wpdb->update("wp_order_paper", $data, $where);
+				}
+		} else {
+			$result = $wpdb->get_row( "SELECT * FROM wp_product_roll WHERE id = '$productId' ");
+			if($_POST["status"] == 'Склад')
+				{
+					calculate_stock_values('wp_product_paper', $_POST["product_id"], $result->page_count);
+				}
+				$data = array(
+					"status" =>$_POST["status"]
+				);
+				$where = array(
+					"id" =>  $_POST["product_id"]
+				);
+				$materialCountArray = array();
+				$form = ($result->form_id)?[$result->form_id => $result->form]:'';
+				$foil = ($result->foil_id)?[$result->foil_id => $result->foil]:'';
+				$rubber = ($result->rubber_id)?[$result->rubber_id => $result->rubber]:'';
+				$lacquer = ($result->lacquer_id)?[$result->lacquer_id => $result->lacquer]:'';
+				array_push($materialCountArray,$form,$foil,$rubber,$lacquer);
+
+				$countStatus = checkProductCount($materialCountArray);
+				if($_POST["status"] == 'Склад' && $countStatus){
+					materialTransaction($form,$foil,$rubber,$lacquer,$wpdb);
+					$wpdb->update("wp_order_roll", $data, $where);
+				}else {
+					$wpdb->update("wp_order_roll", $data, $where);
+				}
+		}
+		foreach($allStatuses as $key=>$value){
+			if($key == $_POST["status"]){
+				$result["option"] .="<option value=".$key." disabled selected>".
+						$value."</option>";
+			} else {
+				$result["option"] .="<option value=".$key.">".$value."</option>";
+			}
+		}
+		wp_send_json($result);
+		wp_die();
+	}
+	add_action('wp_ajax_nopriv_ajaxChangeOrderStatus', 'changeOrderStatus');
+	add_action('wp_ajax_ajaxChangeOrderStatus', 'changeOrderStatus');
+
 	function getOtherProductPrice() {
 		global $wpdb;
 		$productId = $_POST["otherProductId"];
