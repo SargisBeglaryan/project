@@ -8,7 +8,6 @@ Template Name: Order handler
 
 // GET PRODUCTS LIST FROM DB
 	$printing_type = $_GET["type"];
-	$material_name = $_GET["material"];
 	global $wpdb;	
 	//$index = array_search ('paper200', $materials_array);
 ?>
@@ -54,9 +53,9 @@ webshims.polyfill('forms forms-ext');
 					<?php
 					$clients = $wpdb->get_results ( "SELECT * FROM  wp_customers");
 					if($printing_type == "paper"){
-						$allPapers = $wpdb->get_results ( "SELECT * FROM wp_product_paper");
-						$material = $wpdb->get_results ( "SELECT * FROM wp_product_paper GROUP BY `name`");
-						$density = $wpdb->get_results ( "SELECT * FROM wp_product_paper GROUP BY `density`");
+						$allPapers = $wpdb->get_results( "SELECT * FROM wp_product_paper");
+						$material = $wpdb->get_results( "SELECT * FROM wp_product_paper GROUP BY `name`");
+						$density = $wpdb->get_results( "SELECT * FROM wp_product_paper GROUP BY `density`");
 					?>
 					<div class="order_paper">
 						<form method="POST" action="" autocomplete="off" class="orderPaper">

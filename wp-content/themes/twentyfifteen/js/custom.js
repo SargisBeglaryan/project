@@ -1,8 +1,5 @@
 jQuery( document ).ready(function() {
-	jQuery(".button_content button").on("click", function (){
-		var formPrefix = jQuery(this).attr('id')
-		jQuery('.'+formPrefix+'FormContent').append('<div>'+formPrefix+'</div>');
-				    });''
+
     jQuery("#roll_customer").on("change", function (){
     	changeCustomerId(this, 'roll');
     });
@@ -95,7 +92,10 @@ jQuery( document ).ready(function() {
 
 	jQuery("#material_size, #material, #density, #type").on("change", function(){
 		var formName = jQuery(this).closest("form");
-		jQuery(formName).find(".page_count").trigger("blur");
+		var ignoredTables = ["salePaperForm", "saleRollForm", "saleOtherForm"]
+		if(numberColums.indexOf(jQuery(formName).attr("class")) == -1){
+			jQuery(formName).find(".page_count").trigger("blur",  {trigger: true});
+		}
 	});
 
 	jQuery("#form, #foil, #rubber, #lacquer").on('change', function(){
@@ -138,7 +138,7 @@ jQuery( document ).ready(function() {
 		}
 	});
 
-	jQuery(".page_count").on("blur", function(){
+	jQuery(".page_count").on("blur", function(event, trigger){
 		var formName = jQuery(this).closest("form");
 		if(jQuery(".page_count").val() != null) {
 			var oneCountPrice = jQuery(formName).find('.oneCountPrice');
@@ -177,7 +177,7 @@ jQuery( document ).ready(function() {
 		}
 		if(jQuery(formName).attr("class") == "orderPaper"){
 			if(jQuery(formName).find("#material").val() != null && jQuery(formName).find("#material_size").val() != null
-			&&	jQuery(formName).find("#density").val() != null && jQuery(formName).find(".oneCountPrice").val() == "") {
+			&&	jQuery(formName).find("#density").val() != null && trigger.trigger == true) {
 				var data = {};
 				data["orderType"] = "paper";
 				data["material"] = jQuery(formName).find("#material").val();
@@ -189,7 +189,7 @@ jQuery( document ).ready(function() {
 			}
 		} else {
 			if(jQuery(formName).find("#material").val() != null && jQuery(formName).find("#material_size").val() != null
-			&&	jQuery(formName).find("#type").val() != null && jQuery(formName).find(".oneCountPrice").val() == "") {
+			&&	jQuery(formName).find("#type").val() != null && trigger.trigger == true) {
 				var data = {};
 				data["orderType"] = "roll";
 				data["material"] = jQuery(formName).find("#material").val();
@@ -238,8 +238,103 @@ jQuery( document ).ready(function() {
 			console.log(xhr.responseText);
 		});
 	});
+
+	/*sale product functionality */
+	jQuery(".salePaperFormContent, .saleRollFormContent, .saleOtherFormContent").on("change", "#sale_material_size,"+ 
+		"#sale_material, #sale_density, #sale_type, #otherType, #otherName", function(){
+		var formName = jQuery(this).closest("form");
+		saleProductValidation(formName);
+	});
+
+	jQuery(".salePaperFormContent, .saleRollFormContent, .saleOtherFormContent").on("keyup", ".sale_page_count", function(){
+		var formName = jQuery(this).closest("form");
+		saleProductValidation(formName);
+	});
+
+	jQuery("#sale_paper, #sale_roll, #sale_other").on("click", function(){
+		if(jQuery(this).attr("id") == "sale_paper"){
+			var formContent = jQuery(".salePaperFormStructure");
+			jQuery(".salePaperFormContent").html(jQuery(formContent).html()).show(500);
+			jQuery(".salePaperForm").show(500);
+		} else if(jQuery(this).attr("id") == "sale_roll"){
+			var formContent = jQuery(".saleRollFormStructure");
+			jQuery(".saleRollFormContent").html(jQuery(formContent).html()).show(500);
+			jQuery(".saleRollForm").show(500);
+		} else {
+			var formContent = jQuery(".saleOtherFormStructure");
+			jQuery(".saleOtherFormContent").html(jQuery(formContent).html()).show(500);
+			jQuery(".saleOtherForm").show(500);
+		}
+	});
+
+	jQuery(".salePaperFormContent, .saleRollFormContent, .saleOtherFormContent").on("click", ".fa-minus-circle", function(){
+		var formName = jQuery(this).closest("form");
+		var contentName = jQuery(formName).parent();
+		jQuery(formName).hide(600).remove();
+		if(jQuery(contentName).html().trim() == ""){
+			jQuery(contentName).hide(300)
+		}
+
+	});
+
+	jQuery(".salePaperFormContent, .saleRollFormContent, .saleOtherFormContent").on("click", ".fa-plus-circle", function(){
+		var currentForm = jQuery(this).closest("form");
+		if(jQuery(currentForm).attr("class") == "salePaperForm"){
+			var newformContent = jQuery(".salePaperFormStructure");
+		} else if(jQuery(currentForm).attr("class") == "saleRollForm"){
+			var newformContent = jQuery(".saleRollFormStructure");
+		} else {
+			var newformContent = jQuery(".saleOtherFormStructure");
+		}
+		if(jQuery(currentForm).parent().find(".salePageTitle").length > 0){
+			jQuery(newformContent).find(".salePageTitle").remove();
+		}
+		jQuery(currentForm).parent().append(jQuery(newformContent).html());
+		jQuery(this).hide(300);
+	});
+
+	jQuery(".salePaperFormContent, .saleRollFormContent, .saleOtherFormContent").on("click", "#saleProductButton", function(){
+		var currentForm = jQuery(this).closest("form");
+		var data = {};
+		if(jQuery(currentForm).attr("class") == "salePaperForm"){
+			data["orderType"] = "paper";
+			data["material"] = jQuery(formName).find("#material").val();
+			var xIndex = jQuery(formName).find("#material_size").val().indexOf('x');
+			data["size_y"] = jQuery(formName).find("#material_size").val().slice(xIndex+1);
+			data["size_x"] = jQuery(formName).find("#material_size").val().slice(0, xIndex);
+			data["density"] = jQuery(formName).find("#density").val();
+		} else if(jQuery(currentForm).attr("class") == "saleRollForm"){
+			data["orderType"] = "other";
+			data["material"] = jQuery(formName).find("#material").val();
+			var xIndex = jQuery(formName).find("#material_size").val().indexOf('x');
+			data["size_y"] = jQuery(formName).find("#material_size").val().slice(xIndex+1);
+			data["size_x"] = jQuery(formName).find("#material_size").val().slice(0, xIndex);
+			data["density"] = jQuery(formName).find("#type").val();
+		} else {
+			data["otherName"] = jQuery(formName).find("#otherName").val();
+			data["otherType"] = jQuery(formName).find("#otherType").val();
+		}
+		data["sale_page_count"] = jQuery(formName).find(".sale_page_count");
+		data["action"] = "ajaxAddedNewSaleProduct";
+	jQuery.ajax({
+		url: "../../wp-admin/admin-ajax.php",
+		type: 'POST',
+		dataType: 'json',
+		data: data,
+		})
+		.done(function(material) {
+			jQuery(currentForm).prepand("<p class='infoMessage'>Продажа сохранена</p>");
+			jQuery(currentForm).find(".infoMessage").hide(1000);
+		})
+		.fail(function(xhr) {
+			console.log(xhr.responseText);
+		});
+	});
+
 });
 
+
+/* document ready finish these are functions */
 function addedToPrice(price, percent, count, currentSum, formName){
 	var otherProductPrice = parseInt(price);
 	var otherProductPercent = parseInt(percent);
@@ -279,4 +374,35 @@ function getMaterialOnePagePrice (data){
 		.fail(function(xhr) {
 			console.log(xhr.responseText);
 		});
+}
+
+function saleProductValidation(formName) {
+	if(jQuery(formName).attr("class") == "salePaperForm") {
+		if(jQuery(formName).find("#sale_material_size").val() != null && jQuery(formName).find("#sale_material").val() != null
+			&& jQuery(formName).find("#sale_density").val() != null && jQuery(formName).find(".sale_page_count").val() != ""){
+			jQuery(formName).find("#saleProductButton").fadeIn(300);
+			jQuery(formName).find(".fa-plus-circle").fadeIn(300);
+		} else {
+			jQuery(formName).find("#saleProductButton").fadeOut(300);
+			jQuery(formName).find(".fa-plus-circle").fadeOut(300);
+		}
+	} else if (jQuery(formName).attr("class") == "saleRollForm"){
+		if(jQuery(formName).find("#sale_material_size").val() != null && jQuery(formName).find("#sale_material").val() != null
+			&& jQuery(formName).find("#sale_type").val() != null && jQuery(formName).find(".sale_page_count").val() != ""){
+			jQuery(formName).find("#saleProductButton").fadeIn(300);
+			jQuery(formName).find(".fa-plus-circle").fadeIn(300);
+		} else {
+			jQuery(formName).find("#saleProductButton").fadeOut(300);
+			jQuery(formName).find(".fa-plus-circle").fadeOut(300);
+		}
+	} else {
+		if(jQuery(formName).find("#otherType").val() != null && jQuery(formName).find("#otherName").val() != null
+			&&  jQuery(formName).find(".sale_page_count").val() != ""){
+			jQuery(formName).find("#saleProductButton").fadeIn(300);
+			jQuery(formName).find(".fa-plus-circle").fadeIn(300);
+		} else {
+			jQuery(formName).find("#saleProductButton").fadeOut(300);
+			jQuery(formName).find(".fa-plus-circle").fadeOut(300);
+		}
+	}
 }
