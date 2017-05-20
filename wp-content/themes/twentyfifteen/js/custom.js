@@ -93,8 +93,32 @@ jQuery( document ).ready(function() {
 	jQuery("#material_size, #material, #density, #type").on("change", function(){
 		var formName = jQuery(this).closest("form");
 		var ignoredTables = ["salePaperForm", "saleRollForm", "saleOtherForm"]
-		if(numberColums.indexOf(jQuery(formName).attr("class")) == -1){
-			jQuery(formName).find(".page_count").trigger("blur",  {trigger: true});
+		if(ignoredTables.indexOf(jQuery(formName).attr("class")) == -1){
+			if(jQuery(formName).attr("class") == "orderPaper"){
+				if(jQuery(formName).find("#material").val() != null && jQuery(formName).find("#material_size").val() != null
+				&&	jQuery(formName).find("#density").val() != null ) {
+					var data = {};
+					data["orderType"] = "paper";
+					data["material"] = jQuery(formName).find("#material").val();
+					var xIndex = jQuery(formName).find("#material_size").val().indexOf('x');
+					data["size_y"] = jQuery(formName).find("#material_size").val().slice(xIndex+1);
+					data["size_x"] = jQuery(formName).find("#material_size").val().slice(0, xIndex);
+					data["density"] = jQuery(formName).find("#density").val();
+					getMaterialOnePagePrice(data, formName);
+				}
+			} else {
+				if(jQuery(formName).find("#material").val() != null && jQuery(formName).find("#material_size").val() != null
+				&&	jQuery(formName).find("#type").val() != null) {
+					var data = {};
+					data["orderType"] = "roll";
+					data["material"] = jQuery(formName).find("#material").val();
+					var xIndex = jQuery(formName).find("#material_size").val().indexOf('x');
+					data["size_y"] = jQuery(formName).find("#material_size").val().slice(xIndex+1);
+					data["size_x"] = jQuery(formName).find("#material_size").val().slice(0, xIndex);
+					data["type"] = jQuery(formName).find("#type").val();
+					getMaterialOnePagePrice(data, formName);
+				}
+			}
 		}
 	});
 
@@ -138,12 +162,11 @@ jQuery( document ).ready(function() {
 		}
 	});
 
-	jQuery(".page_count").on("blur", function(event, trigger){
+	jQuery(".page_count").on("blur", function(event){
 		var formName = jQuery(this).closest("form");
 		if(jQuery(".page_count").val() != null) {
 			var oneCountPrice = jQuery(formName).find('.oneCountPrice');
 			if( jQuery(oneCountPrice).val() != null && jQuery(oneCountPrice).val() != ""){
-				"#form, #foil, #rubber, #lacquer"
 				var percent = jQuery(oneCountPrice).attr('percent');
 				var percentPrice = parseInt(jQuery(".page_count").val()) * parseInt(percent) / 100;
 				var sum = parseInt(jQuery(".page_count").val()) * (parseInt(jQuery(oneCountPrice).val()) + percentPrice);
@@ -173,31 +196,6 @@ jQuery( document ).ready(function() {
 							sum, jQuery(formName)
 						);
 				}
-			}
-		}
-		if(jQuery(formName).attr("class") == "orderPaper"){
-			if(jQuery(formName).find("#material").val() != null && jQuery(formName).find("#material_size").val() != null
-			&&	jQuery(formName).find("#density").val() != null && trigger.trigger == true) {
-				var data = {};
-				data["orderType"] = "paper";
-				data["material"] = jQuery(formName).find("#material").val();
-				var xIndex = jQuery(formName).find("#material_size").val().indexOf('x');
-				data["size_y"] = jQuery(formName).find("#material_size").val().slice(xIndex+1);
-				data["size_x"] = jQuery(formName).find("#material_size").val().slice(0, xIndex);
-				data["density"] = jQuery(formName).find("#density").val();
-				getMaterialOnePagePrice(data);
-			}
-		} else {
-			if(jQuery(formName).find("#material").val() != null && jQuery(formName).find("#material_size").val() != null
-			&&	jQuery(formName).find("#type").val() != null && trigger.trigger == true) {
-				var data = {};
-				data["orderType"] = "roll";
-				data["material"] = jQuery(formName).find("#material").val();
-				var xIndex = jQuery(formName).find("#material_size").val().indexOf('x');
-				data["size_y"] = jQuery(formName).find("#material_size").val().slice(xIndex+1);
-				data["size_x"] = jQuery(formName).find("#material_size").val().slice(0, xIndex);
-				data["type"] = jQuery(formName).find("#type").val();
-				getMaterialOnePagePrice(data);
 			}
 		}
 	});
@@ -267,25 +265,36 @@ jQuery( document ).ready(function() {
 	jQuery("#sale_paper, #sale_roll, #sale_other").on("click", function(){
 		if(jQuery(this).attr("id") == "sale_paper"){
 			var formContent = jQuery(".salePaperFormStructure");
-			jQuery(".salePaperFormContent").html(jQuery(formContent).html()).show(500);
-			jQuery(".salePaperForm").show(500);
+			if(jQuery(".salePaperFormContent").html().trim() == ""){
+				jQuery(".salePaperFormContent").html(jQuery(formContent).html()).show(500);
+				jQuery(".salePaperForm").show(500);
+			}
 		} else if(jQuery(this).attr("id") == "sale_roll"){
 			var formContent = jQuery(".saleRollFormStructure");
-			jQuery(".saleRollFormContent").html(jQuery(formContent).html()).show(500);
-			jQuery(".saleRollForm").show(500);
+			if(jQuery(".saleRollFormContent").html().trim() == ""){
+				jQuery(".saleRollFormContent").html(jQuery(formContent).html()).show(500);
+				jQuery(".saleRollForm").show(500);
+			}
 		} else {
 			var formContent = jQuery(".saleOtherFormStructure");
-			jQuery(".saleOtherFormContent").html(jQuery(formContent).html()).show(500);
-			jQuery(".saleOtherForm").show(500);
+			if(jQuery(".saleOtherFormContent").html().trim() == ""){
+				jQuery(".saleOtherFormContent").html(jQuery(formContent).html()).show(500);
+				jQuery(".saleOtherForm").show(500);
+			}
 		}
 	});
 
 	jQuery(".salePaperFormContent, .saleRollFormContent, .saleOtherFormContent").on("click", ".fa-minus-circle", function(){
 		var formName = jQuery(this).closest("form");
 		var contentName = jQuery(formName).parent();
-		jQuery(formName).hide(600).remove();
+		var pageTitle =  jQuery(formName).find(".salePageTitle").html();
+		jQuery(formName).remove();
 		if(jQuery(contentName).html().trim() == ""){
 			jQuery(contentName).hide(300)
+		} else {
+			if(jQuery(contentName).find("salePageTitle").length == 0){
+				jQuery(contentName).find("form:first").prepend("<p class='salePageTitle'>"+pageTitle+"</p>");
+			}
 		}
 
 	});
@@ -293,11 +302,11 @@ jQuery( document ).ready(function() {
 	jQuery(".salePaperFormContent, .saleRollFormContent, .saleOtherFormContent").on("click", ".fa-plus-circle", function(){
 		var currentForm = jQuery(this).closest("form");
 		if(jQuery(currentForm).attr("class") == "salePaperForm"){
-			var newformContent = jQuery(".salePaperFormStructure");
+			var newformContent = jQuery(".salePaperFormStructure").clone();
 		} else if(jQuery(currentForm).attr("class") == "saleRollForm"){
-			var newformContent = jQuery(".saleRollFormStructure");
+			var newformContent = jQuery(".saleRollFormStructure").clone();
 		} else {
-			var newformContent = jQuery(".saleOtherFormStructure");
+			var newformContent = jQuery(".saleOtherFormStructure").clone();
 		}
 		if(jQuery(currentForm).parent().find(".salePageTitle").length > 0){
 			jQuery(newformContent).find(".salePageTitle").remove();
@@ -379,7 +388,7 @@ function createTypeForm(button) {
 
 }
 
-function getMaterialOnePagePrice (data){
+function getMaterialOnePagePrice (data, formName){
 	data["action"] = "ajaxGetMaterialPrice";
 	jQuery.ajax({
 		url: "../../wp-admin/admin-ajax.php",
@@ -394,6 +403,7 @@ function getMaterialOnePagePrice (data){
 				} else {
 					jQuery('.orderRoll').find('.oneCountPrice').val(material.price).attr('percent', material.percent);
 				}
+				jQuery(formName).find(".page_count").trigger("blur");
 			}
 		})
 		.fail(function(xhr) {

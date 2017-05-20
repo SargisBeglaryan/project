@@ -190,11 +190,12 @@ webshims.polyfill('forms forms-ext');
 									<option value="Налич">Налич</option>
 									<option value="Фактура">Фактура</option>
 								</select>
-								<label>Общая цена</label>
-								<input type="text" class="orderPriceSum" name="orderPriceSum" style="width:30%;" placeholder="общая цена заказа">
+								<label>Себестоимость</label>
+								<input type="text" class="orderPriceSum" name="orderPriceSum" style="width: 25.5%;;" placeholder="общая цена заказа">
 							</p>
 							<p>
 								<input type="text" name="debt" style="width:46%;" placeholder="Задолженность">
+								<input type="text" name="selling_price" style="width:46%;" placeholder="Цена продажи">
 							</p>
 							
 							<input type="submit" name="submit_create" value="Оформить" style="margin-top:30px;">
@@ -226,7 +227,6 @@ webshims.polyfill('forms forms-ext');
 								"rubber" => $_POST["rubber_count"],
 								"lacquer" => $_POST["lacquer_count"],
 								"type"=>$_POST["order_type"],
-								"debt" => $_POST["debt"],
 								"selling_price" => $_POST["orderPriceSum"],
 								"type_of_order" => $_POST['type_of_order'],
 								"status" => "Оформлен"
@@ -237,6 +237,16 @@ webshims.polyfill('forms forms-ext');
 							} else {
 								$data["customer_id"] = $_POST["customer_id"];
 								$data["customer"] = null;
+							}
+							if($_POST["selling_price"] == ""){
+								$data["selling_price"] = $_POST["orderPriceSum"];
+							} else {
+								$data["selling_price"] = $_POST["selling_price"];
+							}
+							if($_POST["debt"] == ""){
+								$data["debt"] = $_POST["orderPriceSum"];
+							} else {
+								$data["debt"] = $_POST["debt"];
 							}
 							$data['form'] = ($_POST["form_count"])?$_POST["form_count"]:'0';
 							$data['foil'] = ($_POST["foil_count"])?$_POST["foil_count"]:'0';
@@ -396,12 +406,12 @@ webshims.polyfill('forms forms-ext');
 									<option value="Налич">Налич</option>
 									<option value="Фактура">Фактура</option>
 								</select>
-								<label>Общая цена</label>
-								<input type="text" class="orderPriceSum" name="orderPriceSum" style="width:30%;" placeholder="общая цена заказа" disabled>
+								<label>Себестоимость</label>
+								<input type="text" class="orderPriceSum" name="orderPriceSum" style="width: 25.5%;;" placeholder="общая цена заказа" disabled>
 							</p>
 							<p>
 								<input type="text" name="debt" style="width:46%;" placeholder="Задолженность">
-								<input type="text" name="debt" style="width:46%;" placeholder="Задолженность">
+								<input type="text" name="selling_price" style="width:46%;" placeholder="Цена продажи">
 							</p>
 							<input type="submit" name="submit_create" value="Оформить" style="margin-top:30px;">
 						
@@ -427,7 +437,6 @@ webshims.polyfill('forms forms-ext');
 								"count_per_page" => $_POST["count_per_page"],
 								"step_lenght" => $_POST["step_lenght"],
 								"label_count" => $_POST["label_count"],
-								"debt" => $_POST["debt"],
 								"selling_price" => $_POST["orderPriceSum"],
 								"material" => $material_id,
 								"type"=>$_POST["order_type"],
@@ -440,6 +449,16 @@ webshims.polyfill('forms forms-ext');
 							} else {
 								$data["customer_id"] = $_POST["customer_id"];
 								$data["customer"] = null;
+							}
+							if($_POST["selling_price"] == ""){
+								$data["selling_price"] = $_POST["orderPriceSum"];
+							} else {
+								$data["selling_price"] = $_POST["selling_price"];
+							}
+							if($_POST["debt"] == ""){
+								$data["debt"] = $_POST["orderPriceSum"];
+							} else {
+								$data["debt"] = $_POST["debt"];
 							}
 							$data['form'] = ($_POST["form_count"])?$_POST["form_count"]:'0';
 							$data['foil'] = ($_POST["foil_count"])?$_POST["foil_count"]:'0';
