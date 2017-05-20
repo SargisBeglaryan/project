@@ -791,6 +791,87 @@ function my_custom_redirect() {
 	add_action('wp_ajax_nopriv_ajaxGetMaterialPrice', 'getMaterialPrice');
 	add_action('wp_ajax_ajaxGetMaterialPrice', 'getMaterialPrice');
 
+	function filterOtherSelectOptions() {
+		global $wpdb;
+		if($_POST["colum"] == "type"){
+			$colum = "name";
+			$searchColum = "type";
+		} else {
+			$colum = "type";
+			$searchColum = "name";
+		}
+		$name = $_POST["name"];
+		$otherOptions = $wpdb->get_results ( "SELECT $colum as name FROM wp_product_other WHERE $searchColum = '$name'");
+		wp_send_json($otherOptions);
+		wp_die();
+	}
+	add_action('wp_ajax_nopriv_ajaxFilterOtherSelect', 'filterOtherSelectOptions');
+	add_action('wp_ajax_ajaxFilterOtherSelect', 'filterOtherSelectOptions');
+
+	function addedNewSaleProduct() {
+		global $wpdb;
+		$tableName = "wp_sale_".$_POST["orderType"]."_product";
+		if($_POST["orderType"] == "roll"){
+			$productRezervCount = $wpdb->get_row("SELECT area, id FROM wp_product_roll WHERE name ='".$_POST["material"]."' AND type ='".$_POST["type"]."'");
+			$productNewCount = array( "area"=>$productRezervCount->area - $_POST["sale_page_count"]);
+			$where = array('id'=>$productRezervCount->id);
+			if(intval($productNewCount["area"]) >= 0){
+				$wpdb->update("wp_product_roll", $productNewCount, $where);
+			} else {
+				return wp_send_json(false);
+			}
+			$data = array(
+				"name" => $_POST["material"],
+				"size_x" =>  $_POST["size_x"],
+				"size_y" => $_POST["size_y"],
+				"type" => $_POST["type"],
+				"count" =>  $_POST["sale_page_count"]
+			);
+		} else if($_POST["orderType"] == "paper") {
+			$productRezervCount = $wpdb->get_row("SELECT page_count, id FROM wp_product_paper WHERE name ='".$_POST["material"]."' AND density ='".$_POST["density"]."'
+				AND size_x ='".$_POST["size_x"]."' AND size_y ='".$_POST["size_y"]."'");
+			$productNewCount = array("page_count"=>$productRezervCount->page_count - $_POST["sale_page_count"]);
+			$where = array('id'=>$productRezervCount->id); 
+			if(intval($productNewCount["page_count"]) >= 0){
+				$wpdb->update("wp_product_paper", $productNewCount, $where);
+			} else {
+				return wp_send_json(false);
+			}
+			$data = array(
+				"name" => $_POST["material"],
+				"size_x" =>  $_POST["size_x"],
+				"size_y" => $_POST["size_y"],
+				"density" => $_POST["density"],
+				"count" =>  $_POST["sale_page_count"]
+			);
+		} else {
+			$productRezervCount = $wpdb->get_row("SELECT count, id FROM wp_product_other WHERE name ='".$_POST["otherName"]."' AND type ='".$_POST["otherType"]."'");
+			$productNewCount = array(
+				"count"=>$productRezervCount->count - $_POST["sale_page_count"]);
+			$where = array('id'=>$productRezervCount->id);
+			if(intval($productNewCount["count"]) >= 0){
+				$wpdb->update("wp_product_other", $productNewCount, $where);
+			} else {
+				return wp_send_json(false);
+			}
+			$data = array(
+				"name" => $_POST["otherName"],
+				"type" =>  $_POST["otherType"],
+				"count" =>  $_POST["sale_page_count"]
+			);
+		}
+		var_dump($data);
+		$insertResult = $wpdb->insert($tableName,$data);
+		if($insertResult){
+			wp_send_json(true);
+		} else {
+			wp_send_json(false);
+		}
+		wp_die();
+	}
+	add_action('wp_ajax_nopriv_ajaxAddedNewSaleProduct', 'addedNewSaleProduct');
+	add_action('wp_ajax_ajaxAddedNewSaleProduct', 'addedNewSaleProduct');
+
 	function changeOrderStatus() {
 		global $wpdb;
 		$productId = $_POST["id"];

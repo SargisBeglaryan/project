@@ -397,9 +397,10 @@ webshims.polyfill('forms forms-ext');
 									<option value="Фактура">Фактура</option>
 								</select>
 								<label>Общая цена</label>
-								<input type="text" class="orderPriceSum" name="orderPriceSum" style="width:30%;" placeholder="общая цена заказа">
+								<input type="text" class="orderPriceSum" name="orderPriceSum" style="width:30%;" placeholder="общая цена заказа" disabled>
 							</p>
 							<p>
+								<input type="text" name="debt" style="width:46%;" placeholder="Задолженность">
 								<input type="text" name="debt" style="width:46%;" placeholder="Задолженность">
 							</p>
 							<input type="submit" name="submit_create" value="Оформить" style="margin-top:30px;">

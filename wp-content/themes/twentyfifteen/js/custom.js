@@ -243,6 +243,19 @@ jQuery( document ).ready(function() {
 	jQuery(".salePaperFormContent, .saleRollFormContent, .saleOtherFormContent").on("change", "#sale_material_size,"+ 
 		"#sale_material, #sale_density, #sale_type, #otherType, #otherName", function(){
 		var formName = jQuery(this).closest("form");
+		if(jQuery(this).attr("id") == "otherType" || jQuery(this).attr("id") == "otherName") {
+			var otherData = {};
+			otherData["action"] = "ajaxFilterOtherSelect";
+			if(jQuery(this).attr("id") == "otherType"){
+				otherData["colum"] = "type";
+				otherData["option"] = "Имя";
+			} else {
+				otherData["colum"] = "name";
+				otherData["option"] = "Kатегория";
+			}
+			otherData["name"] = jQuery(this).val();
+			filterOtherSelectOptions(otherData);
+		}
 		saleProductValidation(formName);
 	});
 
@@ -295,26 +308,28 @@ jQuery( document ).ready(function() {
 
 	jQuery(".salePaperFormContent, .saleRollFormContent, .saleOtherFormContent").on("click", "#saleProductButton", function(){
 		var currentForm = jQuery(this).closest("form");
+		var contentName = jQuery(currentForm).parent();
 		var data = {};
 		if(jQuery(currentForm).attr("class") == "salePaperForm"){
 			data["orderType"] = "paper";
-			data["material"] = jQuery(formName).find("#material").val();
-			var xIndex = jQuery(formName).find("#material_size").val().indexOf('x');
-			data["size_y"] = jQuery(formName).find("#material_size").val().slice(xIndex+1);
-			data["size_x"] = jQuery(formName).find("#material_size").val().slice(0, xIndex);
-			data["density"] = jQuery(formName).find("#density").val();
+			data["material"] = jQuery(currentForm).find("#sale_material").val();
+			var xIndex = jQuery(currentForm).find("#sale_material_size").val().indexOf('x');
+			data["size_y"] = jQuery(currentForm).find("#sale_material_size").val().slice(xIndex+1);
+			data["size_x"] = jQuery(currentForm).find("#sale_material_size").val().slice(0, xIndex);
+			data["density"] = jQuery(currentForm).find("#sale_density").val();
 		} else if(jQuery(currentForm).attr("class") == "saleRollForm"){
-			data["orderType"] = "other";
-			data["material"] = jQuery(formName).find("#material").val();
-			var xIndex = jQuery(formName).find("#material_size").val().indexOf('x');
-			data["size_y"] = jQuery(formName).find("#material_size").val().slice(xIndex+1);
-			data["size_x"] = jQuery(formName).find("#material_size").val().slice(0, xIndex);
-			data["density"] = jQuery(formName).find("#type").val();
+			data["orderType"] = "roll";
+			data["material"] = jQuery(currentForm).find("#sale_material").val();
+			var xIndex = jQuery(currentForm).find("#sale_material_size").val().indexOf('x');
+			data["size_y"] = jQuery(currentForm).find("#sale_material_size").val().slice(xIndex+1);
+			data["size_x"] = jQuery(currentForm).find("#sale_material_size").val().slice(0, xIndex);
+			data["type"] = jQuery(currentForm).find("#sale_type").val();
 		} else {
-			data["otherName"] = jQuery(formName).find("#otherName").val();
-			data["otherType"] = jQuery(formName).find("#otherType").val();
+			data["orderType"] = "other";
+			data["otherName"] = jQuery(currentForm).find("#otherName").val();
+			data["otherType"] = jQuery(currentForm).find("#otherType").val();
 		}
-		data["sale_page_count"] = jQuery(formName).find(".sale_page_count");
+		data["sale_page_count"] = jQuery(currentForm).find(".sale_page_count").val();
 		data["action"] = "ajaxAddedNewSaleProduct";
 	jQuery.ajax({
 		url: "../../wp-admin/admin-ajax.php",
@@ -323,8 +338,18 @@ jQuery( document ).ready(function() {
 		data: data,
 		})
 		.done(function(material) {
-			jQuery(currentForm).prepand("<p class='infoMessage'>Продажа сохранена</p>");
-			jQuery(currentForm).find(".infoMessage").hide(1000);
+			if(material == true) {
+				jQuery(currentForm).parent().append("<p class='infoMessage'>Продажа сохранена</p>");
+				jQuery(currentForm).remove();
+			} else {
+				jQuery(currentForm).parent().append("<p class='infoMessage errorMessage'>Продажа не сохранена</p>");
+			}
+			jQuery(contentName).find(".infoMessage").fadeOut(4000, function() {
+				jQuery(this).remove();
+				if(jQuery(contentName).html().trim() == ""){
+					jQuery(contentName).hide(1000);
+				}
+			});
 		})
 		.fail(function(xhr) {
 			console.log(xhr.responseText);
@@ -368,6 +393,37 @@ function getMaterialOnePagePrice (data){
 					jQuery('.orderPaper').find('.oneCountPrice').val(material.price).attr('percent', material.percent);
 				} else {
 					jQuery('.orderRoll').find('.oneCountPrice').val(material.price).attr('percent', material.percent);
+				}
+			}
+		})
+		.fail(function(xhr) {
+			console.log(xhr.responseText);
+		});
+}
+
+function filterOtherSelectOptions(data){
+	jQuery.ajax({
+		url: "../../wp-admin/admin-ajax.php",
+		type: 'POST',
+		dataType: 'json',
+		data: data,
+		})
+		.done(function(otherOption) {
+			if(otherOption != null){
+				var allOptions = "<option value='' disabled selected>"+data["option"]+"</option>";
+				for(var i=0; i < otherOption.length; i++){
+					allOptions += "<option value='"+otherOption[i].name+"''>"+otherOption[i].name+"</option>";
+				}
+				if(data.colum == 'type'){
+					jQuery('#otherType').html("<option value='"+data["name"]+"' selected>"+data["name"]+"</option>");
+					if(jQuery('#otherName').val() == null){
+						jQuery('#otherName').html(allOptions);
+					}
+				} else {
+					jQuery('#otherName').html("<option value='"+data["name"]+"' selected>"+data["name"]+"</option>");
+					if(jQuery('#otherType').val() == null){
+						jQuery('#otherType').html(allOptions);
+					}
 				}
 			}
 		})
