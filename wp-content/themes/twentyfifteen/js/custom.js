@@ -1,5 +1,49 @@
 jQuery( document ).ready(function() {
 
+	jQuery(".showClientsModal").on("click", function (){
+		var getTableName = "."+jQuery(this).closest("table").attr("class");
+		var customersNames = [];
+		var allNamesList = "<ul class='list-group'>";
+		jQuery(getTableName+ " .allCustomersList").each(function() {
+			if(customersNames.indexOf(jQuery(this).text()) == -1){
+				customersNames.push(jQuery(this).text());
+				var checked = (jQuery(this).hasClass("checked")) ? "checked" : "";
+				allNamesList += "<li class='list-group-item'>"+jQuery(this).text()+
+								"<input type='checkbox' "+checked+"></li>";
+			}
+		});
+		allNamesList += "</ul>";
+		jQuery("#customerModal .modal-body").html(allNamesList);
+	});
+
+	jQuery(".showFiltredCustomers").on("click", function(){
+		debugger;
+		var tableClassName = "."+jQuery(this).closest(".modal").attr("tableName");
+		var selectedCustomersNames = [];
+		jQuery('#customerModal ul input:checked').each(function() {
+		    selectedCustomersNames.push(jQuery(this).closest("li").text());
+		});
+		var rows = jQuery(tableClassName +" tbody tr");
+		if(selectedCustomersNames.length == 0){
+			for(var j=0; j < rows.length; j++){
+				jQuery(rows[j]).show();
+				jQuery(rows[j]).find(".allCustomersList").removeClass("checked");
+			}
+			jQuery('#customerModal').modal('hide');
+			return true;
+		}
+		for(var i=0; i < rows.length; i++){
+			if(selectedCustomersNames.indexOf(jQuery(rows[i]).find(".allCustomersList").text()) == -1){
+				jQuery(rows[i]).hide();
+				jQuery(rows[i]).find(".allCustomersList").removeClass("checked");
+			} else {
+				jQuery(rows[i]).show();
+				jQuery(rows[i]).find(".allCustomersList").addClass("checked");
+			}
+		}
+		jQuery('#customerModal').modal('hide');
+		debugger
+	});
     jQuery("#roll_customer").on("change", function (){
     	changeCustomerId(this, 'roll');
     });
@@ -20,7 +64,7 @@ jQuery( document ).ready(function() {
 		var thisTable = '.'+ jQuery(this).closest('table').attr('class');
 		jQuery(thisTable).find('.activeSort').removeClass('activeSort');
 		jQuery(this).addClass('activeSort');
-		var rows = jQuery(thisTable +" tbody tr").detach().get();
+		var rows = jQuery(thisTable +" tbody tr");
 		if(numberColums.indexOf(sortingColum) > -1){
 			rows.sort(sortByNumber);
 		} else {
@@ -252,7 +296,7 @@ jQuery( document ).ready(function() {
 				otherData["option"] = "Kатегория";
 			}
 			otherData["name"] = jQuery(this).val();
-			filterOtherSelectOptions(otherData);
+			filterOtherSelectOptions(otherData, formName);
 		}
 		saleProductValidation(formName);
 	});
@@ -292,7 +336,10 @@ jQuery( document ).ready(function() {
 		if(jQuery(contentName).html().trim() == ""){
 			jQuery(contentName).hide(300)
 		} else {
-			if(jQuery(contentName).find("salePageTitle").length == 0){
+			if(jQuery(contentName).find("form").length == 1){
+				jQuery(contentName).find(".fa-plus-circle").show();
+			}
+			if(jQuery(contentName).find(".salePageTitle").length == 0){
 				jQuery(contentName).find("form:first").prepend("<p class='salePageTitle'>"+pageTitle+"</p>");
 			}
 		}
@@ -411,7 +458,7 @@ function getMaterialOnePagePrice (data, formName){
 		});
 }
 
-function filterOtherSelectOptions(data){
+function filterOtherSelectOptions(data, formName){
 	jQuery.ajax({
 		url: "../../wp-admin/admin-ajax.php",
 		type: 'POST',
@@ -425,14 +472,14 @@ function filterOtherSelectOptions(data){
 					allOptions += "<option value='"+otherOption[i].name+"''>"+otherOption[i].name+"</option>";
 				}
 				if(data.colum == 'type'){
-					jQuery('#otherType').html("<option value='"+data["name"]+"' selected>"+data["name"]+"</option>");
-					if(jQuery('#otherName').val() == null){
-						jQuery('#otherName').html(allOptions);
+					jQuery(formName).find('#otherType').html("<option value='"+data["name"]+"' selected>"+data["name"]+"</option>");
+					if(jQuery(formName).find('#otherName').val() == null){
+						jQuery(formName).find('#otherName').html(allOptions);
 					}
 				} else {
-					jQuery('#otherName').html("<option value='"+data["name"]+"' selected>"+data["name"]+"</option>");
-					if(jQuery('#otherType').val() == null){
-						jQuery('#otherType').html(allOptions);
+					jQuery(formName).find('#otherName').html("<option value='"+data["name"]+"' selected>"+data["name"]+"</option>");
+					if(jQuery(formName).find('#otherType').val() == null){
+						jQuery(formName).find('#otherType').html(allOptions);
 					}
 				}
 			}

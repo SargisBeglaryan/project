@@ -117,8 +117,11 @@ Use it to make something cool, have fun, and share what you've learned with othe
 	background-color: #31bc86;
 	color: #fff;
 }
-.fa-arrow-down, .fa-arrow-up {
+.fa-arrow-down, .fa-arrow-up, .fa-list-ol{
 	cursor: pointer;
+}
+#customerModal .list-group-item input[type="checkbox"]{
+	margin-left: 15px;
 }
 .activeSort {
 	color: #b3b3b3;

@@ -1,0 +1,75 @@
+********************************************************************************
+DUPLICATOR-LITE PACKAGE-LOG: 2017-05-23 19:41:44
+NOTICE: Do NOT post to public sites or forums 
+********************************************************************************
+VERSION:	1.2.8
+WORDPRESS:	4.7.4
+PHP INFO:	5.5.12 | SAPI: apache2handler
+SERVER:		Apache/2.4.9 (Win64) PHP/5.5.12 
+PHP TIME LIMIT: (0) no time limit imposed 
+PHP MAX MEMORY: 2048M (128M default) 
+MEMORY STACK: 39MB 
+
+********************************************************************************
+DATABASE:
+********************************************************************************
+BUILD MODE:   PHP(query limit - 100)
+MYSQLTIMEOUT: 5000
+MYSQLDUMP:    Not Supported 
+TABLES: total:27 | filtered:0 | create:27 
+FILTERED: [] 
+SQL CREATED: 20170523_ayasprint_ebbb55039f2d0ab47493170523194116_database.sql 
+SQL FILE SIZE: 285.36KB (292208) 
+SQL FILE TIME: 2017-05-23 19:41:45 
+SQL RUNTIME: 0.76 sec. 
+
+******************************************************************************** 
+ARCHIVE (ZIP): 
+******************************************************************************** 
+ARCHIVE DIR:  D:/wamp/www 
+ARCHIVE FILE: 20170523_ayasprint_ebbb55039f2d0ab47493170523194116_archive.zip 
+FILTERS: *OFF* 
+DIRS: not set 
+EXTS:  not set 
+---------------------------------------- 
+COMPRESSING 
+SIZE:	36.74MB 
+STATS:	Dirs 435 | Files 3,288 
+SQL ADDED: 20170523_ayasprint_ebbb55039f2d0ab47493170523194116_database.sql 
+ZipArchive Object
+(
+    [status] => 0
+    [statusSys] => 0
+    [numFiles] => 3723
+    [filename] => D:\wamp\www\wp-snapshots\tmp\20170523_ayasprint_ebbb55039f2d0ab47493170523194116_archive.zip
+    [comment] => 
+)
+ 
+COMPRESSION RESULT: '1' 
+COMPRESSED SIZE: 18.26MB 
+ARCHIVE RUNTIME: 22.10 sec. 
+MEMORY STACK: 40.25MB 
+
+******************************************************************************** 
+MAKE INSTALLER: 
+******************************************************************************** 
+Build Start 
+Build Finished 
+Preping for use 
+Template parsed with new data 
+Complete [D:/wamp/www/wp-snapshots/tmp/20170523_ayasprint_ebbb55039f2d0ab47493170523194116_installer.php] 
+Added to archive 
+
+******************************************************************************** 
+INTEGRITY CHECKS: 
+******************************************************************************** 
+SQL File: 285.36KB 
+Installer File: 428.38KB 
+Archive File: 18.26MB  
+
+********************************************************************************
+RECORD ID:[1]
+TOTAL PROCESS RUNTIME: 23.41 sec.
+PEAK PHP MEMORY USED: 42.75MB
+DONE PROCESSING => 20170523_ayasprint 2017-05-23 19:42:07
+ 
