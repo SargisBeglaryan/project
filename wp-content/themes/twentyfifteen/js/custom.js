@@ -282,8 +282,8 @@ jQuery( document ).ready(function() {
 	});
 
 	/*sale product functionality */
-	jQuery(".salePaperFormContent, .saleRollFormContent, .saleOtherFormContent").on("change", "#sale_material_size,"+ 
-		"#sale_material, #sale_density, #sale_type, #otherType, #otherName", function(){
+	jQuery(".salePaperFormContent, .saleRollFormContent, .saleOtherFormContent").on("change", ".sale_material_size,"+ 
+		".sale_material, .sale_density, .sale_type, #otherType, #otherName", function(){
 		var formName = jQuery(this).closest("form");
 		if(jQuery(this).attr("id") == "otherType" || jQuery(this).attr("id") == "otherName") {
 			var otherData = {};

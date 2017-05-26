@@ -178,21 +178,23 @@
 	} );
 
 } )( jQuery );
-jQuery('select[name="material"],select[name="material_size"],select[name="density"],select[name="type"]').on('change', function (e) {
+jQuery('.order_paper, .order_roll, .salePaperFormContent, .saleRollFormContent, .saleOtherFormContent').on('change', 'select[name="material"],select[name="material_size"],select[name="density"],select[name="type"]', function (e) {
+	var formName = jQuery(this).closest('form');
 	var elementName = jQuery(this).attr('name');
 	var valueSelected = (elementName == 'material')?jQuery(this).find('option:selected').text():this.value;
 	var material = size = density = '';
 	var selectField = "name";
 	var switchDensity = false;
 	var selector = '';
-	if(jQuery("select[name='type']").length > 0){
+	if(jQuery(formName).find("select[name='type']").length > 0){
 		switchDensity = true;
 		selector = 'select[name="material"],select[name="material_size"],select[name="type"]';
 	}else {
 		selector = 'select[name="material"],select[name="material_size"],select[name="density"]';
 	}
 	var materialArray = {};
-	jQuery(selector).not(this).each(function(index, el) {
+	jQuery(formName).find(selector).not(this).each(function(index, el) {
+
 		if(el.value != ''){
 			if(jQuery(el).attr('name') == 'material'){
 				materialArray['name'] = jQuery(this).find('option:selected').text();
@@ -249,12 +251,12 @@ jQuery('select[name="material"],select[name="material_size"],select[name="densit
 		})
 		.done(function(data) {
 			jQuery.each( data, function( key, value ) {
-				var defaultOption = "<option disabled selected value='' >"+jQuery('select[name="'+key+'"] option:selected').text()+"</option>"
-				if(jQuery('select[name="'+key+'"] option:selected').val() == ''){
-					jQuery("#"+key).html(defaultOption+value);
+				var defaultOption = "<option disabled selected value='' >"+jQuery(formName).find('select[name="'+key+'"] option:selected').text()+"</option>"
+				if(jQuery(formName).find('select[name="'+key+'"] option:selected').val() == ''){
+					jQuery(formName).find("#"+key).html(defaultOption+value);
 				}else if (value == null) {
-					defaultOption = "<option value=''>"+jQuery('select[name="'+key+'"] option:disabled').text()+"</option>"
-					jQuery("#"+key).html(defaultOption);
+					defaultOption = "<option value=''>"+jQuery(formName).find('select[name="'+key+'"] option:disabled').text()+"</option>"
+					jQuery(formName).find("#"+key).html(defaultOption);
 				}
 			});
 		})

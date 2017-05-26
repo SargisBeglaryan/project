@@ -31,7 +31,7 @@ Template Name: Sale Product
 		<form method="POST" action="" id="1" autocomplete="off" class="salePaperForm">
 		<p class="salePageTitle">Продажа бумаги</p>
 			<p>
-				<select id="sale_material" name="material"  required>
+				<select id="material"  class="sale_material"name="material"  required>
 					<option value="" disabled selected>Материал</option>
 					<?php
 						foreach ( $paperMaterial as $item ) {
@@ -39,7 +39,7 @@ Template Name: Sale Product
 						<option value="<?php echo $item->name;?>"><?php echo $item->name;?></option>
 					<?php } ?>
 				</select>
-				<select id="sale_material_size"  name="material_size"  required>
+				<select id="material_size" class="sale_material_size" name="material_size"  required>
 					<option value="" disabled selected>Формат</option>
 					<?php
 						foreach ( $allPapers as $item ) {
@@ -47,7 +47,7 @@ Template Name: Sale Product
 					<option value="<?php echo $item->size_x;?>x<?php echo $item->size_y;?>"><?php echo $item->size_x;?>x<?php echo $item->size_y;?></option>
 					<?php } ?>
 				</select>
-				<select id="sale_density" name="density"  required>
+				<select id="density" class="sale_density" name="density"  required>
 					<option value="" disabled selected>Плотность</option>
 					<?php
 						foreach ( $paperDensity as $item ) {
@@ -71,7 +71,7 @@ Template Name: Sale Product
 		<form method="POST" action="" class="saleRollForm">
 		<p class="salePageTitle">Продажа рулона</p>
 			<p>
-				<select id="sale_material" name="material"  required>
+				<select id="material" class="sale_material" name="material"  required>
 					<option value="" disabled selected>Материал</option>
 					<?php
 						foreach ( $material as $item ) {
@@ -79,7 +79,7 @@ Template Name: Sale Product
 						<option value="<?php echo $item->name;?>"><?php echo $item->name;?></option>
 					<?php } ?>
 				</select>
-				<select id="sale_material_size"  name="material_size"  required>
+				<select id="material_size" class="sale_material_size" name="material_size"  required>
 					<option value="" disabled selected>Формат</option>
 					<?php
 						foreach ( $allRoll as $item ) {
@@ -87,7 +87,7 @@ Template Name: Sale Product
 					<option value="<?php echo $item->size_x;?>x<?php echo $item->size_y;?>"><?php echo $item->size_x;?>x<?php echo $item->size_y;?></option>
 					<?php } ?>
 				</select>
-				<select id="sale_type" name="type"  required>
+				<select id="type"  class="sale_type" name="type"  required>
 					<option value="" disabled selected>Тип</option>
 					<?php
 						foreach ( $type as $item ) {
