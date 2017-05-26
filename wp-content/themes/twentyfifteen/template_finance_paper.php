@@ -18,6 +18,7 @@ Template Name: Finance paper all
 						<th colum="1" class="tableCustomer">Клиент<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showClientsModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true"></i>
 						</th>
 						<th colum="2" class="tableCostPrice">Себестоимость<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
@@ -48,7 +49,7 @@ Template Name: Finance paper all
 					?>
 					<tr>
 						<td><?php echo $print['id'];?></td>
-						<td onclick="window.document.location='customer-orders/?type=paper&customer=<?php echo $print['customer'];?>';"  class="customerName"><?php echo $print['customer'];?></td>
+						<td onclick="window.document.location='customer-orders/?type=paper&customer=<?php echo $print['customer'];?>';"  class="allCustomersList customerName"><?php echo $print['customer'];?></td>
 						<td><?php echo $print['cost_price'];?></td>
 						<td contenteditable='true' id="selling_price"><?php echo $print['selling_price'];?></td>
 						<td><?php echo $print['earnings'];?></td>
@@ -68,5 +69,21 @@ Template Name: Finance paper all
 			</table>
 		</main>
 	</div>
+	<div class="modal fade" tableName="financePaper" id="customerModal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+		<div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+		    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		    <h4 class="modal-title" id="gridSystemModalLabel">Имя клиентов</h4>
+		  </div>
+		  <div class="modal-body">
+		  </div>
+		  <div class="modal-footer">
+		    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+		    <button type="button" class="btn showFiltredCustomers">Показать</button>
+		  </div>
+		</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 	
 <?php get_footer(); ?>
