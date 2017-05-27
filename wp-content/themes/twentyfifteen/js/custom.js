@@ -368,18 +368,18 @@ jQuery( document ).ready(function() {
 		var data = {};
 		if(jQuery(currentForm).attr("class") == "salePaperForm"){
 			data["orderType"] = "paper";
-			data["material"] = jQuery(currentForm).find("#sale_material").val();
-			var xIndex = jQuery(currentForm).find("#sale_material_size").val().indexOf('x');
-			data["size_y"] = jQuery(currentForm).find("#sale_material_size").val().slice(xIndex+1);
-			data["size_x"] = jQuery(currentForm).find("#sale_material_size").val().slice(0, xIndex);
-			data["density"] = jQuery(currentForm).find("#sale_density").val();
+			data["material"] = jQuery(currentForm).find(".sale_material").val();
+			var xIndex = jQuery(currentForm).find(".sale_material_size").val().indexOf('x');
+			data["size_y"] = jQuery(currentForm).find(".sale_material_size").val().slice(xIndex+1);
+			data["size_x"] = jQuery(currentForm).find(".sale_material_size").val().slice(0, xIndex);
+			data["density"] = jQuery(currentForm).find(".sale_density").val();
 		} else if(jQuery(currentForm).attr("class") == "saleRollForm"){
 			data["orderType"] = "roll";
-			data["material"] = jQuery(currentForm).find("#sale_material").val();
-			var xIndex = jQuery(currentForm).find("#sale_material_size").val().indexOf('x');
-			data["size_y"] = jQuery(currentForm).find("#sale_material_size").val().slice(xIndex+1);
-			data["size_x"] = jQuery(currentForm).find("#sale_material_size").val().slice(0, xIndex);
-			data["type"] = jQuery(currentForm).find("#sale_type").val();
+			data["material"] = jQuery(currentForm).find(".sale_material").val();
+			var xIndex = jQuery(currentForm).find(".sale_material_size").val().indexOf('x');
+			data["size_y"] = jQuery(currentForm).find(".sale_material_size").val().slice(xIndex+1);
+			data["size_x"] = jQuery(currentForm).find(".sale_material_size").val().slice(0, xIndex);
+			data["type"] = jQuery(currentForm).find(".sale_type").val();
 		} else {
 			data["orderType"] = "other";
 			data["otherName"] = jQuery(currentForm).find("#otherName").val();
@@ -491,8 +491,8 @@ function filterOtherSelectOptions(data, formName){
 
 function saleProductValidation(formName) {
 	if(jQuery(formName).attr("class") == "salePaperForm") {
-		if(jQuery(formName).find("#sale_material_size").val() != null && jQuery(formName).find("#sale_material").val() != null
-			&& jQuery(formName).find("#sale_density").val() != null && jQuery(formName).find(".sale_page_count").val() != ""){
+		if(jQuery(formName).find(".sale_material_size").val() != null && jQuery(formName).find(".sale_material").val() != null
+			&& jQuery(formName).find(".sale_density").val() != null && jQuery(formName).find(".sale_page_count").val() != ""){
 			jQuery(formName).find("#saleProductButton").fadeIn(300);
 			jQuery(formName).find(".fa-plus-circle").fadeIn(300);
 		} else {
@@ -500,8 +500,8 @@ function saleProductValidation(formName) {
 			jQuery(formName).find(".fa-plus-circle").fadeOut(300);
 		}
 	} else if (jQuery(formName).attr("class") == "saleRollForm"){
-		if(jQuery(formName).find("#sale_material_size").val() != null && jQuery(formName).find("#sale_material").val() != null
-			&& jQuery(formName).find("#sale_type").val() != null && jQuery(formName).find(".sale_page_count").val() != ""){
+		if(jQuery(formName).find(".sale_material_size").val() != null && jQuery(formName).find(".sale_material").val() != null
+			&& jQuery(formName).find(".sale_type").val() != null && jQuery(formName).find(".sale_page_count").val() != ""){
 			jQuery(formName).find("#saleProductButton").fadeIn(300);
 			jQuery(formName).find(".fa-plus-circle").fadeIn(300);
 		} else {

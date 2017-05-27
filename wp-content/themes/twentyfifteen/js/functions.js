@@ -278,29 +278,30 @@ jQuery('select#form,select#foil,select#rubber,select#lacquer').on('change', func
 		jQuery('input[name="'+countElement+'"]').removeAttr('disabled');
 	}
 })
-var content_selling = jQuery('#selling_price').html();
-var content_debt = jQuery('#debt').html();
+var content_selling = jQuery('#selling_price').html().trim();
+var content_debt = jQuery('#debt').html().trim();
 jQuery('#selling_price, #debt').blur(function() {
-	if (content_selling!=jQuery(this).html() || content_debt!=jQuery(this).html()){
-		var tableName = jQuery('#table_name').val();
+	debugger;
+	if (content_selling!=jQuery(this).html().trim() || content_debt!=jQuery(this).html().trim()){
+		var tableName = jQuery('#table_name').val().trim();
 		tableName = "'"+tableName+"'";
-		var totalCost = jQuery(this).parent('tr').find('td:nth-child(3)').html();
-		var orderId = jQuery(this).parent('tr').find('td:nth-child(1)').html();
-		var order_type = jQuery(this).parent('tr').find(".order_type").val();
+		var totalCost = jQuery(this).parent('tr').find('td:nth-child(3)').html().trim();
+		var orderId = jQuery(this).parent('tr').find('td:nth-child(1)').html().trim();
+		var order_type = jQuery(this).parent('tr').find(".order_type").val().trim();
 		var customerName;
 		order_type = "'"+order_type+"'";
 		switch (jQuery(this).attr('id')) {
 			case "selling_price":
-				content_selling = jQuery(this).html();
-				content_debt = jQuery(this).parent('tr').find('#debt').html();
+				content_selling = jQuery(this).html().trim();
+				content_debt = jQuery(this).parent('tr').find('#debt').html().trim();
 				jQuery(this).next('td').html(content_selling-totalCost);
 				customerName = null;
 				// jQuery(this).parent('tr').find('td:nth-child(6)').html(content_selling);
 				break;
 			case "debt":
-				content_selling = jQuery(this).parent('tr').find('#selling_price').html();
-				content_debt = jQuery(this).html();
-				customerName = "'"+jQuery(this).parent('tr').find('.customerName').text()+"'";
+				content_selling = jQuery(this).parent('tr').find('#selling_price').html().trim();
+				content_debt = jQuery(this).html().trim();
+				customerName = "'"+jQuery(this).parent('tr').find('.customerName').text().trim()+"'";
 				break;
 		}
 		if(jQuery(this).parent('tr').find(".order-action").length == 0 ){
