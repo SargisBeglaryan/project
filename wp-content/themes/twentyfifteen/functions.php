@@ -502,7 +502,15 @@ function my_custom_redirect() {
 	if (isset($_POST['submit_remove'])) {
 		global $wpdb;
 		$deleteProductDetails = $wpdb->get_row("SELECT * From $var_table WHERE id = '$var_id'");
-		var_dump($deleteProductDetails); exit;
+		$materialCountArray = array();
+		$form = ($deleteProductDetails->form_id)? [$deleteProductDetails->form_id => $deleteProductDetails->form]:'';
+		$foil = ($deleteProductDetails->foil_id)? [$deleteProductDetails->foil_id => $deleteProductDetails->foil]:'';
+		$rubber = ($deleteProductDetails->rubber_id)? [$deleteProductDetails->rubber_id => $deleteProductDetails->rubber]:'';
+		$lacquer = ($deleteProductDetails->lacquer_id)? [$deleteProductDetails->lacquer_id => $deleteProductDetails->lacquer]:'';
+		array_push($materialCountArray,$form,$foil,$rubber,$lacquer);
+		if($deleteProductDetails->status == 'Склад'){
+			materialTransaction($form,$foil,$rubber,$lacquer,$wpdb, "plus");
+		}
 		$wpdb->delete( $var_table, array( 'id' => $var_id ) );
 		if($deleteProductDetails->status == 'Склад'){
 			if($var_table == 'wp_order_paper'){
@@ -860,7 +868,6 @@ function my_custom_redirect() {
 				"count" =>  $_POST["sale_page_count"]
 			);
 		}
-		var_dump($data);
 		$insertResult = $wpdb->insert($tableName,$data);
 		if($insertResult){
 			wp_send_json(true);
@@ -896,7 +903,7 @@ function my_custom_redirect() {
 
 				$countStatus = checkProductCount($materialCountArray);
 				if($_POST["status"] == 'Склад' && $countStatus){
-					materialTransaction($form,$foil,$rubber,$lacquer,$wpdb);
+					materialTransaction($form,$foil,$rubber,$lacquer,$wpdb, "minus");
 					$wpdb->update("wp_order_paper", $data, $where);
 				}else {
 					$wpdb->update("wp_order_paper", $data, $where);
@@ -922,7 +929,7 @@ function my_custom_redirect() {
 
 				$countStatus = checkProductCount($materialCountArray);
 				if($_POST["status"] == 'Склад' && $countStatus){
-					materialTransaction($form,$foil,$rubber,$lacquer,$wpdb);
+					materialTransaction($form,$foil,$rubber,$lacquer,$wpdb, "minus");
 					$wpdb->update("wp_order_roll", $data, $where);
 				}else {
 					$wpdb->update("wp_order_roll", $data, $where);
@@ -952,7 +959,7 @@ function my_custom_redirect() {
 	add_action('wp_ajax_nopriv_ajaxGetOtherProductPrice', 'getOtherProductPrice');
 	add_action('wp_ajax_ajaxGetOtherProductPrice', 'getOtherProductPrice');
 
-	function materialTransaction($form,$foil,$rubber,$lacquer,$db) {
+	function materialTransaction($form,$foil,$rubber,$lacquer,$db, $plusOrMinus) {
 		try {
 			// First of all, let's begin a transaction
 			$db->query('START TRANSACTION');
@@ -960,19 +967,19 @@ function my_custom_redirect() {
     		// A set of queries; if one fails, an exception should be thrown
 			if($form) {
 				$formFiled = key($form);
-				updateProtuctCount($formFiled,$form[$formFiled],'Форма');
+				updateProtuctCount($formFiled,$form[$formFiled],'Форма', $plusOrMinus);
 			}
 			if($foil) {
 				$foilFiled = key($foil);
-				updateProtuctCount($foilFiled,$foil[$foilFiled],'Фольга');
+				updateProtuctCount($foilFiled,$foil[$foilFiled],'Фольга', $plusOrMinus);
 			}
 			if($rubber){
 				$rubberFiled = key($rubber);
-				updateProtuctCount($rubberFiled,$rubber[$rubberFiled],'Резина');	
+				updateProtuctCount($rubberFiled,$rubber[$rubberFiled],'Резина', $plusOrMinus);	
 			}
 			if($lacquer){
 				$lacquerFiled = key($lacquer);
-				updateProtuctCount($lacquerFiled,$lacquer[$lacquerFiled],'Лак');	
+				updateProtuctCount($lacquerFiled,$lacquer[$lacquerFiled],'Лак', $plusOrMinus);	
 			}
 
     		// If we arrive here, it means that no exception was thrown
@@ -997,10 +1004,15 @@ function my_custom_redirect() {
 		}
 		return true;
 	}
-	function updateProtuctCount($field,$value,$type){
+	function updateProtuctCount($field,$value,$type, $plusOrMinus){
 		global $wpdb;
 		$balance = $wpdb->get_var("SELECT count FROM wp_product_other WHERE type = '".$type."' AND id = '".$field."'");
-		$newCount = intval($balance)-intval($value);
+		if($plusOrMinus == "minus"){
+			$newCount = intval($balance)-intval($value);
+			
+		} else {
+			$newCount = intval($balance)+intval($value);
+		}
 		$wpdb->update("wp_product_other",array('count'=>$newCount),array('id'=>$field,'type'=>$type));
 	}
 	/*Calculate each order cost price*/

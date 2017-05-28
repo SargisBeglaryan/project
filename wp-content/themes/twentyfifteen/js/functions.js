@@ -281,7 +281,6 @@ jQuery('select#form,select#foil,select#rubber,select#lacquer').on('change', func
 var content_selling = jQuery('#selling_price').html().trim();
 var content_debt = jQuery('#debt').html().trim();
 jQuery('#selling_price, #debt').blur(function() {
-	debugger;
 	if (content_selling!=jQuery(this).html().trim() || content_debt!=jQuery(this).html().trim()){
 		var tableName = jQuery('#table_name').val().trim();
 		tableName = "'"+tableName+"'";

@@ -152,7 +152,7 @@ if(isset($_POST["submit_status"])){ ?>
 
 					$countStatus = checkProductCount($materialCountArray);
 					if($_POST["status"] == 'Склад' && $countStatus){
-						materialTransaction($form,$foil,$rubber,$lacquer,$wpdb);
+						materialTransaction($form,$foil,$rubber,$lacquer,$wpdb, "minus");
 						$wpdb->update("wp_order_paper", $data, $where);
 					}else {
 						$wpdb->update("wp_order_paper", $data, $where);	
@@ -293,7 +293,7 @@ if(isset($_POST["submit_status"])){ ?>
 
 					$countStatus = checkProductCount($materialCountArray);
 					if($_POST["status"] == 'Склад' && $countStatus){
-						materialTransaction($form,$foil,$rubber,$lacquer,$wpdb);
+						materialTransaction($form,$foil,$rubber,$lacquer,$wpdb, "minus");
 						$wpdb->update("wp_order_roll", $data, $where);
 					}else {
 						$wpdb->update("wp_order_roll", $data, $where);	

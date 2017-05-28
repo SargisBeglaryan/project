@@ -8,7 +8,8 @@ jQuery( document ).ready(function() {
 			if(customersNames.indexOf(jQuery(this).text()) == -1){
 				customersNames.push(jQuery(this).text());
 				var checked = (jQuery(this).hasClass("checked")) ? "checked" : "";
-				allNamesList += "<li class='list-group-item'>"+jQuery(this).text()+
+				var listActiveColor = (jQuery(this).hasClass("checked")) ? "clickedClient" : "";
+				allNamesList += "<li class='list-group-item "+listActiveColor+"'>"+jQuery(this).text()+
 								"<input type='checkbox' "+checked+"></li>";
 			}
 		});
@@ -17,7 +18,6 @@ jQuery( document ).ready(function() {
 	});
 
 	jQuery(".showFiltredCustomers").on("click", function(){
-		debugger;
 		var tableClassName = "."+jQuery(this).closest(".modal").attr("tableName");
 		var selectedCustomersNames = [];
 		jQuery('#customerModal ul input:checked').each(function() {
@@ -42,7 +42,6 @@ jQuery( document ).ready(function() {
 			}
 		}
 		jQuery('#customerModal').modal('hide');
-		debugger
 	});
     jQuery("#roll_customer").on("change", function (){
     	changeCustomerId(this, 'roll');
