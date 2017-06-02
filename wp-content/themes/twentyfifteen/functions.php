@@ -508,11 +508,12 @@ function my_custom_redirect() {
 		$rubber = ($deleteProductDetails->rubber_id)? [$deleteProductDetails->rubber_id => $deleteProductDetails->rubber]:'';
 		$lacquer = ($deleteProductDetails->lacquer_id)? [$deleteProductDetails->lacquer_id => $deleteProductDetails->lacquer]:'';
 		array_push($materialCountArray,$form,$foil,$rubber,$lacquer);
-		if($deleteProductDetails->status == 'Склад'){
+		$allStasuses = ["Склад", "Резка", "Печать", "Готово"];
+		if(in_array($deleteProductDetails->status, $allStasuses)){
 			materialTransaction($form,$foil,$rubber,$lacquer,$wpdb, "plus");
 		}
 		$wpdb->delete( $var_table, array( 'id' => $var_id ) );
-		if($deleteProductDetails->status == 'Склад'){
+		if(in_array($deleteProductDetails->status, $allStasuses)){
 			if($var_table == 'wp_order_paper'){
 				return_stock_values('wp_product_paper', $deleteProductDetails->material, $deleteProductDetails->page_count, $deleteProductDetails);
 			} else {
@@ -641,7 +642,6 @@ function my_custom_redirect() {
 	
 	function my_wp_nav_menu_args( $args = '' ) {
 		$current_user_role = get_current_user_role(); 
-		//echo $current_user_role;
 		
 		
 		if ($current_user_role == 'administrator') 
@@ -799,6 +799,32 @@ function my_custom_redirect() {
 	add_action('wp_ajax_nopriv_ajaxGetMaterialPrice', 'getMaterialPrice');
 	add_action('wp_ajax_ajaxGetMaterialPrice', 'getMaterialPrice');
 
+	function getSaleProductMaterilPrise() {
+		global $wpdb;
+		if($_POST['saleType'] == 'paper') {
+			$size_x = $_POST["size_x"];
+			$size_y = $_POST["size_y"];
+			$materialName = $_POST["name"];
+			$density = $_POST["density"];
+			$material_price = $wpdb->get_row( "SELECT price, percent FROM wp_product_paper WHERE name = '$materialName' and size_x = '$size_x' and size_y = '$size_y' and density = '$density'");
+		} elseif($_POST['saleType'] == 'roll') {
+			$size_x = $_POST["size_x"];
+			$size_y = $_POST["size_y"];
+			$materialName = $_POST["name"];
+			$type = $_POST["type"];
+			$material_price = $wpdb->get_row( "SELECT price, percent FROM wp_product_roll WHERE name = '$materialName' and size_x = '$size_x' and size_y like '{$size_y}%' and type = '$type'");
+		} else {
+			$name = $_POST["otherName"];
+			$type = $_POST["otherType"];
+			$material_price = $wpdb->get_row( "SELECT price, percent FROM wp_product_other WHERE name = '$name' and type = '$type'");
+		}
+		wp_send_json($material_price);
+		wp_die();
+	}
+	add_action('wp_ajax_nopriv_ajaxGetSaleProductMaterilPrise', 'getSaleProductMaterilPrise');
+	add_action('wp_ajax_ajaxGetSaleProductMaterilPrise', 'getSaleProductMaterilPrise');
+
+
 	function filterOtherSelectOptions() {
 		global $wpdb;
 		if($_POST["colum"] == "type"){
@@ -868,6 +894,13 @@ function my_custom_redirect() {
 				"count" =>  $_POST["sale_page_count"]
 			);
 		}
+		$data["customer"] = ($_POST["customer"] != "")? $_POST["customer"] : null;
+		$data["customer_id"] = ($_POST["customer_id"] != "")? $_POST["customer_id"] : null;
+		$data["date"] = $_POST["date"];
+		$data["selling_price"] = $_POST["selling_price"];
+		$data["cost_price"] = $_POST["cost_price"];
+		$data["debt"] = $_POST["debt"];
+		$data["telephone"] = ($_POST["telephone"] != "")? $_POST["telephone"] : null;
 		$insertResult = $wpdb->insert($tableName,$data);
 		if($insertResult){
 			wp_send_json(true);
@@ -1068,6 +1101,27 @@ function my_custom_redirect() {
 		return $returnResult;
 	}
 
+	function costProductPrice($tableName){
+		global $wpdb;
+		$productTableName = "wp_sale_".$tableName."_product";
+		
+		$returnResult = [];
+		$orders = $wpdb->get_results("SELECT * FROM {$productTableName}",ARRAY_A);
+		foreach ($orders as $key=>$value) {
+			$returnResult[$key]['id'] = $value['id'];
+			$returnResult[$key]['customer'] = $value['customer'];
+			if($value['customer'] == null){
+				$customerWithTable = $wpdb->get_row( "SELECT name FROM wp_customers WHERE id ={$value['customer_id']}" );
+				$returnResult[$key]['customer'] = $customerWithTable->name;
+			}
+			$returnResult[$key]['selling_price'] = $value['selling_price'];
+			$returnResult[$key]['cost_price'] = $value['cost_price'];
+			$returnResult[$key]['debt'] = $value['debt'];
+			$returnResult[$key]['earnings'] = $value['selling_price']-$returnResult[$key]['cost_price'];
+		}
+		return $returnResult;
+	}
+
 	/*Calculate each order cost price*/
 	function costumerOrderPrice($tableName, $costumerName){
 		global $wpdb;
@@ -1150,6 +1204,35 @@ function my_custom_redirect() {
 		}
 		return $otherPriceInfo;
 	}
+
+	function saveSaleProductData(){
+		global $wpdb;
+		$table = "wp_sale_".$_POST['tableName']."_product";
+		$selling_data = intval($_POST['content_selling']);
+		$debt_data = intval($_POST['debt']);
+		$orderId= intval($_POST['orderId']);
+		$orderData = $wpdb->get_row("SELECT debt FROM {$table} WHERE id = {$orderId}");
+		if(isset($_POST['customer_name']) && $_POST['customer_name'] != null){
+			$deptTable = 'wp_debt_product_statistic';
+			$deptData = array();
+			$deptData['payed_number'] = intval($orderData->debt) - $debt_data;
+			$deptData['product_id'] = $orderId;
+			$deptData['date'] = date("Y-m-d");
+			$deptData['sale_roll'] = $_POST['tableName'];
+			$deptData['customer'] = $_POST['customer_name'];
+			$wpdb->insert($deptTable,$deptData);
+		}
+		$data = array(
+			'selling_price'=>$selling_data,
+		);
+		$data['debt'] = $debt_data;
+		$wpdb->update($table,$data,array('id'=>$orderId));
+		wp_send_json("The data was updated");
+		wp_die();
+	}
+	add_action('wp_ajax_nopriv_ajaxCostProductUpdate', 'saveSaleProductData');
+	add_action('wp_ajax_ajaxCostProductUpdate', 'saveSaleProductData');
+
 	function updateCostData(){
 		global $wpdb;
 		$table = "wp_order_".$_POST['tableName'];

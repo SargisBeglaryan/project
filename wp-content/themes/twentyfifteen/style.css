@@ -84,10 +84,11 @@ Use it to make something cool, have fun, and share what you've learned with othe
 	margin-top: 5px;
 	text-align: center;
  }
- .salePaperFormContent select, .saleRollFormContent select,
- .saleOtherFormContent select{
-	width: 15%;
-	height: 40px;
+ .salePaperFormContent select, .saleRollFormContent select, .saleOtherFormContent select,
+ .salePaperFormContent input, .saleRollFormContent input, .saleOtherFormContent input{
+	width: 20% !important;
+    height: 40px;
+    font-size: 16px;
  }
  .submitStatus {
 	display: none;

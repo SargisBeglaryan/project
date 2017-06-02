@@ -3,7 +3,9 @@
 Template Name: Sale Product
 */
 ?>
-<?php get_header(); ?>
+<?php get_header(); 
+$clients = $wpdb->get_results ( "SELECT * FROM  wp_customers");
+?>
 	<div id="primary" class="content-area">	
 		<main id="main" class="site-main" role="main">
 			<section class="bla">	
@@ -31,6 +33,20 @@ Template Name: Sale Product
 		<form method="POST" action="" id="1" autocomplete="off" class="salePaperForm">
 		<p class="salePageTitle">Продажа бумаги</p>
 			<p>
+				<input type="date" name="date" data-date='{"startView": 2, "openOnMouseFocus": true}' placeholder="mm/dd/yyyy" required class="saleDate">
+				<input type="text" name="customer_name" placeholder="ФИО"  class="ProductCustomerInput" required>
+				<input type="hidden" name="customer_id" class="paperCustomerId">
+				<select id="product_customer" name="customer"  required>
+					<option selected disabled>Список клиентов</option>
+					<?php
+						foreach ( $clients as $client ) {
+					?>
+						<option id="<?php echo $client->id;?>" value="<?php echo $client->name;?>"><?php echo $client->name;?></option>
+					<?php } ?>
+				</select>
+				<input type="text" name="phone_number" class="phoneNumber" placeholder="Номер телефона">
+			</p>
+			<p>
 				<select id="material"  class="sale_material"name="material"  required>
 					<option value="" disabled selected>Материал</option>
 					<?php
@@ -56,6 +72,11 @@ Template Name: Sale Product
 					<?php } ?>
 				</select>
 				<input type="number" class="sale_page_count" name="page_count" placeholder="Количество бумаги" style="width:20%;height: 40px;font-size: 17px;" required>
+			</p>
+			<p>
+				<input type="text" name="debt" class="sale_debt" style="width:46%;" placeholder="Задолженность">
+				<input type="hidden" name="debt" class="cost_price">
+				<input type="text" class="sale_selling_price" name="selling_price" style="width:46%;" placeholder="Цена продажи">
 				<i class="fa fa-minus-circle" aria-hidden="true"></i>
 				<i class="fa fa-plus-circle" aria-hidden="true"></i>
 				<button type="button" id="saleProductButton" name="submit_create" style="width: 20%;height: 43px; padding: 12px 10px;">Сохранить</button>
@@ -70,6 +91,20 @@ Template Name: Sale Product
 	?>
 		<form method="POST" action="" class="saleRollForm">
 		<p class="salePageTitle">Продажа рулона</p>
+			<p>
+				<input type="date" name="date" class="saleDate" data-date='{"startView": 2, "openOnMouseFocus": true}' placeholder="mm/dd/yyyy" required>
+				<input type="text" name="customer_name" placeholder="ФИО"  class="ProductCustomerInput" required>
+				<input type="hidden" name="customer_id" class="paperCustomerId">
+				<select id="product_customer" name="customer"  required>
+					<option selected disabled>Список клиентов</option>
+					<?php
+						foreach ( $clients as $client ) {
+					?>
+						<option id="<?php echo $client->id;?>" value="<?php echo $client->name;?>"><?php echo $client->name;?></option>
+					<?php } ?>
+				</select>
+				<input type="text" name="phone_number" class="phoneNumber" placeholder="Номер телефона">
+			</p>
 			<p>
 				<select id="material" class="sale_material" name="material"  required>
 					<option value="" disabled selected>Материал</option>
@@ -96,6 +131,11 @@ Template Name: Sale Product
 					<?php } ?>
 				</select>
 				<input type="number" name="label_count" class="sale_page_count" placeholder="Колличество этикеток" style="width:20%;height: 40px;font-size: 17px;" required>
+			</p>
+			<p>
+				<input type="text" name="debt" class="sale_debt" style="width:46%;" placeholder="Задолженность">
+				<input type="hidden" name="debt" class="cost_price">
+				<input type="text" class="sale_selling_price" name="selling_price" style="width:46%;" placeholder="Цена продажи">
 				<i class="fa fa-minus-circle" aria-hidden="true"></i>
 				<i class="fa fa-plus-circle" aria-hidden="true"></i>
 				<button type="button" id="saleProductButton" name="submit_create" style="width: 20%;height: 43px; padding: 12px 10px;">Сохранить</button>
@@ -109,6 +149,20 @@ Template Name: Sale Product
 	?>
 		<form method="POST" action="" autocomplete="off" class="saleOtherForm">
 		<p class="salePageTitle">Продажа другие</p>
+			<p>
+				<input type="date" name="date" data-date='{"startView": 2, "openOnMouseFocus": true}' placeholder="mm/dd/yyyy" required class="saleDate">
+				<input type="text" name="customer_name" placeholder="ФИО"  class="ProductCustomerInput" required>
+				<input type="hidden" name="customer_id" class="paperCustomerId">
+				<select id="product_customer" name="customer"  required>
+					<option selected disabled>Список клиентов</option>
+					<?php
+						foreach ( $clients as $client ) {
+					?>
+						<option id="<?php echo $client->id;?>" value="<?php echo $client->name;?>"><?php echo $client->name;?></option>
+					<?php } ?>
+				</select>
+				<input type="text" name="phone_number" class="phoneNumber" placeholder="Номер телефона">
+			</p>
 			<p>
 				<select id="otherType" name="otherName" >
 					<option value="" disabled selected>Kатегория</option>
@@ -127,6 +181,11 @@ Template Name: Sale Product
 					<?php } ?>
 				</select>
 				<input type="number" class="sale_page_count" name="page_count" placeholder="Количество" style="width:20%;height: 40px;font-size: 17px;" required>
+			</p>
+			<p>
+				<input type="text" name="debt" class="sale_debt" style="width:46%;" placeholder="Задолженность">
+				<input type="hidden" name="debt" class="cost_price">
+				<input type="text" class="sale_selling_price" name="selling_price" style="width:46%;" placeholder="Цена продажи">
 				<i class="fa fa-minus-circle" aria-hidden="true"></i>
 				<i class="fa fa-plus-circle" aria-hidden="true"></i>
 				<button type="button" id="saleProductButton" name="submit_create" style="width: 20%;height: 43px; padding: 12px 10px;">Сохранить</button>

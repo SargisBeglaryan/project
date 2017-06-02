@@ -17,10 +17,16 @@ Template Name: Degt statistic
 				</thead>
 				<tbody>
 					<?php
-						$tableName = 'wp_debt_'.$_GET['type'].'_statistic';
 						$orderId = $_GET['index'];
 						$paintNumber = 1;
-						$result = $wpdb->get_results ( "SELECT * FROM $tableName WHERE order_id='$orderId'" );
+						if(isset($_GET["table"])){
+							$type = $_GET['type'];
+							$tableName = "wp_debt_product_statistic";
+							$result = $wpdb->get_results ("SELECT * FROM $tableName WHERE product_id='$orderId' AND sale_roll='$type'" );
+						} else {
+							$tableName = 'wp_debt_'.$_GET['type'].'_statistic';
+							$result = $wpdb->get_results ( "SELECT * FROM $tableName WHERE order_id='$orderId'" );
+						}
 						foreach ($result as $print ) {
 					?>
 					<tr>

@@ -1,7 +1,41 @@
 jQuery( document ).ready(function() {
 
+	jQuery('.sale_product_selling_price, .sale_product_debt').blur(function() {
+	if (content_selling!=jQuery(this).html().trim() || content_debt!=jQuery(this).html().trim()){
+		var tableName = jQuery('#table_name').val().trim();
+		tableName = "'"+tableName+"'";
+		var totalCost = jQuery(this).parent('tr').find('td:nth-child(3)').html().trim();
+		var orderId = jQuery(this).parent('tr').find('td:nth-child(1)').html().trim();
+		var customerName;
+		switch (jQuery(this).attr('class')) {
+			case "sale_product_selling_price":
+				content_selling = jQuery(this).html().trim();
+				content_debt = jQuery(this).parent('tr').find('.sale_product_debt').html().trim();
+				jQuery(this).next('td').html(content_selling-totalCost);
+				customerName = null;
+				// jQuery(this).parent('tr').find('td:nth-child(6)').html(content_selling);
+				break;
+			case "sale_product_debt":
+				content_selling = jQuery(this).parent('tr').find('.sale_product_selling_price').html().trim();
+				content_debt = jQuery(this).html().trim();
+				customerName = "'"+jQuery(this).parent('tr').find('.customerName').text().trim()+"'";
+				break;
+		}
+		if(jQuery(this).parent('tr').find(".order-action").length == 0 ){
+			jQuery(this).parent('tr').append('<td class="order-action"><button type="button" onclick="saveSaleProductData('+customerName+','+ content_selling+','+content_debt+','+tableName+','+orderId+')">Сохранять</button></td>');
+		}else {
+			jQuery(this).parent('tr').find(".order-action button").attr('onclick', 'saveSaleProductData('+customerName+','+content_selling+','+content_debt+','+tableName+','+orderId+')');
+		}
+	}
+});
+
 	jQuery(".showClientsModal").on("click", function (){
 		var getTableName = "."+jQuery(this).closest("table").attr("class");
+		/* finance Sale page tables*/
+		var tabTablesClasses = [".financePaperSale", ".financeRollSale", ".financeOtherSale"];
+		if(tabTablesClasses.indexOf(getTableName) != -1){
+			jQuery(".modal").attr("tableName", getTableName.substring(1));
+		}
 		var customersNames = [];
 		var allNamesList = "<ul class='list-group'>";
 		jQuery(getTableName+ " .allCustomersList").each(function() {
@@ -48,6 +82,13 @@ jQuery( document ).ready(function() {
     });
     jQuery("#paper_customer").on("change", function (){
     	changeCustomerId(this, 'paper');
+    });
+    jQuery(".salePaperFormContent, .saleRollFormContent, .saleOtherFormContent").on("change", "#product_customer", function (){
+    	jQuery(this).closest("form").find(".paperCustomerId").val(jQuery(this).find("[value='"+jQuery(this).val()+"']").attr("id"));
+		jQuery(this).closest("form").find(".ProductCustomerInput").val(jQuery(this).val());
+    });
+    jQuery(".salePaperFormContent, .saleRollFormContent, .saleOtherFormContent").on("keyup", ".ProductCustomerInput", function (){
+    	jQuery(this).closest("form").find(".paperCustomerId").val("");
     });
     jQuery(".rollCustomerInput, .paperCustomerInput").on('change', function (){
     	jQuery(this).next().val('');
@@ -165,6 +206,7 @@ jQuery( document ).ready(function() {
 		}
 	});
 
+	
 	jQuery("#form, #foil, #rubber, #lacquer").on('change', function(){
 		var thisSelect = jQuery(this);
 		var formName = jQuery(this).closest("form");
@@ -204,7 +246,20 @@ jQuery( document ).ready(function() {
 			jQuery(formName).find('.orderPriceSum').val(sum);
 		}
 	});
-
+	jQuery(".salePaperFormContent, .saleRollFormContent, .saleOtherFormContent").on("change", ".sale_page_count", function(){
+		var formName = jQuery(this).closest("form");
+		if(jQuery(this).val() != ""){
+			if(jQuery(this).attr("percent") != "" && jQuery(this).attr("price") != ""){
+				var percent = jQuery(this).attr("percent");
+				var percentPrice = parseInt(jQuery(this).val()) * parseInt(percent) / 100;
+				var sum = parseInt(jQuery(this).val()) * (parseInt(jQuery(this).attr("price")) + percentPrice);
+				jQuery(formName).find(".sale_debt").val(sum);
+				jQuery(formName).find(".sale_selling_price").val(sum);
+				jQuery(formName).find(".cost_price").val(sum);
+				jQuery(this).trigger("keyup");
+			}
+		}
+	});
 	jQuery(".page_count").on("blur", function(event){
 		var formName = jQuery(this).closest("form");
 		if(jQuery(".page_count").val() != null) {
@@ -282,9 +337,14 @@ jQuery( document ).ready(function() {
 
 	/*sale product functionality */
 	jQuery(".salePaperFormContent, .saleRollFormContent, .saleOtherFormContent").on("change", ".sale_material_size,"+ 
-		".sale_material, .sale_density, .sale_type, #otherType, #otherName", function(){
+		".sale_material, .sale_density, .sale_type, .saleDate,"+
+		 ".ProductCustomerInput, #otherType, #otherName", function(){
 		var formName = jQuery(this).closest("form");
+		getSaleProductPrice(jQuery(this), formName);
 		if(jQuery(this).attr("id") == "otherType" || jQuery(this).attr("id") == "otherName") {
+			if(jQuery("#otherName").val() != null && jQuery("#otherType").val() != null){
+				return false;
+			} else {
 			var otherData = {};
 			otherData["action"] = "ajaxFilterOtherSelect";
 			if(jQuery(this).attr("id") == "otherType"){
@@ -296,11 +356,12 @@ jQuery( document ).ready(function() {
 			}
 			otherData["name"] = jQuery(this).val();
 			filterOtherSelectOptions(otherData, formName);
+			}
 		}
 		saleProductValidation(formName);
 	});
 
-	jQuery(".salePaperFormContent, .saleRollFormContent, .saleOtherFormContent").on("keyup", ".sale_page_count", function(){
+	jQuery(".salePaperFormContent, .saleRollFormContent, .saleOtherFormContent").on("keyup", ".sale_page_count, .sale_selling_price, sale_debt", function(){
 		var formName = jQuery(this).closest("form");
 		saleProductValidation(formName);
 	});
@@ -385,6 +446,18 @@ jQuery( document ).ready(function() {
 			data["otherType"] = jQuery(currentForm).find("#otherType").val();
 		}
 		data["sale_page_count"] = jQuery(currentForm).find(".sale_page_count").val();
+		if(jQuery(currentForm).find(".paperCustomerId").val() == ""){
+			data["customer"] = jQuery(currentForm).find(".ProductCustomerInput").val();
+			data["customer_id"] = "";
+		} else {
+			data["customer"] = "";
+			data["customer_id"] = jQuery(currentForm).find(".paperCustomerId").val();
+		}
+		data["telephone"] = jQuery(currentForm).find(".phoneNumber").val();
+		data["cost_price"] = jQuery(currentForm).find(".cost_price").val();
+		data["selling_price"] = jQuery(currentForm).find(".sale_selling_price").val();
+		data["debt"] = jQuery(currentForm).find(".sale_debt").val();
+		data["date"] = jQuery(currentForm).find(".saleDate").val();
 		data["action"] = "ajaxAddedNewSaleProduct";
 	jQuery.ajax({
 		url: "../../wp-admin/admin-ajax.php",
@@ -457,6 +530,27 @@ function getMaterialOnePagePrice (data, formName){
 		});
 }
 
+function getSaleProductMaterialPrise(data, formName) {
+	jQuery.ajax({
+		url: "../../wp-admin/admin-ajax.php",
+		type: 'POST',
+		dataType: 'json',
+		data: data,
+		})
+		.done(function(material) {
+			if(material != null){
+				jQuery(formName).find(".sale_page_count").attr({
+				    price: material.price,
+				    percent: material.percent
+				});
+				jQuery(formName).find(".sale_page_count").trigger("blur");
+			}
+		})
+		.fail(function(xhr) {
+			console.log(xhr.responseText);
+		});
+}
+
 function filterOtherSelectOptions(data, formName){
 	jQuery.ajax({
 		url: "../../wp-admin/admin-ajax.php",
@@ -489,9 +583,16 @@ function filterOtherSelectOptions(data, formName){
 }
 
 function saleProductValidation(formName) {
+	if(jQuery(formName).find(".saleDate").val() == "" || jQuery(formName).find(".ProductCustomerInput").val() == ""
+		|| jQuery(formName).find(".sale_selling_price").val() == "" || jQuery(formName).find(".sale_debt").val() == ""){
+		jQuery(formName).find("#saleProductButton").fadeOut(300);
+		jQuery(formName).find(".fa-plus-circle").fadeOut(300);
+		return false;
+	}
 	if(jQuery(formName).attr("class") == "salePaperForm") {
 		if(jQuery(formName).find(".sale_material_size").val() != null && jQuery(formName).find(".sale_material").val() != null
-			&& jQuery(formName).find(".sale_density").val() != null && jQuery(formName).find(".sale_page_count").val() != ""){
+			&& jQuery(formName).find(".sale_density").val() != null && jQuery(formName).find(".sale_page_count").val() != ""
+			&& jQuery(formName).find(".sale_debt").val() != ""){
 			jQuery(formName).find("#saleProductButton").fadeIn(300);
 			jQuery(formName).find(".fa-plus-circle").fadeIn(300);
 		} else {
@@ -500,7 +601,8 @@ function saleProductValidation(formName) {
 		}
 	} else if (jQuery(formName).attr("class") == "saleRollForm"){
 		if(jQuery(formName).find(".sale_material_size").val() != null && jQuery(formName).find(".sale_material").val() != null
-			&& jQuery(formName).find(".sale_type").val() != null && jQuery(formName).find(".sale_page_count").val() != ""){
+			&& jQuery(formName).find(".sale_type").val() != null && jQuery(formName).find(".sale_page_count").val() != ""
+			&& jQuery(formName).find(".sale_debt").val() != ""){
 			jQuery(formName).find("#saleProductButton").fadeIn(300);
 			jQuery(formName).find(".fa-plus-circle").fadeIn(300);
 		} else {
@@ -509,7 +611,7 @@ function saleProductValidation(formName) {
 		}
 	} else {
 		if(jQuery(formName).find("#otherType").val() != null && jQuery(formName).find("#otherName").val() != null
-			&&  jQuery(formName).find(".sale_page_count").val() != ""){
+			&&  jQuery(formName).find(".sale_page_count").val() != "" && jQuery(formName).find(".sale_debt").val() != ""){
 			jQuery(formName).find("#saleProductButton").fadeIn(300);
 			jQuery(formName).find(".fa-plus-circle").fadeIn(300);
 		} else {
@@ -517,4 +619,72 @@ function saleProductValidation(formName) {
 			jQuery(formName).find(".fa-plus-circle").fadeOut(300);
 		}
 	}
+}
+
+function getSaleProductPrice(changedSelect, formName){
+		var formName = jQuery(changedSelect).closest("form");
+		data = {};
+		data["action"] = "ajaxGetSaleProductMaterilPrise";
+		if(jQuery(formName).attr("class") == "saleOtherForm") {
+			data["saleType"] = "other";
+			if(jQuery(formName).find("#otherType").val() != null && 
+				jQuery(formName).find("#otherName").val() != null){
+				data["otherType"] = jQuery(formName).find("#otherType").val().trim();
+				data["otherName"] = jQuery(formName).find("#otherName").val().trim();
+				getSaleProductMaterialPrise(data, formName)
+			} else {
+				return false;
+			}
+		} else if (jQuery(formName).attr("class") == "salePaperForm"){
+				if(jQuery(formName).find(".sale_material_size").val() != null && jQuery(formName).find(".sale_material").val() != null
+				&&	jQuery(formName).find(".sale_density").val() != null ) {
+					data["saleType"] = "paper";
+					data["name"] = jQuery(formName).find(".sale_material").val();
+					var xIndex = jQuery(formName).find(".sale_material_size").val().indexOf('x');
+					data["size_y"] = jQuery(formName).find(".sale_material_size").val().slice(xIndex+1);
+					data["size_x"] = jQuery(formName).find(".sale_material_size").val().slice(0, xIndex);
+					data["density"] = jQuery(formName).find(".sale_density").val();
+					getSaleProductMaterialPrise(data, formName);
+				} else {
+					return false;
+				}
+		} else {
+			if(jQuery(formName).find(".sale_material").val() != null && jQuery(formName).find(".sale_material_size").val() != null
+			&&	jQuery(formName).find(".sale_type").val() != null) {
+				data["saleType"] = "roll";
+				data["name"] = jQuery(formName).find(".sale_material").val();
+				var xIndex = jQuery(formName).find(".sale_material_size").val().indexOf('x');
+				data["size_y"] = jQuery(formName).find(".sale_material_size").val().slice(xIndex+1);
+				data["size_x"] = jQuery(formName).find(".sale_material_size").val().slice(0, xIndex);
+				data["type"] = jQuery(formName).find(".sale_type").val();
+				getSaleProductMaterialPrise(data, formName);
+			} else {
+				return false;
+			}
+		}
+	}
+
+function saveSaleProductData(customer_name, content_selling,debt,tableName,orderId){
+	debt = (debt > content_selling)?0:debt;
+	jQuery.ajax({
+		url: "../../wp-admin/admin-ajax.php",
+		type: 'POST',
+		dataType: 'json',
+		data: {
+			action: "ajaxCostProductUpdate",
+			content_selling: content_selling,
+			debt: debt,
+			orderId: orderId,
+			tableName: tableName,
+			customer_name: customer_name
+		},
+	})
+	.done(function(data) {
+		if(data){
+			jQuery(".order-action").remove();
+		}
+	})
+	.fail(function(xhr) {
+		console.log(xhr.responseText);
+	});
 }
