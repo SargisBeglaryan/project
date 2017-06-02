@@ -250,6 +250,8 @@ jQuery('.order_paper, .order_roll, .salePaperFormContent, .saleRollFormContent, 
 			},
 		})
 		.done(function(data) {
+			var override = data.override;
+			delete data.override;
 			jQuery.each( data, function( key, value ) {
 				var defaultOption = "<option disabled selected value='' >"+jQuery(formName).find('select[name="'+key+'"] option:selected').text()+"</option>"
 				if(jQuery(formName).find('select[name="'+key+'"] option:selected').val() == ''){
@@ -257,8 +259,12 @@ jQuery('.order_paper, .order_roll, .salePaperFormContent, .saleRollFormContent, 
 				}else if (value == null) {
 					defaultOption = "<option value=''>"+jQuery(formName).find('select[name="'+key+'"] option:disabled').text()+"</option>"
 					jQuery(formName).find("#"+key).html(defaultOption);
+				}else if(override && override != undefined){
+					defaultOption = "<option value=''>"+jQuery(formName).find('select[name="'+key+'"] option:disabled').text()+"</option>"
+					jQuery(formName).find("#"+key).html(defaultOption+value);
 				}
 			});
+			groupByOptions(Object.keys(data))
 		})
 		.fail(function(xhr) {
 			console.log(xhr.responseText);
@@ -361,4 +367,22 @@ function saveOrderData(customer_name, content_selling,debt,tableName,orderId,ord
 		.fail(function(xhr) {
 			console.log(xhr.responseText);
 		});
+}
+function groupByOptions(optionsObj){
+	for(el in optionsObj){
+		if (optionsObj.hasOwnProperty(el)) {
+			jQuery("#"+optionsObj[el]+" option").each(function(index, option) {
+				if(jQuery(option).val() != ''){
+					var findOption = jQuery(option).parent('select').find('option[value="'+jQuery(option).val()+'"]').not(jQuery(option))
+					if(findOption.length > 0){
+						for(var i=0; i<findOption.length;i++){
+							if (findOption.hasOwnProperty(i)) {
+								jQuery(findOption[i]).remove();
+							}
+						}
+					}
+				}
+			});
+		}
+	}
 }

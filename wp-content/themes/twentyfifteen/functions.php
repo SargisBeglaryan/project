@@ -694,6 +694,7 @@ function my_custom_redirect() {
 	function material_filter_html() {
 		global $wpdb;
 		$filter = "";
+		$override = false;
 		if($_POST["switchDensity"] == "true"){
 			$dbTable = "wp_product_roll";
 		}else {
@@ -715,6 +716,10 @@ function my_custom_redirect() {
 				}
 			}else {
 				$result = $wpdb->get_results ( "SELECT * FROM {$dbTable} WHERE ".$_POST["selectField"]." LIKE '%".$material."%'".$filter);
+			}
+			if(empty($result)){
+				$result = $wpdb->get_results ( "SELECT * FROM {$dbTable} WHERE ".$_POST["selectField"]." LIKE '%".$material."%'");
+				$override = true;
 			}
 			$resultHtml = [];
 			foreach ( $result as $item ) {
@@ -771,10 +776,12 @@ function my_custom_redirect() {
 				$resultHtml['density'] = $density;
 			}
 		}
-
+		if($override){
+			$resultHtml['override'] = true;
+		}
 		wp_send_json($resultHtml);
 		wp_die();
-	}
+		}
 	add_action('wp_ajax_nopriv_ajaxConversion', 'material_filter_html');
 	add_action('wp_ajax_ajaxConversion', 'material_filter_html');
 
