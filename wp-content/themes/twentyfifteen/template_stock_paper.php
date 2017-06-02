@@ -16,6 +16,7 @@ Template Name: Stock paper
 						<th colum="1" class="tableName">Имя<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showClientsModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true"></i>
 						</th>
 						<th colum="2" class="tableFirm">Фирма<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
@@ -59,7 +60,7 @@ Template Name: Stock paper
 					?>
 					<tr onclick="window.document.location='stock_edit/?type=paper&index=<?php echo $print->id;?>';">
 						<td class="tableIdRows"><?php echo $print->id;?></td>
-						<td><?php echo $print->name;?></td>
+						<td class="allCustomersList"><?php echo $print->name;?></td>
 						<td><?php echo $print->company;?></td>
 						<td><?php echo $print->density;?></td>
 						<td><?php echo $print->type;?></td>
@@ -74,5 +75,21 @@ Template Name: Stock paper
 			</table>			
 		</main>
 	</div>
+	<div class="modal fade" tableName="paperTable" id="customerModal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+		<div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+		    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		    <h4 class="modal-title" id="gridSystemModalLabel">Имя клиентов</h4>
+		  </div>
+		  <div class="modal-body">
+		  </div>
+		  <div class="modal-footer">
+		    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+		    <button type="button" class="btn showFiltredCustomers">Показать</button>
+		  </div>
+		</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 	
 <?php get_footer(); ?>

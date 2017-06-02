@@ -137,39 +137,39 @@ $clients = $wpdb->get_results ( "SELECT * FROM  wp_customers");
 					<thead>
 						<tr>
 							<th  colum="0" class="tableId">Н/З<br>
-								<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
-								<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
-							</th>
-							<th colum="1" class="tableDate">Дата<br>
-								<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
-								<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
-							</th>
-							<th colum="2" class="tableCustomer">Клиент<br>
-								<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
-								<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
-								<i class="fa fa-list-ol showClientsModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true"></i>
-							</th>
-							<th colum="3" class="tableProductName">Имя<br>
-								<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
-								<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
-							</th>
-							<th colum="4" class="tableType">Тип<br>
-								<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
-								<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
-							</th>
-							<th colum="5" class="tableCount">Количество<br>
-								<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
-								<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
-							</th>
-							<th>
-								Действия
-							</th>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th colum="1" class="tableCustomer">Клиент<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showClientsModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true"></i>
+						</th>
+						<th colum="2" class="tableCostPrice">Себестоимость<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th colum="3" class="tablePrice">Цена продажи<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th colum="4" class="tableIncome">Доход<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th colum="5" class="tableDept">Задолженность<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+						</th>
+						<th>
+							Действия
+						</th>
 						</tr>
 					</thead>
 					<tbody>
 						<?php
 						global $wpdb;
-						$allOther = costProductPrice("paper");
+						$allOther = costProductPrice("other");
 						$userRoll = apply_filters( 'wp_nav_menu_args', '' )['status'];
 						foreach($allOther as $other){
 						?>
@@ -177,7 +177,7 @@ $clients = $wpdb->get_results ( "SELECT * FROM  wp_customers");
 							<td><?php echo $other['id'];?></td>
 							<td onclick="window.document.location='customer-orders/?type=other&customer=<?php echo $other['customer'];?>&table=prodaja';"  class="allCustomersList customerName"><?php echo $other['customer'];?></td>
 							<td><?php echo $other['cost_price'];?></td>
-							<td contenteditable='true' class="sale_product_selling_price"><?php echo $paper['selling_price'];?></td>
+							<td contenteditable='true' class="sale_product_selling_price"><?php echo $other['selling_price'];?></td>
 							<td><?php echo $other['earnings'];?></td>
 							<td contenteditable='true' class="sale_product_debt"><?php echo $other['debt'];?></td>
 						</tr>

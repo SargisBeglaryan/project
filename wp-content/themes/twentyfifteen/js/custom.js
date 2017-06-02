@@ -32,7 +32,8 @@ jQuery( document ).ready(function() {
 	jQuery(".showClientsModal").on("click", function (){
 		var getTableName = "."+jQuery(this).closest("table").attr("class");
 		/* finance Sale page tables*/
-		var tabTablesClasses = [".financePaperSale", ".financeRollSale", ".financeOtherSale"];
+		var tabTablesClasses = [".financePaperSale", ".financeRollSale", ".financeOtherSale",
+		".stockRoll", ".stockPaper", ".stockCustomer", ".stockOther"];
 		if(tabTablesClasses.indexOf(getTableName) != -1){
 			jQuery(".modal").attr("tableName", getTableName.substring(1));
 		}

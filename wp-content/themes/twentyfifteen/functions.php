@@ -1117,7 +1117,7 @@ function my_custom_redirect() {
 			$returnResult[$key]['selling_price'] = $value['selling_price'];
 			$returnResult[$key]['cost_price'] = $value['cost_price'];
 			$returnResult[$key]['debt'] = $value['debt'];
-			$returnResult[$key]['earnings'] = $value['selling_price']-$returnResult[$key]['cost_price'];
+			$returnResult[$key]['earnings'] = $value['selling_price']-$value['cost_price'];
 		}
 		return $returnResult;
 	}
