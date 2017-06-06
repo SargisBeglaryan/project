@@ -18,31 +18,37 @@ Template Name: Stock roll
 						<th colum="1" class="tableName">Имя<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
-							<i class="fa fa-list-ol showClientsModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true" id="allMaterialsList"></i>
 						</th>
 						<th colum="2" class="tableFirm">Фирма<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true" id="allFirmList"></i>
 						</th>
 						<th colum="3" class="tableType">Тип<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true" id="allTypeList"></i>
 						</th>
 						<th colum="4" class="tableOrderFormat">Формат<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true" id="allFormatList"></i>
 						</th>
 						<th colum="5" class="tableMass">М<sup><small>2</small></sup><br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true" id="allMassaList"></i>
 						</th>
 						<th colum="6" class="tablePrice">Цена<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true" id="allPriceList"></i>
 						</th>
 						<th colum="7" class="tableProcent">Процент<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true" id="allPercentList"></i>
 						</th>
 					</tr>
 				</thead>
@@ -55,12 +61,12 @@ Template Name: Stock roll
 					<tr onclick="window.document.location='stock_edit/?type=roll&index=<?php echo $print->id;?>';">
 						<td class="tableIdRows"><?php echo $print->id;?></td>
 						<td class="allCustomersList"><?php echo $print->name;?></td>
-						<td><?php echo $print->company;?></td>
-						<td><?php echo $print->type;?></td>
-						<td><?php echo $print->size_x;?> x <?php echo $print->size_y;?></td>
-						<td><?php echo $print->area;?></td>
-						<td><?= $print->price ?></td>
-						<td><?= $print->percent ?></td>
+						<td class="allFirmList"><?php echo $print->company;?></td>
+						<td class="allTypeList"><?php echo $print->type;?></td>
+						<td class="allFormatList"><?php echo $print->size_x;?>x<?php echo $print->size_y;?></td>
+						<td class="allMassaList"><?php echo $print->area;?></td>
+						<td class="allPriceList"><?= $print->price ?></td>
+						<td class="allPercentList"><?= $print->percent ?></td>
 					</tr>
 					<?php } ?>
 				</tbody>

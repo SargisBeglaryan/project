@@ -1,79 +1,161 @@
 jQuery( document ).ready(function() {
 
 	jQuery('.sale_product_selling_price, .sale_product_debt').blur(function() {
-	if (content_selling!=jQuery(this).html().trim() || content_debt!=jQuery(this).html().trim()){
-		var tableName = jQuery('#table_name').val().trim();
-		tableName = "'"+tableName+"'";
-		var totalCost = jQuery(this).parent('tr').find('td:nth-child(3)').html().trim();
-		var orderId = jQuery(this).parent('tr').find('td:nth-child(1)').html().trim();
-		var customerName;
-		switch (jQuery(this).attr('class')) {
-			case "sale_product_selling_price":
-				content_selling = jQuery(this).html().trim();
-				content_debt = jQuery(this).parent('tr').find('.sale_product_debt').html().trim();
-				jQuery(this).next('td').html(content_selling-totalCost);
-				customerName = null;
-				// jQuery(this).parent('tr').find('td:nth-child(6)').html(content_selling);
-				break;
-			case "sale_product_debt":
-				content_selling = jQuery(this).parent('tr').find('.sale_product_selling_price').html().trim();
-				content_debt = jQuery(this).html().trim();
-				customerName = "'"+jQuery(this).parent('tr').find('.customerName').text().trim()+"'";
-				break;
+		if (content_selling!=jQuery(this).html().trim() || content_debt!=jQuery(this).html().trim()){
+			var tableName = jQuery('#table_name').val().trim();
+			tableName = "'"+tableName+"'";
+			var totalCost = jQuery(this).parent('tr').find('td:nth-child(3)').html().trim();
+			var orderId = jQuery(this).parent('tr').find('td:nth-child(1)').html().trim();
+			var customerName;
+			switch (jQuery(this).attr('class')) {
+				case "sale_product_selling_price":
+					content_selling = jQuery(this).html().trim();
+					content_debt = jQuery(this).parent('tr').find('.sale_product_debt').html().trim();
+					jQuery(this).next('td').html(content_selling-totalCost);
+					customerName = null;
+					// jQuery(this).parent('tr').find('td:nth-child(6)').html(content_selling);
+					break;
+				case "sale_product_debt":
+					content_selling = jQuery(this).parent('tr').find('.sale_product_selling_price').html().trim();
+					content_debt = jQuery(this).html().trim();
+					customerName = "'"+jQuery(this).parent('tr').find('.customerName').text().trim()+"'";
+					break;
+			}
+			if(jQuery(this).parent('tr').find(".order-action").length == 0 ){
+				jQuery(this).parent('tr').append('<td class="order-action"><button type="button" onclick="saveSaleProductData('+customerName+','+ content_selling+','+content_debt+','+tableName+','+orderId+')">Сохранять</button></td>');
+			}else {
+				jQuery(this).parent('tr').find(".order-action button").attr('onclick', 'saveSaleProductData('+customerName+','+content_selling+','+content_debt+','+tableName+','+orderId+')');
+			}
 		}
-		if(jQuery(this).parent('tr').find(".order-action").length == 0 ){
-			jQuery(this).parent('tr').append('<td class="order-action"><button type="button" onclick="saveSaleProductData('+customerName+','+ content_selling+','+content_debt+','+tableName+','+orderId+')">Сохранять</button></td>');
-		}else {
-			jQuery(this).parent('tr').find(".order-action button").attr('onclick', 'saveSaleProductData('+customerName+','+content_selling+','+content_debt+','+tableName+','+orderId+')');
-		}
-	}
-});
+	});
 
-	jQuery(".showClientsModal").on("click", function (){
+	jQuery(".class").on("change", function(){
+		var formName = jQuery(this).closest("form");
+		jQuery(formName).find(".submitStatus").css("display", "block");
+	});
+	var allFiltredColums = {};
+	var filtredTableRows = [];
+	jQuery(".financeSaleTab li").on("click", function (){
+		allFiltredColums = {};
+		filtredTableRows = [];
+	});
+
+	jQuery(".showFilterModal").on("click", function (){
 		var getTableName = "."+jQuery(this).closest("table").attr("class");
+		var getColumClass = jQuery(this).attr("id");
 		/* finance Sale page tables*/
 		var tabTablesClasses = [".financePaperSale", ".financeRollSale", ".financeOtherSale",
 		".stockRoll", ".stockPaper", ".stockCustomer", ".stockOther"];
+		jQuery(".modal").attr("filtredColum", getColumClass);
 		if(tabTablesClasses.indexOf(getTableName) != -1){
 			jQuery(".modal").attr("tableName", getTableName.substring(1));
 		}
-		var customersNames = [];
 		var allNamesList = "<ul class='list-group'>";
-		jQuery(getTableName+ " .allCustomersList").each(function() {
-			if(customersNames.indexOf(jQuery(this).text()) == -1){
-				customersNames.push(jQuery(this).text());
-				var checked = (jQuery(this).hasClass("checked")) ? "checked" : "";
-				var listActiveColor = (jQuery(this).hasClass("checked")) ? "clickedClient" : "";
-				allNamesList += "<li class='list-group-item "+listActiveColor+"'>"+jQuery(this).text()+
-								"<input type='checkbox' "+checked+"></li>";
+		customersNames = [];
+		if(filtredTableRows.length > 0){
+			if(allFiltredColums["primary"] != getColumClass) {
+				jQuery(filtredTableRows).find(" ."+getColumClass).each(function() {
+					if(customersNames.indexOf(jQuery(this).text().trim()) == -1 && jQuery(this).text().trim() != ""){
+						customersNames.push(jQuery(this).text().trim());
+						var checked = (jQuery(this).hasClass("checked")) ? "checked" : "";
+						var listActiveColor = (jQuery(this)).hasClass("checked") ? "clickedClient" : "";
+						allNamesList += "<li class='list-group-item "+listActiveColor+"'>"+jQuery(this).text().trim()+
+										"<input type='checkbox' "+checked+"></li>";
+					}
+				});
+			} else {
+				jQuery(getTableName+ " ."+getColumClass).each(function() {
+					if(customersNames.indexOf(jQuery(this).text().trim()) == -1 && jQuery(this).text().trim() != ""){
+						customersNames.push(jQuery(this).text().trim());
+						var checked = (jQuery(this)).hasClass("checked") ? "checked" : "";
+						var listActiveColor = (jQuery(this)).hasClass("checked") ? "clickedClient" : "";
+						allNamesList += "<li class='list-group-item "+listActiveColor+"'>"+jQuery(this).text().trim()+
+										"<input type='checkbox' "+checked+"></li>";
+					}
+				});
 			}
-		});
+		}else {
+			jQuery(getTableName+ " ."+getColumClass).each(function() {
+				if(customersNames.indexOf(jQuery(this).text().trim()) == -1 && jQuery(this).text().trim() != ""){
+					customersNames.push(jQuery(this).text().trim());
+					var checked = (jQuery(this)).hasClass("checked") ? "checked" : "";
+					var listActiveColor = (jQuery(this)).hasClass("checked") ? "clickedClient" : "";
+					allNamesList += "<li class='list-group-item "+listActiveColor+"'>"+jQuery(jQuery(this)).text().trim()+
+									"<input type='checkbox' "+checked+"></li>";
+				}
+			});
+		}
+			
+			
 		allNamesList += "</ul>";
 		jQuery("#customerModal .modal-body").html(allNamesList);
 	});
 
 	jQuery(".showFiltredCustomers").on("click", function(){
 		var tableClassName = "."+jQuery(this).closest(".modal").attr("tableName");
+		var filtredColum = jQuery(this).closest(".modal").attr("filtredColum");
+		if(jQuery.isEmptyObject(allFiltredColums)){
+	    	allFiltredColums["primary"] = filtredColum;
+	    } 
+		allFiltredColums[filtredColum] = [];
 		var selectedCustomersNames = [];
 		jQuery('#customerModal ul input:checked').each(function() {
 		    selectedCustomersNames.push(jQuery(this).closest("li").text());
+		    allFiltredColums[filtredColum].push(jQuery(this).closest("li").text());
 		});
 		var rows = jQuery(tableClassName +" tbody tr");
-		if(selectedCustomersNames.length == 0){
+		var getCheckedColumsSum = 0;
+		for( var objectKey in allFiltredColums){
+			if(allFiltredColums[objectKey].length > 0){
+				if(objectKey != "primary"){
+					getCheckedColumsSum += 1;
+				} else {
+					continue;
+				}
+			} else {
+				for(var j=0; j < rows.length; j++){
+				jQuery(rows[j]).show();
+				jQuery(rows[j]).find("."+objectKey).removeClass("checked");
+				delete allFiltredColums[objectKey]; 
+			}
+			}
+		}
+		filtredTableRows = [];
+		if(getCheckedColumsSum == 0){
 			for(var j=0; j < rows.length; j++){
 				jQuery(rows[j]).show();
-				jQuery(rows[j]).find(".allCustomersList").removeClass("checked");
+				jQuery(rows[j]).find("td").removeClass("checked");
 			}
 			jQuery('#customerModal').modal('hide');
+			allFiltredColums = {};
 			return true;
 		}
 		for(var i=0; i < rows.length; i++){
-			if(selectedCustomersNames.indexOf(jQuery(rows[i]).find(".allCustomersList").text()) == -1){
+			var searchFiltredColums = 0;
+			var allColumsSum = 0;
+			var allColumName = [];
+			for(var objectKeyGet in allFiltredColums){
+				if(allFiltredColums[objectKeyGet].indexOf(jQuery(rows[i]).find("."+objectKeyGet).text().trim()) != -1){
+					searchFiltredColums += 1;
+				}
+				allColumsSum += 1;
+				allColumName.push(objectKeyGet);
+			}
+			if(searchFiltredColums != allColumsSum){
 				jQuery(rows[i]).hide();
-				jQuery(rows[i]).find(".allCustomersList").removeClass("checked");
+				jQuery(rows[i]).removeClass("checked");
+				for(var col = 0; col < allColumName.length; col ++){
+					jQuery(rows[i]).find("."+allColumName[col]).removeClass("checked")
+				}
 			} else {
+				//alreadyFiltredTable.push(row[i]);
 				jQuery(rows[i]).show();
-				jQuery(rows[i]).find(".allCustomersList").addClass("checked");
+				jQuery(rows[i]).addClass("checked");
+				for(var col = 0; col < allColumName.length; col ++){
+					jQuery(rows[i]).find("."+allColumName[col]).addClass("checked")
+				}
+				filtredTableRows.push(rows[i]);
+				
 			}
 		}
 		jQuery('#customerModal').modal('hide');
@@ -299,10 +381,10 @@ jQuery( document ).ready(function() {
 		}
 	});
 
-	jQuery("#status").on("change", function(){
-		var formName = jQuery(this).closest("form");
-		jQuery(formName).find(".submitStatus").css("display", "block");
-	});
+	// jQuery("#status").on("change", function(){
+	// 	var formName = jQuery(this).closest("form");
+	// 	jQuery(formName).find(".submitStatus").css("display", "block");
+	// });
 	jQuery(".submitStatus").on("click", function(){
 		var formName = jQuery(this).closest("form");
 		var data = {};

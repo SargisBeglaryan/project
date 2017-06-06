@@ -227,6 +227,7 @@ webshims.polyfill('forms forms-ext');
 								"rubber" => $_POST["rubber_count"],
 								"lacquer" => $_POST["lacquer_count"],
 								"type"=>$_POST["order_type"],
+								"cost_price"=> $_POST["orderPriceSum"],
 								"selling_price" => $_POST["orderPriceSum"],
 								"type_of_order" => $_POST['type_of_order'],
 								"status" => "Оформлен"
@@ -437,7 +438,7 @@ webshims.polyfill('forms forms-ext');
 								"count_per_page" => $_POST["count_per_page"],
 								"step_lenght" => $_POST["step_lenght"],
 								"label_count" => $_POST["label_count"],
-								"selling_price" => $_POST["orderPriceSum"],
+								"cost_price" => $_POST["orderPriceSum"],
 								"material" => $material_id,
 								"type"=>$_POST["order_type"],
 								"type_of_order" => $_POST['type_of_order'],

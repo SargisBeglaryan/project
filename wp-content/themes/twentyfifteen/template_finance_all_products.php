@@ -31,23 +31,27 @@ $clients = $wpdb->get_results ( "SELECT * FROM  wp_customers");
 						<th colum="1" class="tableCustomer">Клиент<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
-							<i class="fa fa-list-ol showClientsModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allCustomersList" aria-hidden="true"></i>
 						</th>
 						<th colum="2" class="tableCostPrice">Себестоимость<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allCostPriceList" aria-hidden="true"></i>
 						</th>
 						<th colum="3" class="tablePrice">Цена продажи<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allSellingPriceList" aria-hidden="true"></i>
 						</th>
 						<th colum="4" class="tableIncome">Доход<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol class="sale_product_debt"Modal"  data-toggle="modal" data-target="#customerModal" id="allEarningList" aria-hidden="true"></i>
 						</th>
 						<th colum="5" class="tableDept">Задолженность<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allDebtList" aria-hidden="true"></i>
 						</th>
 						<th>
 							Действия
@@ -64,10 +68,10 @@ $clients = $wpdb->get_results ( "SELECT * FROM  wp_customers");
 						<tr>
 						<td><?php echo $roll['id'];?></td>
 						<td onclick="window.document.location='customer-orders/?type=roll&customer=<?php echo $roll['customer'];?>&table=prodaja';"  class="allCustomersList customerName"><?php echo $roll['customer'];?></td>
-						<td><?php echo $roll['cost_price'];?></td>
-						<td contenteditable='true' class="sale_product_selling_price"><?php echo $roll['selling_price'];?></td>
-						<td><?php echo $roll['earnings'];?></td>
-						<td contenteditable='true' class="sale_product_debt"><?php echo $roll['debt'];?></td>
+						<td class="allCostPriceList"><?php echo $roll['cost_price'];?></td>
+						<td contenteditable='true' class="allSellingPriceList sale_product_selling_price"><?php echo $roll['selling_price'];?></td>
+						<td class="allEarningList"><?php echo $roll['earnings'];?></td>
+						<td contenteditable='true' class="allDebtList sale_product_debt"><?php echo $roll['debt'];?></td>
 						</tr>
 						<?php
 						}
@@ -87,23 +91,27 @@ $clients = $wpdb->get_results ( "SELECT * FROM  wp_customers");
 						<th colum="1" class="tableCustomer">Клиент<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
-							<i class="fa fa-list-ol showClientsModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allCustomersList" aria-hidden="true"></i>
 						</th>
 						<th colum="2" class="tableCostPrice">Себестоимость<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allCostPriceList" aria-hidden="true"></i>
 						</th>
 						<th colum="3" class="tablePrice">Цена продажи<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allSellingPriceList" aria-hidden="true"></i>
 						</th>
 						<th colum="4" class="tableIncome">Доход<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol class="sale_product_debt"Modal"  data-toggle="modal" data-target="#customerModal" id="allEarningList" aria-hidden="true"></i>
 						</th>
 						<th colum="5" class="tableDept">Задолженность<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allDebtList" aria-hidden="true"></i>
 						</th>
 						<th>
 							Действия
@@ -120,10 +128,10 @@ $clients = $wpdb->get_results ( "SELECT * FROM  wp_customers");
 						<tr>
 							<td><?php echo $paper['id'];?></td>
 							<td onclick="window.document.location='customer-orders/?type=paper&customer=<?php echo $paper['customer'];?>&table=prodaja';"  class="allCustomersList customerName"><?php echo $paper['customer'];?></td>
-							<td><?php echo $paper['cost_price'];?></td>
-							<td contenteditable='true' class="sale_product_selling_price"><?php echo $paper['selling_price'];?></td>
-							<td><?php echo $paper['earnings'];?></td>
-							<td contenteditable='true' class="sale_product_debt"><?php echo $paper['debt'];?></td>
+							<td class="allCostPriceList"><?php echo $paper['cost_price'];?></td>
+							<td  contenteditable='true' class="allSellingPriceList sale_product_selling_price"><?php echo $paper['selling_price'];?></td>
+							<td class="allEarningList"><?php echo $paper['earnings'];?></td>
+							<td contenteditable='true' class="allDebtList sale_product_debt"><?php echo $paper['debt'];?></td>
 						</tr>
 						<?php
 						}
@@ -143,23 +151,27 @@ $clients = $wpdb->get_results ( "SELECT * FROM  wp_customers");
 						<th colum="1" class="tableCustomer">Клиент<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
-							<i class="fa fa-list-ol showClientsModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allCustomersList" aria-hidden="true"></i>
 						</th>
 						<th colum="2" class="tableCostPrice">Себестоимость<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allCostPriceList" aria-hidden="true"></i>
 						</th>
 						<th colum="3" class="tablePrice">Цена продажи<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allSellingPriceList" aria-hidden="true"></i>
 						</th>
 						<th colum="4" class="tableIncome">Доход<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol class="sale_product_debt"Modal"  data-toggle="modal" data-target="#customerModal" id="allEarningList" aria-hidden="true"></i>
 						</th>
 						<th colum="5" class="tableDept">Задолженность<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allDebtList" aria-hidden="true"></i>
 						</th>
 						<th>
 							Действия
@@ -176,10 +188,10 @@ $clients = $wpdb->get_results ( "SELECT * FROM  wp_customers");
 						<tr>
 							<td><?php echo $other['id'];?></td>
 							<td onclick="window.document.location='customer-orders/?type=other&customer=<?php echo $other['customer'];?>&table=prodaja';"  class="allCustomersList customerName"><?php echo $other['customer'];?></td>
-							<td><?php echo $other['cost_price'];?></td>
-							<td contenteditable='true' class="sale_product_selling_price"><?php echo $other['selling_price'];?></td>
-							<td><?php echo $other['earnings'];?></td>
-							<td contenteditable='true' class="sale_product_debt"><?php echo $other['debt'];?></td>
+							<td class="allCostPriceList"><?php echo $other['cost_price'];?></td>
+							<td contenteditable='true' class="allSellingPriceList sale_product_selling_price"><?php echo $other['selling_price'];?></td>
+							<td class="allEarningList"><?php echo $other['earnings'];?></td>
+							<td contenteditable='true' class="allDebtList sale_product_debt"><?php echo $other['debt'];?></td>
 						</tr>
 						<?php
 						}

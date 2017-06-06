@@ -16,39 +16,47 @@ Template Name: Stock paper
 						<th colum="1" class="tableName">Имя<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
-							<i class="fa fa-list-ol showClientsModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true" id="allCustomersList"></i>
 						</th>
 						<th colum="2" class="tableFirm">Фирма<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true" id="allFirmList"></i>
 						</th>
 						<th colum="3" class="tableDensity">Плотность<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true" id="allDensityList"></i>
 						</th>
 						<th colum="4" class="tableType">Тип<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true" id="allTypeList"></i>
 						</th>
 						<th colum="5" class="tableOrderFormat">Формат<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true" id="allFormatList"></i>
 						</th>
 						<th colum="6" class="tableList">Листы<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true" id="allPageCountList"></i>
 						</th>
 						<th colum="7" class="tableWeight">КГ<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true" id="allWeightList"></i>
 						</th>
 						<th colum="8" class="tablePrice">Цена<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true" id="allPriceList"></i>
 						</th>
 						<th colum="9" class="tableProcent">Процент<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true" id="allPercentList"></i>
 						</th>
 					</tr>
 				</thead>
@@ -61,14 +69,14 @@ Template Name: Stock paper
 					<tr onclick="window.document.location='stock_edit/?type=paper&index=<?php echo $print->id;?>';">
 						<td class="tableIdRows"><?php echo $print->id;?></td>
 						<td class="allCustomersList"><?php echo $print->name;?></td>
-						<td><?php echo $print->company;?></td>
-						<td><?php echo $print->density;?></td>
-						<td><?php echo $print->type;?></td>
-						<td><?php echo $print->size_x;?> x <?php echo $print->size_y;?></td>
-						<td><?php echo $print->page_count;?></td>
-						<td><?php echo $print->weight;?></td>
-						<td><?= $print->price ?></td>
-						<td><?= $print->percent ?></td>
+						<td class="allFirmList"><?php echo $print->company;?></td>
+						<td class="allDensityList"><?php echo $print->density;?></td>
+						<td class="allTypeList"><?php echo $print->type;?></td>
+						<td class="allFormatList"><?php echo $print->size_x;?>x<?php echo $print->size_y;?></td>
+						<td class="allPageCountList"><?php echo $print->page_count;?></td>
+						<td class="allWeightList"><?php echo $print->weight;?></td>
+						<td class="allPriceList"><?= $print->price ?></td>
+						<td class="allPercentList"><?= $print->percent ?></td>
 					</tr>
 					<?php } ?>
 				</tbody>

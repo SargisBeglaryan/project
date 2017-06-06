@@ -18,23 +18,27 @@ Template Name: Finance paper all
 						<th colum="1" class="tableCustomer">Клиент<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
-							<i class="fa fa-list-ol showClientsModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true" id="allCustomersList"></i>
 						</th>
 						<th colum="2" class="tableCostPrice">Себестоимость<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allCostPriceList"aria-hidden="true"></i>
 						</th>
 						<th colum="3" class="tablePrice">Цена продажи<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allSellingPriceList"aria-hidden="true"></i>
 						</th>
 						<th colum="4" class="tableIncome">Доход<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol" class="sale_product_debt"  data-toggle="modal" data-target="#customerModal" id="allEarningList"aria-hidden="true"></i>
 						</th>
 						<th colum="5" class="tableDept">Задолженность<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allDebtList"aria-hidden="true"></i>
 						</th>
 						<th>Тип</th>
 						<th>Действия</th>
@@ -50,10 +54,10 @@ Template Name: Finance paper all
 					<tr>
 						<td><?php echo $print['id'];?></td>
 						<td onclick="window.document.location='customer-orders/?type=paper&customer=<?php echo $print['customer'];?>';"  class="allCustomersList customerName"><?php echo $print['customer'];?></td>
-						<td><?php echo $print['cost_price'];?></td>
-						<td contenteditable='true' id="selling_price"><?php echo $print['selling_price'];?></td>
-						<td><?php echo $print['earnings'];?></td>
-						<td contenteditable='true' id="debt"><?php echo $print['debt'];?></td>
+						<td class="allCostPriceList"><?php echo $print['cost_price'];?></td>
+						<td class="allSellingPriceList" contenteditable='true' id="selling_price"><?php echo $print['selling_price'];?></td>
+						<td class="allEarningList"><?php echo $print['earnings'];?></td>
+						<td class="allDebtList" contenteditable='true' id="debt"><?php echo $print['debt'];?></td>
 						<td>
 							<select name="order_type" class="order_type">
 								<option value="" selected disabled>Выберите тип</option>

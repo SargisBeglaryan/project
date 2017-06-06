@@ -18,35 +18,62 @@ Template Name: Order roll all
 						<th colum="1" class="tableDate">Дата<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal" id="allDateList" data-toggle="modal" data-target="#customerModal" aria-hidden="true"></i>
 						</th>
 						<th colum="2" class="tableCustomer">Клиент<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
-							<i class="fa fa-list-ol showClientsModal"  data-toggle="modal" data-target="#customerModal" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allCustomersList"aria-hidden="true"></i>
 						</th>
 						<th colum="3" class="tableMaterials">Материал<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allMaterialsList"aria-hidden="true"></i>
 						</th>
 						<th colum="4" class="tableType">Тип<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allTypeList"aria-hidden="true"></i>
 						</th>
 						<th colum="5" class="tableTiraj">Тираж<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allTirajList"aria-hidden="true"></i>
 						</th>
 						<th colum="6" class="tableOrderType">Тип заказа<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allOrderTypeList"aria-hidden="true"></i>
 						</th>
 						<th class="tableStatus">Статус</th>
+						<th colum="7" class="tableCostPrice">Себестоимость<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allCostPriceList"aria-hidden="true"></i>
+						</th>
+						<th colum="8" class="tablePrice">Цена продажи<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allSellingPriceList"aria-hidden="true"></i>
+						</th>
+						<th colum="9" class="tableIncome">Доход<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol" class="sale_product_debt"  data-toggle="modal" data-target="#customerModal" id="allEarningList"aria-hidden="true"></i>
+						</th>
+						<th colum="10" class="tableDept">Задолженность<br>
+							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
+							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allDebtList"aria-hidden="true"></i>
+						</th>
+						<th>Действия</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php
 						global $wpdb;
 						$result = $wpdb->get_results ( "SELECT * FROM wp_order_roll" );
+						$orderData = costPrice("roll");
 						$userRoll = apply_filters( 'wp_nav_menu_args', '' )['status'];
 						$allStatuses = ['Склад'=>'Выход со склада', 'Резка'=>'Выход с резки', 'Печать'=>'Выход из печати', 'Готово'=>'Готово'];
 						foreach ( $result as $print ) {
@@ -58,9 +85,9 @@ Template Name: Order roll all
 					?>
 					<tr onclick="window.document.location='order-single/?type=roll&index=<?php echo $print->id;?>';">
 						<td class="tableIdRows"><?php echo $print->id;?></td>
-						<td><?php echo $print->date;?></td>
+						<td class="allDateList"><?php echo $print->date;?></td>
 						<td class="allCustomersList"><?php echo $print->customer;?></td>
-						<td><?php 
+						<td class="allMaterialsList"><?php 
 							if (preg_match('/[0-9]+/', $print->material)){
 								echo $wpdb->get_var('SELECT name FROM wp_product_roll WHERE id = "'.$print->material.'"');
 							}else {
@@ -68,13 +95,13 @@ Template Name: Order roll all
 							}
 							?>
 						</td>
-						<td><?php echo $print->order_type;?></td>
-						<td><?php echo $print->printing_count;?></td>
-						<td><?php echo $print->type_of_order; ?></td>
+						<td class="allTypeList"><?php echo $print->order_type;?></td>
+						<td class="allTirajList"><?php echo $print->printing_count;?></td>
+						<td class="allOrderTypeList"><?php echo $print->type_of_order; ?></td>
 						<td onclick="window.event.cancelBubble = true">
 							<form method="POST" action="">
 								<p style="    margin-bottom: 10px; text-align: center;">
-									<select id="status" name="status" autocomplete="off">
+									<select id="status"  class="class" name="status" autocomplete="off">
 										<?php
 
 										foreach($allStatuses as $key=>$value){
@@ -94,6 +121,10 @@ Template Name: Order roll all
 								<button type="button" class="submitStatus" name="submit_status" style="margin: 0px auto;width: 110px;height: 30px;padding: 5px;">Сохранить</button>
 							</form>
 						</td>
+						<td class=" allCostPriceList"><?php echo $print->cost_price;?></td>
+						<td class="allSellingPriceList" contenteditable='true' id="selling_price"><?php echo $print->selling_price;?></td>
+						<td class="allEarningList"><?php echo $print->selling_price - $print->cost_price;?></td>
+						<td class="allDebtList"contenteditable='true' id="debt"><?php echo $print->debt;?></td>
 					</tr>
 					<?php }
 					} ?>
