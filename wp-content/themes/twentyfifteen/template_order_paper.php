@@ -61,13 +61,14 @@ Template Name: Order paper all
 						<th colum="9" class="tableIncome">Доход<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
-							<i class="fa fa-list-ol class="sale_product_debt"Modal"  data-toggle="modal" data-target="#customerModal" id="allEarningList"aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allEarningList"aria-hidden="true"></i>
 						</th>
 						<th colum="10" class="tableDept">Задолженность<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
 							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allDebtList"aria-hidden="true"></i>
 						</th>
+						<th>Oплата</th>
 						<th>Действия</th>
 					</tr>
 				</thead>
@@ -76,7 +77,7 @@ Template Name: Order paper all
 						global $wpdb;
 						$result = $wpdb->get_results ( "SELECT * FROM wp_order_paper" );
 						$userRoll = apply_filters( 'wp_nav_menu_args', '' )['status'];
-						$allStatuses = ['Склад'=>'Выход со склада', 'Резка'=>'Выхол с резки', 'Печать'=>'Выход из печати', 'Готово'=>'Готово'];
+						$allStatuses = ['Склад'=>'Выход со склада', 'Резка'=>'Выход с резки', 'Печать'=>'Выход из печати', 'Готово'=>'Готово'];
 						foreach ( $result as $print ) {
 							if($print->status == $userRoll || $userRoll=='all'){
 								if($print->customer == null){
@@ -84,10 +85,10 @@ Template Name: Order paper all
 									$print->customer = $customerWithTable->name;
 								}
 					?>
-					<tr onclick="window.document.location='order-single/?type=paper&index=<?php echo $print->id;?>';">
+					<tr>
 						<td class="tableIdRows"><?php echo $print->id;?></td>
 						<td class="allDateList"><?php echo $print->date;?></td>
-						<td class="allCustomersList"><?php echo $print->customer;?></td>
+						<td class="allCustomersList" onclick="window.document.location='order-single/?type=paper&index=<?php echo $print->id;?>';"><?php echo $print->customer;?></td>
 						<td class="allMaterialsList"><?php 
 							if (preg_match('/[0-9]+/', $print->material)){
 								echo $wpdb->get_var('SELECT name FROM wp_product_paper WHERE id = "'.$print->material.'"');
@@ -96,7 +97,7 @@ Template Name: Order paper all
 							}
 							?>
 						</td>
-						<td class="allTypeList"><?php echo $print->order_type;?></td>
+						<td class="allTypeList"><?php echo $print->type;?></td>
 						<td class="allTirajList"><?php echo $print->printing_count;?></td>
 						<td class="allFormatList"><?php echo $print->size_x;?>x<?php echo $print->size_y;?></td>
 						<td><?php echo $print->type_of_order; ?></td>
@@ -105,7 +106,9 @@ Template Name: Order paper all
 								<p style="    margin-bottom: 10px; text-align: center;">
 									<select id="status" class="class" name="status" autocomplete="off">
 										<?php
-
+										if($print->status == "Оформлен"){
+											echo "<option value='' disabled selected>Виберите статус</option>";
+										}
 										foreach($allStatuses as $key=>$value){
 											if($print->status == $key){
 												echo "<option value=".$key." disabled selected>".
@@ -127,11 +130,13 @@ Template Name: Order paper all
 						<td class=" allCostPriceList"><?php echo $print->cost_price;?></td>
 						<td class="allSellingPriceList" contenteditable='true' id="selling_price"><?php echo $print->selling_price;?></td>
 						<td class="allEarningList"><?php echo $print->selling_price - $print->cost_price;?></td>
-						<td class="allDebtList"contenteditable='true' id="debt"><?php echo $print->debt;?></td>
+						<td class="allDebtList" contenteditable='true' id="debt"><?php echo $print->debt;?></td>
+						<td class="allDebtList" contenteditable='true' id="debt"><?php echo $print->order_type;?></td>
 					</tr>
 					<?php }
 					} ?>
 				</tbody>
+				<input type="hidden" value="paper" id="table_name">
 			</table>
 		</main>
 	</div>

@@ -52,7 +52,7 @@ Template Name: Stock other
 						<td class="tableIdRows"><?php echo $print->id;?></td>
 						<td class="allCustomersList"><?php echo $print->name;?></td>
 						<td class="allTypeList"><?php echo $print->type;?></td>
-						<td class="allPageCountList"><?php echo $print->page_count;?></td>
+						<td class="allPageCountList"><?php echo $print->count;?></td>
 						<td class="allPriceList"><?= $print->price ?></td>
 						<td class="allPercentList"><?= $print->percent ?></td>
 					</tr>

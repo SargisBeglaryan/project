@@ -2,12 +2,12 @@ jQuery( document ).ready(function() {
 
 	jQuery('.sale_product_selling_price, .sale_product_debt').blur(function() {
 		if (content_selling!=jQuery(this).html().trim() || content_debt!=jQuery(this).html().trim()){
-			var tableName = jQuery('#table_name').val().trim();
+			var tableName = jQuery(this).closest('table').find('#table_name').val().trim();
 			tableName = "'"+tableName+"'";
-			var totalCost = jQuery(this).parent('tr').find('td:nth-child(3)').html().trim();
+			var totalCost = jQuery(this).parent('tr').find('.allCostPriceList').html().trim();
 			var orderId = jQuery(this).parent('tr').find('td:nth-child(1)').html().trim();
 			var customerName;
-			switch (jQuery(this).attr('class')) {
+			switch (jQuery(this).attr('data')) {
 				case "sale_product_selling_price":
 					content_selling = jQuery(this).html().trim();
 					content_debt = jQuery(this).parent('tr').find('.sale_product_debt').html().trim();
@@ -334,10 +334,8 @@ jQuery( document ).ready(function() {
 		if(jQuery(this).val() != ""){
 			if(jQuery(this).attr("percent") != "" && jQuery(this).attr("price") != ""){
 				var percent = jQuery(this).attr("percent");
-				var percentPrice = parseInt(jQuery(this).val()) * parseInt(percent) / 100;
+				var percentPrice = parseInt(jQuery(this).attr("price")) * parseInt(percent) / 100;
 				var sum = parseInt(jQuery(this).val()) * (parseInt(jQuery(this).attr("price")) + percentPrice);
-				jQuery(formName).find(".sale_debt").val(sum);
-				jQuery(formName).find(".sale_selling_price").val(sum);
 				jQuery(formName).find(".cost_price").val(sum);
 				jQuery(this).trigger("keyup");
 			}
@@ -345,11 +343,11 @@ jQuery( document ).ready(function() {
 	});
 	jQuery(".page_count").on("blur", function(event){
 		var formName = jQuery(this).closest("form");
-		if(jQuery(".page_count").val() != null) {
+		if(jQuery(".page_count").val() != null && jQuery(".page_count").val() != "") {
 			var oneCountPrice = jQuery(formName).find('.oneCountPrice');
 			if( jQuery(oneCountPrice).val() != null && jQuery(oneCountPrice).val() != ""){
 				var percent = jQuery(oneCountPrice).attr('percent');
-				var percentPrice = parseInt(jQuery(".page_count").val()) * parseInt(percent) / 100;
+				var percentPrice = parseInt(jQuery(oneCountPrice).val()) * parseInt(percent) / 100;
 				var sum = parseInt(jQuery(".page_count").val()) * (parseInt(jQuery(oneCountPrice).val()) + percentPrice);
 				jQuery(formName).find('.orderPriceSum').val(sum);
 				if(jQuery(formName).find("#form").val() != undefined){
@@ -444,7 +442,7 @@ jQuery( document ).ready(function() {
 		saleProductValidation(formName);
 	});
 
-	jQuery(".salePaperFormContent, .saleRollFormContent, .saleOtherFormContent").on("keyup", ".sale_page_count, .sale_selling_price, sale_debt", function(){
+	jQuery(".salePaperFormContent, .saleRollFormContent, .saleOtherFormContent").on("keyup", ".sale_page_count, .sale_selling_price", function(){
 		var formName = jQuery(this).closest("form");
 		saleProductValidation(formName);
 	});
@@ -538,8 +536,12 @@ jQuery( document ).ready(function() {
 		}
 		data["telephone"] = jQuery(currentForm).find(".phoneNumber").val();
 		data["cost_price"] = jQuery(currentForm).find(".cost_price").val();
-		data["selling_price"] = jQuery(currentForm).find(".sale_selling_price").val();
-		data["debt"] = jQuery(currentForm).find(".sale_debt").val();
+		data["selling_price"] = parseInt(jQuery(currentForm).find(".sale_selling_price").val());
+		if(jQuery(currentForm).find(".sale_debt").val() != ""){
+			data["debt"] = jQuery(currentForm).find(".sale_debt").val();
+		} else {
+			data["debt"] = data["selling_price"];
+		}
 		data["date"] = jQuery(currentForm).find(".saleDate").val();
 		data["action"] = "ajaxAddedNewSaleProduct";
 	jQuery.ajax({
@@ -667,7 +669,7 @@ function filterOtherSelectOptions(data, formName){
 
 function saleProductValidation(formName) {
 	if(jQuery(formName).find(".saleDate").val() == "" || jQuery(formName).find(".ProductCustomerInput").val() == ""
-		|| jQuery(formName).find(".sale_selling_price").val() == "" || jQuery(formName).find(".sale_debt").val() == ""){
+		|| jQuery(formName).find(".sale_selling_price").val() == ""){
 		jQuery(formName).find("#saleProductButton").fadeOut(300);
 		jQuery(formName).find(".fa-plus-circle").fadeOut(300);
 		return false;
@@ -675,7 +677,7 @@ function saleProductValidation(formName) {
 	if(jQuery(formName).attr("class") == "salePaperForm") {
 		if(jQuery(formName).find(".sale_material_size").val() != null && jQuery(formName).find(".sale_material").val() != null
 			&& jQuery(formName).find(".sale_density").val() != null && jQuery(formName).find(".sale_page_count").val() != ""
-			&& jQuery(formName).find(".sale_debt").val() != ""){
+			){
 			jQuery(formName).find("#saleProductButton").fadeIn(300);
 			jQuery(formName).find(".fa-plus-circle").fadeIn(300);
 		} else {
@@ -685,7 +687,7 @@ function saleProductValidation(formName) {
 	} else if (jQuery(formName).attr("class") == "saleRollForm"){
 		if(jQuery(formName).find(".sale_material_size").val() != null && jQuery(formName).find(".sale_material").val() != null
 			&& jQuery(formName).find(".sale_type").val() != null && jQuery(formName).find(".sale_page_count").val() != ""
-			&& jQuery(formName).find(".sale_debt").val() != ""){
+			){
 			jQuery(formName).find("#saleProductButton").fadeIn(300);
 			jQuery(formName).find(".fa-plus-circle").fadeIn(300);
 		} else {
@@ -694,7 +696,7 @@ function saleProductValidation(formName) {
 		}
 	} else {
 		if(jQuery(formName).find("#otherType").val() != null && jQuery(formName).find("#otherName").val() != null
-			&&  jQuery(formName).find(".sale_page_count").val() != "" && jQuery(formName).find(".sale_debt").val() != ""){
+			&&  jQuery(formName).find(".sale_page_count").val() != ""){
 			jQuery(formName).find("#saleProductButton").fadeIn(300);
 			jQuery(formName).find(".fa-plus-circle").fadeIn(300);
 		} else {
@@ -766,6 +768,24 @@ function saveSaleProductData(customer_name, content_selling,debt,tableName,order
 		if(data){
 			jQuery(".order-action").remove();
 		}
+	})
+	.fail(function(xhr) {
+		console.log(xhr.responseText);
+	});
+}
+function deleteProduct(tableName,orderId){
+	jQuery.ajax({
+		url: "../../wp-admin/admin-ajax.php",
+		type: 'POST',
+		dataType: 'json',
+		data: {
+			action: "ajaxDeleteSaleProduct",
+			orderId: orderId,
+			tableName: tableName,
+		},
+	})
+	.done(function(data) {
+		location.reload();
 	})
 	.fail(function(xhr) {
 		console.log(xhr.responseText);

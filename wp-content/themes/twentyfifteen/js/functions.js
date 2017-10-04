@@ -292,7 +292,11 @@ jQuery('#selling_price, #debt').blur(function() {
 		tableName = "'"+tableName+"'";
 		var totalCost = jQuery(this).parent('tr').find('td:nth-child(3)').html().trim();
 		var orderId = jQuery(this).parent('tr').find('td:nth-child(1)').html().trim();
-		var order_type = jQuery(this).parent('tr').find(".order_type").val().trim();
+		if(jQuery(this).parent('tr').find(".order_type").val()){
+			var order_type = jQuery(this).parent('tr').find(".order_type").val().trim();
+		} else {
+			var order_type = "";
+		}
 		var customerName;
 		order_type = "'"+order_type+"'";
 		switch (jQuery(this).attr('id')) {

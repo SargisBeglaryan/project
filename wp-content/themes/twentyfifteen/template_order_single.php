@@ -58,7 +58,7 @@ if(isset($_POST["submit_status"])){ ?>
 						<th>Плотность</th>
 						<th>Тип</th>
 						<th>Формат</th>
-						<th></th>
+						<th>П/П</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -113,7 +113,7 @@ if(isset($_POST["submit_status"])){ ?>
 					<select id="status" name="status" style="margin-left:30px;padding:0.48em;" autocomplete="off">
 						<option value="" disabled selected>Статус</option>
 						<option value="Склад">Выход со склада</option>
-						<option value="Резка">Выхол с резки</option>
+						<option value="Резка">Выход с резки</option>
 						<option value="Печать">Выход из печати</option>
 						<option value="Готово">Готово</option>
 					</select>
@@ -169,7 +169,7 @@ if(isset($_POST["submit_status"])){ ?>
 						<th>Тел.</th>
 						<th>Тип</th>
 						<th>Тираж</th>
-						<th>На одну стр</th>
+						<th>Разходы</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -177,6 +177,10 @@ if(isset($_POST["submit_status"])){ ?>
 					<?php
 						$result = $wpdb->get_results ( "SELECT * FROM wp_order_roll WHERE id={$index}" );
 						foreach ( $result as $print ) {
+							if($print->customer == null){
+								$customerWithTable = $wpdb->get_row( "SELECT name FROM wp_customers WHERE id = $print->customer_id" );
+								$print->customer = $customerWithTable->name;
+							}
 					?>
 					<tr>
 						<th><?php echo $print->date;?></th>
@@ -198,7 +202,7 @@ if(isset($_POST["submit_status"])){ ?>
 						<th>Фирма</th>
 						<th>Тип</th>
 						<th>Формат</th>
-						<th></th>
+						<th>П/П</th>
 						<th></th>
 					</tr>
 					
@@ -257,7 +261,7 @@ if(isset($_POST["submit_status"])){ ?>
 					<select id="status" name="status" style="margin-left:30px;padding:0.48em;" autocomplete="off">
 						<option value="" disabled selected>Статус</option>
 						<option value="Склад">Выход со склада</option>
-						<option value="Резка">Выхол с резки</option>
+						<option value="Резка">Выход с резки</option>
 						<option value="Печать">Выход из печати</option>
 						<option value="Готово">Готово</option>
 					</select>

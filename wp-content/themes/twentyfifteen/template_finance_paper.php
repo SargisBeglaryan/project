@@ -33,7 +33,7 @@ Template Name: Finance paper all
 						<th colum="4" class="tableIncome">Доход<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
-							<i class="fa fa-list-ol" class="sale_product_debt"  data-toggle="modal" data-target="#customerModal" id="allEarningList"aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allEarningList" aria-hidden="true"></i>
 						</th>
 						<th colum="5" class="tableDept">Задолженность<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
@@ -61,8 +61,8 @@ Template Name: Finance paper all
 						<td>
 							<select name="order_type" class="order_type">
 								<option value="" selected disabled>Выберите тип</option>
-								<option value="Налич" <?php if($print['type'] && $print['type'] == "Налич") echo "selected";?>>Налич</option>
-								<option value="Фактура" <?php if($print['type'] && $print['type'] == "Фактура") echo "selected";?>>Фактура</option>
+								<option value="Налич" <?php if($print['order_type'] && $print['order_type'] == "Налич") echo "selected";?>>Налич</option>
+								<option value="Фактура" <?php if($print['order_type'] && $print['order_type'] == "Фактура") echo "selected";?>>Фактура</option>
 							</select>
 						</td>
 					</tr>

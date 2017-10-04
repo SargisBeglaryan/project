@@ -135,7 +135,7 @@ $clients = $wpdb->get_results ( "SELECT * FROM  wp_customers");
 			<p>
 				<input type="text" name="debt" class="sale_debt" style="width:46%;" placeholder="Задолженность">
 				<input type="hidden" name="debt" class="cost_price">
-				<input type="text" class="sale_selling_price" name="selling_price" style="width:46%;" placeholder="Цена продажи">
+				<input type="text" class="sale_selling_price order_selling_price" name="selling_price" style="width:46%;" placeholder="Цена продажи">
 				<i class="fa fa-minus-circle" aria-hidden="true"></i>
 				<i class="fa fa-plus-circle" aria-hidden="true"></i>
 				<button type="button" id="saleProductButton" name="submit_create" style="width: 20%;height: 43px; padding: 12px 10px;">Сохранить</button>

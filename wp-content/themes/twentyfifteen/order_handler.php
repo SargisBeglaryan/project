@@ -58,16 +58,16 @@ webshims.polyfill('forms forms-ext');
 						$density = $wpdb->get_results( "SELECT * FROM wp_product_paper GROUP BY `density`");
 					?>
 					<div class="order_paper">
-						<form method="POST" action="" autocomplete="off" class="orderPaper">
+						<form method="POST" action="" class="orderPaper">
 						
 							<p>
 								<input type="date" name="date" data-date='{"startView": 2, "openOnMouseFocus": true}' placeholder="mm/dd/yyyy" required>
 							</p>
 						
 							<p>
-								<input type="text" name="customer_name" placeholder="ФИО" style="width:25%;" class="paperCustomerInput" required>
+								<input type="text" name="customer_name" placeholder="ФИО" style="width:46%;" class="paperCustomerInput" required>
 								<input type="hidden" name="customer_id" class="paperCustomerId">
-								<select id="paper_customer" name="customer"  required style="width: 20%; margin-left: 0px">
+								<select id="paper_customer" name="customer"  required style="width: 46%; margin-left: 0px">
 									<option selected disabled>Список клиентов</option>
 									<?php
 										foreach ( $clients as $client ) {
@@ -75,11 +75,12 @@ webshims.polyfill('forms forms-ext');
 										<option id="<?php echo $client->id;?>" value="<?php echo $client->name;?>"><?php echo $client->name;?></option>
 									<?php } ?>
 								</select>
-								<input type="text" name="phone_number" placeholder="Номер телефона" style="width:46%;" >
 							</p>
-							
 							<p>
-								<input type="text" name="order_type" placeholder="Тип заказа" style="width:46%;" required>
+							<input type="text" name="phone_number" placeholder="Номер телефона" style="width:46%;" >
+							</p>
+							<p>
+								<input type="text" name="type" placeholder="Тип заказа" style="width:46%;" required>
 								<select id="material" name="material"  required>
 									<option value="" disabled selected>Материал</option>
 									<?php
@@ -185,7 +186,7 @@ webshims.polyfill('forms forms-ext');
 								<input type="hidden" name="type_of_order" value="Заказ">
 							</p>
 							<p>
-								<select name="order_type" class="order_type">
+								<select name="order_type" class="order_type" required>
 									<option value="" selected="" disabled="">Выберите тип</option>
 									<option value="Налич">Налич</option>
 									<option value="Фактура">Фактура</option>
@@ -195,7 +196,7 @@ webshims.polyfill('forms forms-ext');
 							</p>
 							<p>
 								<input type="text" name="debt" style="width:46%;" placeholder="Задолженность">
-								<input type="text" name="selling_price" style="width:46%;" placeholder="Цена продажи">
+								<input type="text" name="selling_price" class="order_selling_price" style="width:46%;" placeholder="Цена продажи" required>
 							</p>
 							
 							<input type="submit" name="submit_create" value="Оформить" style="margin-top:30px;">
@@ -226,12 +227,12 @@ webshims.polyfill('forms forms-ext');
 								"foil" => $_POST["foil_count"],
 								"rubber" => $_POST["rubber_count"],
 								"lacquer" => $_POST["lacquer_count"],
-								"type"=>$_POST["order_type"],
+								"type"=>$_POST["type"],
 								"cost_price"=> $_POST["orderPriceSum"],
-								"selling_price" => $_POST["orderPriceSum"],
 								"type_of_order" => $_POST['type_of_order'],
 								"status" => "Оформлен"
 							);
+							$data["selling_price"] = $_POST["selling_price"] * $_POST["printing_count"];
 							if($_POST["customer_id"] == ""){
 								$data["customer"] = $_POST["customer_name"];
 								$data["customer_id"] = null;
@@ -239,13 +240,8 @@ webshims.polyfill('forms forms-ext');
 								$data["customer_id"] = $_POST["customer_id"];
 								$data["customer"] = null;
 							}
-							if($_POST["selling_price"] == ""){
-								$data["selling_price"] = $_POST["orderPriceSum"];
-							} else {
-								$data["selling_price"] = $_POST["selling_price"];
-							}
 							if($_POST["debt"] == ""){
-								$data["debt"] = $_POST["orderPriceSum"];
+								$data["debt"] = $data["selling_price"];
 							} else {
 								$data["debt"] = $_POST["debt"];
 							}
@@ -257,7 +253,6 @@ webshims.polyfill('forms forms-ext');
 							$data['foil_id'] = ($_POST["foil"])?$_POST["foil"]:'0';
 							$data['rubber_id'] = ($_POST["rubber"])?$_POST["rubber"]:'0';
 							$data['lacquer_id'] = ($_POST["lacquer"])?$_POST["lacquer"]:'0';
-							
 							//Insert new row
 							$wpdb->insert("wp_order_paper", $data);
 						
@@ -281,9 +276,9 @@ webshims.polyfill('forms forms-ext');
 							</p>
 						
 							<p>
-								<input type="text" name="customer_name" placeholder="ФИО" style="width:25%;" class="rollCustomerInput" required>
+								<input type="text" name="customer_name" placeholder="ФИО" style="width:46%;" class="rollCustomerInput" required>
 								<input type="hidden" name="customer_id" class="rollCustomerId">
-								<select id="roll_customer" name="customer"  required style="width: 20%; margin-left: 0px">
+								<select id="roll_customer" name="customer"  required style="width: 46%; margin-left: 0px">
 									<option selected disabled>Список клиентов</option>
 									<?php
 										foreach ( $clients as $client ) {
@@ -291,11 +286,12 @@ webshims.polyfill('forms forms-ext');
 										<option id="<?php echo $client->id;?>" value="<?php echo $client->name;?>"><?php echo $client->name;?></option>
 									<?php } ?>
 								</select>
+							</p>
+							<p>
 								<input type="text" name="phone_number" placeholder="Номер телефона" style="width:46%;" >
 							</p>
-							
 							<p>
-								<input type="text" name="order_type" placeholder="Тип заказа" style="width:46%;" required>
+								<input type="text" name="type" placeholder="Тип заказа" style="width:46%;" required>
 								<select id="material" name="material"  required>
 									<option value="" disabled selected>Материал</option>
 									<?php
@@ -327,12 +323,12 @@ webshims.polyfill('forms forms-ext');
 							
 							<p>
 								<input type="text" name="printing_count" placeholder="Тираж" style="width:46%;" required>
-								<input type="text" name="count_per_page" placeholder="Расходы" style="width:46%;" required>
+								<input type="text" name="count_per_page" placeholder="Расходы" style="width:46%;" required class="page_count">
 							</p>
 							
 							<p>
 								<input type="text" name="step_lenght" placeholder="Длина шага" style="width:46%;" required>
-								<input type="text" name="label_count" class="page_count" placeholder="Колличество этикеток" style="width:46%;" required>
+								<input type="text" name="label_count" placeholder="Колличество этикеток" style="width:46%;" required>
 							</p>
 							<p>
 							<label>Цена одного рулона</label>
@@ -402,17 +398,17 @@ webshims.polyfill('forms forms-ext');
 								<input type="hidden" name="type_of_order" value="Заказ">
 							</p>
 							<p>
-								<select name="order_type" class="order_type">
+								<select name="order_type" class="order_type" required>
 									<option value="" selected="" disabled="">Выберите тип</option>
 									<option value="Налич">Налич</option>
 									<option value="Фактура">Фактура</option>
 								</select>
 								<label>Себестоимость</label>
-								<input type="text" class="orderPriceSum" name="orderPriceSum" style="width: 25.5%;;" placeholder="общая цена заказа" disabled>
+								<input type="text" class="orderPriceSum" name="orderPriceSum" style="width: 25.5%;;" placeholder="общая цена заказа">
 							</p>
 							<p>
 								<input type="text" name="debt" style="width:46%;" placeholder="Задолженность">
-								<input type="text" name="selling_price" style="width:46%;" placeholder="Цена продажи">
+								<input type="text" class="order_selling_price" name="selling_price" style="width:46%;" placeholder="Цена продажи" required>
 							</p>
 							<input type="submit" name="submit_create" value="Оформить" style="margin-top:30px;">
 						
@@ -440,10 +436,11 @@ webshims.polyfill('forms forms-ext');
 								"label_count" => $_POST["label_count"],
 								"cost_price" => $_POST["orderPriceSum"],
 								"material" => $material_id,
-								"type"=>$_POST["order_type"],
+								"type"=>$_POST["type"],
 								"type_of_order" => $_POST['type_of_order'],
 								"status" => "Оформлен"
 							);
+							$data["selling_price"] = $_POST["selling_price"] * $_POST["printing_count"];
 							if($_POST["customer_id"] == ""){
 								$data["customer"] = $_POST["customer_name"];
 								$data["customer_id"] = null;
@@ -451,13 +448,8 @@ webshims.polyfill('forms forms-ext');
 								$data["customer_id"] = $_POST["customer_id"];
 								$data["customer"] = null;
 							}
-							if($_POST["selling_price"] == ""){
-								$data["selling_price"] = $_POST["orderPriceSum"];
-							} else {
-								$data["selling_price"] = $_POST["selling_price"];
-							}
 							if($_POST["debt"] == ""){
-								$data["debt"] = $_POST["orderPriceSum"];
+								$data["debt"] = $data["selling_price"];
 							} else {
 								$data["debt"] = $_POST["debt"];
 							}
@@ -470,6 +462,7 @@ webshims.polyfill('forms forms-ext');
 							$data['rubber_id'] = ($_POST["rubber"])?$_POST["rubber"]:'0';
 							$data['lacquer_id'] = ($_POST["lacquer"])?$_POST["lacquer"]:'0';
 							//Insert new row
+							
 							$wpdb->insert("wp_order_roll", $data);
 						} else if(isset($_POST["submit_remove"])) {?>
 						 

@@ -59,13 +59,14 @@ Template Name: Order roll all
 						<th colum="9" class="tableIncome">Доход<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
-							<i class="fa fa-list-ol" class="sale_product_debt"  data-toggle="modal" data-target="#customerModal" id="allEarningList"aria-hidden="true"></i>
+							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allEarningList" aria-hidden="true"></i>
 						</th>
 						<th colum="10" class="tableDept">Задолженность<br>
 							<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 							<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
 							<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allDebtList"aria-hidden="true"></i>
 						</th>
+						<th>Oплата</th>
 						<th>Действия</th>
 					</tr>
 				</thead>
@@ -95,7 +96,7 @@ Template Name: Order roll all
 							}
 							?>
 						</td>
-						<td class="allTypeList"><?php echo $print->order_type;?></td>
+						<td class="allTypeList"><?php echo $print->type;?></td>
 						<td class="allTirajList"><?php echo $print->printing_count;?></td>
 						<td class="allOrderTypeList"><?php echo $print->type_of_order; ?></td>
 						<td onclick="window.event.cancelBubble = true">
@@ -103,7 +104,9 @@ Template Name: Order roll all
 								<p style="    margin-bottom: 10px; text-align: center;">
 									<select id="status"  class="class" name="status" autocomplete="off">
 										<?php
-
+										if($print->status == "Оформлен"){
+											echo "<option value='' disabled selected>Виберите статус</option>";
+										}
 										foreach($allStatuses as $key=>$value){
 											if($print->status == $key){
 												echo "<option value=".$key." disabled selected>".
@@ -125,6 +128,7 @@ Template Name: Order roll all
 						<td class="allSellingPriceList" contenteditable='true' id="selling_price"><?php echo $print->selling_price;?></td>
 						<td class="allEarningList"><?php echo $print->selling_price - $print->cost_price;?></td>
 						<td class="allDebtList"contenteditable='true' id="debt"><?php echo $print->debt;?></td>
+						<td class="allDebtList" contenteditable='true' id="debt"><?php echo $print->order_type;?></td>
 					</tr>
 					<?php }
 					} ?>

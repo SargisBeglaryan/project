@@ -4204,7 +4204,6 @@ p > video {
 	.sidebar {
 		float: left;
 		margin-right: -100%;
-		max-width: 413px;
 		position: relative;
 		width: 20%;
 	}
@@ -5981,14 +5980,6 @@ p > video {
 /**
  * 16.7 Desktop X-Large 1403px
  */
-
-@media screen and (min-width: 87.6875em) {
-	body:before {
-		width: -webkit-calc(50% - 289px);
-		width: calc(50% - 289px);
-	}
-}
-
 
 /**
  * 17.0 Print

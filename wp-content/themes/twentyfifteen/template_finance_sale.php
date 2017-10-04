@@ -68,12 +68,15 @@ $clients = $wpdb->get_results ( "SELECT * FROM  wp_customers");
 							<th colum="9" class="tableIncome">Доход<br>
 								<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 								<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
-								<i class="fa fa-list-ol class="sale_product_debt"Modal"  data-toggle="modal" data-target="#customerModal" id="allEarningList" aria-hidden="true"></i>
+								<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allEarningList" aria-hidden="true"></i>
 							</th>
 							<th colum="10" class="tableDept">Задолженность<br>
 								<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 								<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
 								<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allDebtList" aria-hidden="true"></i>
+							</th>
+							<th>
+								Удалить продажу
 							</th>
 							<th>
 								Действия
@@ -100,9 +103,12 @@ $clients = $wpdb->get_results ( "SELECT * FROM  wp_customers");
 							<td><?php echo $roll->type; ?></td>
 							<td><?php echo $roll->count; ?></td>
 							<td class="allCostPriceList"><?php echo $roll->cost_price;?></td>
-							<td contenteditable='true' class="allSellingPriceList sale_product_selling_price"><?php echo $roll->selling_price;?></td>
+							<td contenteditable='true' class="allSellingPriceList sale_product_selling_price" data="sale_product_selling_price"><?php echo $roll->selling_price;?></td>
 							<td class="allEarningList"><?php echo $roll->selling_price - $roll->cost_price;?></td>
-							<td contenteditable='true' class="allDebtList sale_product_debt"><?php echo $roll->debt;?></td>
+							<td contenteditable='true' class="allDebtList sale_product_debt" data="sale_product_debt"><?php echo $roll->debt;?></td>
+							<td class="productActions">
+								<button style="display: block; margin: 0px auto" type="button" onclick="deleteProduct('roll', <?php echo $roll->id;?>)">Удалить</button>
+							</td>
 						</tr>
 						<?php
 						}
@@ -160,12 +166,15 @@ $clients = $wpdb->get_results ( "SELECT * FROM  wp_customers");
 							<th colum="9" class="tableIncome">Доход<br>
 								<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 								<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
-								<i class="fa fa-list-ol class="sale_product_debt"Modal"  data-toggle="modal" data-target="#customerModal" id="allEarningList"aria-hidden="true"></i>
+								<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allEarningList" aria-hidden="true"></i>
 							</th>
 							<th colum="10" class="tableDept">Задолженность<br>
 								<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 								<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
 								<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allDebtList" aria-hidden="true"></i>
+							</th>
+							<th>
+								Удалить продажу
 							</th>
 							<th>
 								Действия
@@ -192,9 +201,12 @@ $clients = $wpdb->get_results ( "SELECT * FROM  wp_customers");
 							<td><?php echo $paper->density; ?></td>
 							<td><?php echo $paper->count; ?></td>
 							<td class="allCostPriceList"><?php echo $paper->cost_price;?></td>
-							<td contenteditable='true' class="allSellingPriceList sale_product_selling_price"><?php echo $paper->selling_price;?></td>
+							<td contenteditable='true' class="allSellingPriceList sale_product_selling_price" data="sale_product_selling_price"><?php echo $paper->selling_price;?></td>
 							<td class="allEarningList"><?php echo $paper->selling_price - $paper->cost_price;?></td>
-							<td contenteditable='true' class="allDebtList sale_product_debt"><?php echo $paper->debt;?></td>
+							<td contenteditable='true' class="allDebtList sale_product_debt" data="sale_product_debt"><?php echo $paper->debt;?></td>
+							<td class="productActions">
+								<button style="display: block; margin: 0px auto" type="button" onclick="deleteProduct('paper', <?php echo $paper->id;?>)">Удалить</button>
+							</td>
 						</tr>
 						<?php
 						}
@@ -247,12 +259,15 @@ $clients = $wpdb->get_results ( "SELECT * FROM  wp_customers");
 							<th colum="9" class="tableIncome">Доход<br>
 								<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 								<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
-								<i class="fa fa-list-ol class="sale_product_debt"Modal"  data-toggle="modal" data-target="#customerModal" id="allEarningList"aria-hidden="true"></i>
+								<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allEarningList" aria-hidden="true"></i>
 							</th>
 							<th colum="10" class="tableDept">Задолженность<br>
 								<i sort="asc" class="fa fa-arrow-down" aria-hidden="true"></i>
 								<i sort="desc" class="fa fa-arrow-up" aria-hidden="true"></i>
 								<i class="fa fa-list-ol showFilterModal"  data-toggle="modal" data-target="#customerModal" id="allDebtList"aria-hidden="true"></i>
+							</th>
+							<th>
+								Удалить продажу
 							</th>
 							<th>
 								Действия
@@ -279,9 +294,12 @@ $clients = $wpdb->get_results ( "SELECT * FROM  wp_customers");
 							<td><?php echo $other->count; ?></td>
 							<td><?php echo $other->cost_price;?></td>
 							<td class="allCostPriceList"><?php echo $other->cost_price;?></td>
-							<td contenteditable='true' class="allSellingPriceList sale_product_selling_price"><?php echo $other->selling_price;?></td>
+							<td contenteditable='true' class="allSellingPriceList sale_product_selling_price" data="sale_product_selling_price"><?php echo $other->selling_price;?></td>
 							<td class="allEarningList"><?php echo $other->selling_price - $other->cost_price;?></td>
-							<td contenteditable='true' class="allDebtList sale_product_debt"><?php echo $other->debt;?></td>
+							<td contenteditable='true' class="allDebtList sale_product_debt" data="sale_product_debt"><?php echo $other->debt;?></td>
+							<td class="productActions">
+								<button style="display: block; margin: 0px auto" type="button" onclick="deleteProduct('other', <?php echo $other->id;?>)">Удалить</button>
+							</td>
 						</tr>
 						<?php
 						}

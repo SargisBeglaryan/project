@@ -20,8 +20,8 @@
 
 // ** Параметры MySQL: Эту информацию можно получить у вашего хостинг-провайдера ** //
 /** Имя базы данных для WordPress */
-define('WP_CACHE', true); //Added by WP-Cache Manager
-define( 'WPCACHEHOME', 'D:\wamp\www\wp-content\plugins\wp-super-cache/' ); //Added by WP-Cache Manager
+//define('WP_CACHE', true); //Added by WP-Cache Manager
+define( 'WPCACHEHOME', 'D:\xampp\htdocs\ayas\wp-content\plugins\wp-super-cache/' ); //Added by WP-Cache Manager
 define('DB_NAME', 'cf09127_main');
 
 /** Имя пользователя MySQL */
