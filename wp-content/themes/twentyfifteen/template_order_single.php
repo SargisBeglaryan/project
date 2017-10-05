@@ -112,10 +112,10 @@ if(isset($_POST["submit_status"])){ ?>
 				<p>
 					<select id="status" name="status" style="margin-left:30px;padding:0.48em;" autocomplete="off">
 						<option value="" disabled selected>Статус</option>
-						<option value="Склад">Выход со склада</option>
-						<option value="Резка">Выход с резки</option>
-						<option value="Печать">Выход из печати</option>
-						<option value="Готово">Готово</option>
+						<option value="Sklad">Выход со склада</option>
+						<option value="Rezka">Выход с резки</option>
+						<option value="Pechat">Выход из печати</option>
+						<option value="Gotovo">Готово</option>
 					</select>
 				</p>
 				<input type="hidden" name="url" value="/all-<?php echo $type; ?>-orders/">
@@ -260,10 +260,10 @@ if(isset($_POST["submit_status"])){ ?>
 				<p>
 					<select id="status" name="status" style="margin-left:30px;padding:0.48em;" autocomplete="off">
 						<option value="" disabled selected>Статус</option>
-						<option value="Склад">Выход со склада</option>
-						<option value="Резка">Выход с резки</option>
-						<option value="Печать">Выход из печати</option>
-						<option value="Готово">Готово</option>
+						<option value="Sklad">Выход со склада</option>
+						<option value="Rezka">Выход с резки</option>
+						<option value="Pechat">Выход из печати</option>
+						<option value="Gotovo">Готово</option>
 					</select>
 				</p>
 				<input type="hidden" name="url" value="/all-<?php echo $type; ?>-orders/">
@@ -276,7 +276,7 @@ if(isset($_POST["submit_status"])){ ?>
 			<?php
 				if(isset($_POST["submit_status"]))
 				{
-					if($_POST["status"] == 'Склад')
+					if($_POST["status"] == 'Sklad')
 					{
 						calculate_stock_values('wp_product_roll', $material_id, $page_count);
 					}
@@ -296,7 +296,7 @@ if(isset($_POST["submit_status"])){ ?>
 					array_push($materialCountArray,$form,$foil,$rubber,$lacquer);
 
 					$countStatus = checkProductCount($materialCountArray);
-					if($_POST["status"] == 'Склад' && $countStatus){
+					if($_POST["status"] == 'Sklad' && $countStatus){
 						materialTransaction($form,$foil,$rubber,$lacquer,$wpdb, "minus");
 						$wpdb->update("wp_order_roll", $data, $where);
 					}else {

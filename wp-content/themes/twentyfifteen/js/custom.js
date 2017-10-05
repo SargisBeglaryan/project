@@ -386,7 +386,7 @@ jQuery( document ).ready(function() {
 	jQuery(".submitStatus").on("click", function(){
 		var formName = jQuery(this).closest("form");
 		var data = {};
-		if(jQuery(formName).attr('class') == "rollTable"){
+		if(jQuery(formName).closest('table').attr('class') == "rollTable"){
 			data["orderType"] = "roll"
 		} else {
 			data["orderType"] = "paper";

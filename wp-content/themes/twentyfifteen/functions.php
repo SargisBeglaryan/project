@@ -19,7 +19,7 @@
  *
  * For more information on hooks, actions, and filters,
  * {@link https://codex.wordpress.org/Plugin_API}
- *
+ *F
  * @package WordPress
  * @subpackage Twenty_Fifteen
  * @since Twenty Fifteen 1.0
@@ -911,10 +911,12 @@ function my_custom_redirect() {
 	function changeOrderStatus() {
 		global $wpdb;
 		$productId = $_POST["id"];
-		$allStatuses = ['Склад'=>'Выход со склада', 'Резка'=>'Выхол с резки', 'Печать'=>'Выход из печати', 'Готово'=>'Готово'];
+		$allStatuses = ['Sklad'=>'Выход со склада', 'Rezka'=>'Выход с резки', 'Pechat'=>'Выход из печати', 'Gotovo'=>'Готово'];
+		
 		if($_POST['orderType'] == 'paper') {
 			$result = $wpdb->get_row( "SELECT * FROM wp_product_paper WHERE id = '$productId' ");
-			if($_POST["status"] == 'Склад')	{
+			if($_POST["status"] == 'Sklad')	{
+
 					calculate_stock_values('wp_product_paper', $_POST["product_id"], $result->page_count);
 				}
 				$data = array(
@@ -931,7 +933,7 @@ function my_custom_redirect() {
 				array_push($materialCountArray,$form,$foil,$rubber,$lacquer);
 
 				$countStatus = checkProductCount($materialCountArray);
-				if($_POST["status"] == 'Склад' && $countStatus){
+				if($_POST["status"] == 'Sklad' && $countStatus){
 					materialTransaction($form,$foil,$rubber,$lacquer,$wpdb, "minus");
 					$wpdb->update("wp_order_paper", $data, $where);
 				}else {
@@ -939,7 +941,7 @@ function my_custom_redirect() {
 				}
 		} else {
 			$result = $wpdb->get_row( "SELECT * FROM wp_product_roll WHERE id = '$productId' ");
-			if($_POST["status"] == 'Склад')
+			if($_POST["status"] == 'Sklad')
 				{
 					calculate_stock_values('wp_product_paper', $_POST["product_id"], $result->page_count);
 				}
@@ -966,10 +968,10 @@ function my_custom_redirect() {
 		}
 		foreach($allStatuses as $key=>$value){
 			if($key == $_POST["status"]){
-				$result["option"] .="<option value=".$key." disabled selected>".
+				$result["option"] .="<option value="."'".$key."'"." disabled selected>".
 						$value."</option>";
 			} else {
-				$result["option"] .="<option value=".$key.">".$value."</option>";
+				$result["option"] .="<option value="."'".$key."'".">".$value."</option>";
 			}
 		}
 		wp_send_json($result);

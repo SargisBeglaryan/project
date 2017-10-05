@@ -1,9 +1,9 @@
-<? 
+<?php 
 /* 
 Template Name: Stock edit
 */ 
 ?>
-<? get_header(); 
+<?php get_header(); 
  global $wpdb;
  $index = $_GET["index"];
  $type = $_GET["type"];
@@ -35,17 +35,17 @@ Template Name: Stock edit
 		<main id="main" class="site-main" role="main">
 			<section class="bla">	
 				<div class="page-content">
-					<h3 class="page-title"><? _e( 'Редактировать товар на складе' ); ?></h3>
+					<h3 class="page-title"><?php _e( 'Редактировать товар на складе' ); ?></h3>
 					
 					<div class="stock_edit_paper">
 						
 						<!-- reques to function. -> my_custom_redirect() handler END -->
-						<? foreach ($db_result as $item) { ?>
+						<?php foreach ($db_result as $item) { ?>
 							<form method="POST" action="">
 					
-							<input type="hidden" id="one_page_weight" name="one_page_weight" value="<? echo $item->one_page_weight; ?>">
+							<input type="hidden" id="one_page_weight" name="one_page_weight" value="<?php echo $item->one_page_weight; ?>">
 					
-							<? if($type == 'paper'){ ?>
+							<?php if($type == 'paper'){ ?>
 							
 							<p style="width:46%;margin-right:30px;display:inline-block;">
 								Листы: <input type="text" name="page_count" value="0" 
@@ -58,48 +58,48 @@ Template Name: Stock edit
 							</p>
 							<p style="width:46%;margin-right:30px;display:inline-block;">
 									<label for="price">Цена на одну единицу:</label>
-									<input type="text" name="price" id="price" placeholder="Цена на одну единицу"   value="<?= $item->price ?>">
+									<input type="text" name="price" id="price" placeholder="Цена на одну единицу"   value="<?php $item->price ?>">
 								</p>
 								<p style="width:46%;display:inline-block;">
 									<label for="percent">Процент (%):</label>
-									<input type="number" name="percent" id="percent" placeholder="Процент (%)" value="<?= $item->percent ?>" style="padding:0.48em;width:100%">
+									<input type="number" name="percent" id="percent" placeholder="Процент (%)" value="<?php $item->percent ?>" style="padding:0.48em;width:100%">
 								</p>
 							
-							<? } else if ($type == 'roll') { ?>
+							<?php } else if ($type == 'roll') { ?>
 								<p>
 									<span>М<sup><small>2</small></sup>:</span>
 									<input type="text" name="product_wieght" value="0" required>
 								</p>
 								<p style="width:50%;margin-right:15px;display:inline-block;">
 									<label for="price">Цена на одну единицу:</label>
-									<input type="text" name="price" id="price" placeholder="Цена на одну единицу"   value="<?= $item->price ?>">
+									<input type="text" name="price" id="price" placeholder="Цена на одну единицу"   value="<?php $item->price ?>">
 								</p>
 								<p style="width:46%;display:inline-block;">
 									<label for="percent">Процент (%):</label>
-									<input type="number" name="percent" id="percent" placeholder="Процент (%)" value="<?= $item->percent ?>" style="padding:0.48em;width:100%">
+									<input type="number" name="percent" id="percent" placeholder="Процент (%)" value="<?php $item->percent ?>" style="padding:0.48em;width:100%">
 								</p>
 								
-							<? }  else if ($type == 'other') { ?>
+							<?php }  else if ($type == 'other') { ?>
 								<p>
 									<label for="product_wieght">Колличество:</label>
 									<input type="text" name="product_wieght" id="product_wieght" value="0" required>
 								</p>
 								<p style="width:50%;margin-right:15px;display:inline-block;">
 									<label for="price">Цена на одну единицу:</label>
-									<input type="text" name="price" id="price" placeholder="Цена на одну единицу"   value="<?= $item->price ?>">
+									<input type="text" name="price" id="price" placeholder="Цена на одну единицу"   value="<?php $item->price ?>">
 								</p>
 								<p style="width:46%;display:inline-block;">
 									<label for="percent">Процент (%):</label>
-									<input type="number" name="percent" id="percent" placeholder="Процент (%)" value="<?= $item->percent ?>" style="padding:0.48em;width:100%">
+									<input type="number" name="percent" id="percent" placeholder="Процент (%)" value="<?php $item->percent ?>" style="padding:0.48em;width:100%">
 								</p>
 								
-							<? } ?>
+							<?php } ?>
 							
-							<input type="hidden" name="url" value="<? echo $url;?>">
-							<input type="hidden" name="product_table" value="<? echo $table; ?>">
-							<input type="hidden" name="product_id" value="<? echo $item->id; ?>">
-							<input type="hidden" name="colum_name" value="<? echo $unit; ?>">
-							<input type="hidden" name="one_page_weight" value="<? echo $item->one_page_weight; ?>">
+							<input type="hidden" name="url" value="<?php echo $url;?>">
+							<input type="hidden" name="product_table" value="<?php echo $table; ?>">
+							<input type="hidden" name="product_id" value="<?php echo $item->id; ?>">
+							<input type="hidden" name="colum_name" value="<?php echo $unit; ?>">
+							<input type="hidden" name="one_page_weight" value="<?php echo $item->one_page_weight; ?>">
 						
 							<p>
 								<input type="submit" name="submit_edit" value="Сохранить" style="margin-top:30px;">
@@ -109,13 +109,13 @@ Template Name: Stock edit
 							</form>
 								
 							
-						<? } ?>
+						<?php } ?>
 					</div>
 				</div>
 			</section>
 		</main>
 	</div>
 	
-<? get_footer(); ?>
+<?php get_footer(); ?>
 
 

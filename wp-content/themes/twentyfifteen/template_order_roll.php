@@ -76,7 +76,7 @@ Template Name: Order roll all
 						$result = $wpdb->get_results ( "SELECT * FROM wp_order_roll" );
 						$orderData = costPrice("roll");
 						$userRoll = apply_filters( 'wp_nav_menu_args', '' )['status'];
-						$allStatuses = ['Склад'=>'Выход со склада', 'Резка'=>'Выход с резки', 'Печать'=>'Выход из печати', 'Готово'=>'Готово'];
+						$allStatuses = ['Sklad'=>'Выход со склада', 'Rezka'=>'Выход с резки', 'Pechat'=>'Выход из печати', 'Gotovo'=>'Готово'];
 						foreach ( $result as $print ) {
 							if($print->status == $userRoll || $userRoll=='all'){
 								if($print->customer == null){
