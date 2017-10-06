@@ -112,10 +112,10 @@ if(isset($_POST["submit_status"])){ ?>
 				<p>
 					<select id="status" name="status" style="margin-left:30px;padding:0.48em;" autocomplete="off">
 						<option value="" disabled selected>Статус</option>
-						<option value="Sklad">Выход со склада</option>
-						<option value="Rezka">Выход с резки</option>
-						<option value="Pechat">Выход из печати</option>
-						<option value="Gotovo">Готово</option>
+						<option value="Склад">Выход со склада</option>
+						<option value="Резка">Выхол с резки</option>
+						<option value="Печать">Выход из печати</option>
+						<option value="Готово">Готово</option>
 					</select>
 				</p>
 				<input type="hidden" name="url" value="/all-<?php echo $type; ?>-orders/">
@@ -128,7 +128,7 @@ if(isset($_POST["submit_status"])){ ?>
 				<?php } ?>
 			</form>
 			<?php
-				if(isset($_POST["submit_status"]))
+			if(isset($_POST["submit_status"]))
 				{
 					if($_POST["status"] == 'Склад')
 					{
@@ -142,17 +142,15 @@ if(isset($_POST["submit_status"])){ ?>
 					$where = array(
 						"id" =>  $index
 					);
-
 					$materialCountArray = array();
 					$form = ($result[0]->form_id)?[$result[0]->form_id => $result[0]->form]:'';
 					$foil = ($result[0]->foil_id)?[$result[0]->foil_id => $result[0]->foil]:'';
 					$rubber = ($result[0]->rubber_id)?[$result[0]->rubber_id => $result[0]->rubber]:'';
 					$lacquer = ($result[0]->lacquer_id)?[$result[0]->lacquer_id => $result[0]->lacquer]:'';
 					array_push($materialCountArray,$form,$foil,$rubber,$lacquer);
-
 					$countStatus = checkProductCount($materialCountArray);
 					if($_POST["status"] == 'Склад' && $countStatus){
-						materialTransaction($form,$foil,$rubber,$lacquer,$wpdb, "minus");
+						materialTransaction($form,$foil,$rubber,$lacquer,$wpdb);
 						$wpdb->update("wp_order_paper", $data, $where);
 					}else {
 						$wpdb->update("wp_order_paper", $data, $where);	
@@ -169,7 +167,7 @@ if(isset($_POST["submit_status"])){ ?>
 						<th>Тел.</th>
 						<th>Тип</th>
 						<th>Тираж</th>
-						<th>Разходы</th>
+						<th>На одну стр</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -177,10 +175,6 @@ if(isset($_POST["submit_status"])){ ?>
 					<?php
 						$result = $wpdb->get_results ( "SELECT * FROM wp_order_roll WHERE id={$index}" );
 						foreach ( $result as $print ) {
-							if($print->customer == null){
-								$customerWithTable = $wpdb->get_row( "SELECT name FROM wp_customers WHERE id = $print->customer_id" );
-								$print->customer = $customerWithTable->name;
-							}
 					?>
 					<tr>
 						<th><?php echo $print->date;?></th>
@@ -260,10 +254,10 @@ if(isset($_POST["submit_status"])){ ?>
 				<p>
 					<select id="status" name="status" style="margin-left:30px;padding:0.48em;" autocomplete="off">
 						<option value="" disabled selected>Статус</option>
-						<option value="Sklad">Выход со склада</option>
-						<option value="Rezka">Выход с резки</option>
-						<option value="Pechat">Выход из печати</option>
-						<option value="Gotovo">Готово</option>
+						<option value="Склад">Выход со склада</option>
+						<option value="Резка">Выхол с резки</option>
+						<option value="Печать">Выход из печати</option>
+						<option value="Готово">Готово</option>
 					</select>
 				</p>
 				<input type="hidden" name="url" value="/all-<?php echo $type; ?>-orders/">
@@ -276,7 +270,7 @@ if(isset($_POST["submit_status"])){ ?>
 			<?php
 				if(isset($_POST["submit_status"]))
 				{
-					if($_POST["status"] == 'Sklad')
+					if($_POST["status"] == 'Склад')
 					{
 						calculate_stock_values('wp_product_roll', $material_id, $page_count);
 					}
@@ -296,8 +290,8 @@ if(isset($_POST["submit_status"])){ ?>
 					array_push($materialCountArray,$form,$foil,$rubber,$lacquer);
 
 					$countStatus = checkProductCount($materialCountArray);
-					if($_POST["status"] == 'Sklad' && $countStatus){
-						materialTransaction($form,$foil,$rubber,$lacquer,$wpdb, "minus");
+					if($_POST["status"] == 'Склад' && $countStatus){
+						materialTransaction($form,$foil,$rubber,$lacquer,$wpdb);
 						$wpdb->update("wp_order_roll", $data, $where);
 					}else {
 						$wpdb->update("wp_order_roll", $data, $where);	

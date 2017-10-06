@@ -401,12 +401,12 @@ jQuery( document ).ready(function() {
 		data: data,
 		})
 		.done(function(material) {
-			if(material != true){
+			if(material == true){
 				if(data.orderType == 'paper'){
-					jQuery('.paperTable').find('#status').html(material.options);
+					//jQuery('.paperTable').find('#status').html(material.options);
 					jQuery('.paperTable').find(".submitStatus").hide();
 				} else {
-					jQuery('.rollTable').find('#status').html(material.options);
+					//jQuery('.rollTable').find('#status').html(material.options);
 					jQuery('.rollTable').find(".submitStatus").hide();
 				}
 			}

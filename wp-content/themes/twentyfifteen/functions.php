@@ -19,7 +19,7 @@
  *
  * For more information on hooks, actions, and filters,
  * {@link https://codex.wordpress.org/Plugin_API}
- *F
+ *
  * @package WordPress
  * @subpackage Twenty_Fifteen
  * @since Twenty Fifteen 1.0
@@ -517,7 +517,7 @@ function my_custom_redirect() {
 			if($var_table == 'wp_order_paper'){
 				return_stock_values('wp_product_paper', $deleteProductDetails->material, $deleteProductDetails->page_count, $deleteProductDetails);
 			} else {
-				return_stock_values('wp_product_roll', $deleteProductDetails->material, $deleteProductDetails->page_count, $deleteProductDetails);
+				return_stock_values('wp_product_roll', $deleteProductDetails->material, $deleteProductDetails->count_per_page, $deleteProductDetails);
 			}
 		}
         wp_redirect($_POST['url']);
@@ -578,7 +578,7 @@ function my_custom_redirect() {
 
 	function calculate_stock_values($db_name, $id, $cost_income_value){
 		global $wpdb;
-		$result_db = $wpdb->get_results ("SELECT * FROM {$db_name} WHERE id={$id}");
+		$result_db = $wpdb->get_results("SELECT * FROM {$db_name} WHERE id={$id}");
 		
 		if ($db_name == "wp_product_paper")
 		{
@@ -620,7 +620,6 @@ function my_custom_redirect() {
 		$where = array(
 		'id' => $id
 		);
-
 
 		$wpdb->update($db_name, $data, $where);
 	}
@@ -856,7 +855,11 @@ function my_custom_redirect() {
 			$productRezervCount = $wpdb->get_row("SELECT area, id FROM wp_product_roll WHERE name ='".$_POST["material"]."' AND type ='".$_POST["type"]."'");
 			$productNewCount = array( "area"=>$productRezervCount->area - $_POST["sale_page_count"]);
 			$where = array('id'=>$productRezervCount->id);
-			$wpdb->update("wp_product_roll", $productNewCount, $where);
+			if(intval($productNewCount["area"]) >= 0){
+				$wpdb->update("wp_product_roll", $productNewCount, $where);
+			} else {
+				return wp_send_json(false);
+			}
 			$data = array(
 				"name" => $_POST["material"],
 				"size_x" =>  $_POST["size_x"],
@@ -865,12 +868,15 @@ function my_custom_redirect() {
 				"count" =>  $_POST["sale_page_count"]
 			);
 		} else if($_POST["orderType"] == "paper") {
-			$productRezervCount = $wpdb->get_row("SELECT * FROM wp_product_paper WHERE name ='".$_POST["material"]."' AND density ='".$_POST["density"]."'
+			$productRezervCount = $wpdb->get_row("SELECT page_count, id FROM wp_product_paper WHERE name ='".$_POST["material"]."' AND density ='".$_POST["density"]."'
 				AND size_x ='".$_POST["size_x"]."' AND size_y ='".$_POST["size_y"]."'");
 			$productNewCount = array("page_count"=>$productRezervCount->page_count - $_POST["sale_page_count"]);
-			$productNewCount['weight'] = $productRezervCount->weight - ($_POST["sale_page_count"] * $productRezervCount->one_page_weight);
 			$where = array('id'=>$productRezervCount->id); 
-			$wpdb->update("wp_product_paper", $productNewCount, $where);
+			if(intval($productNewCount["page_count"]) >= 0){
+				$wpdb->update("wp_product_paper", $productNewCount, $where);
+			} else {
+				return wp_send_json(false);
+			}
 			$data = array(
 				"name" => $_POST["material"],
 				"size_x" =>  $_POST["size_x"],
@@ -883,7 +889,11 @@ function my_custom_redirect() {
 			$productNewCount = array(
 				"count"=>$productRezervCount->count - $_POST["sale_page_count"]);
 			$where = array('id'=>$productRezervCount->id);
-			$wpdb->update("wp_product_other", $productNewCount, $where);
+			if(intval($productNewCount["count"]) >= 0){
+				$wpdb->update("wp_product_other", $productNewCount, $where);
+			} else {
+				return wp_send_json(false);
+			}
 			$data = array(
 				"name" => $_POST["otherName"],
 				"type" =>  $_POST["otherType"],
@@ -910,15 +920,13 @@ function my_custom_redirect() {
 
 	function changeOrderStatus() {
 		global $wpdb;
-		$productId = $_POST["id"];
-		$allStatuses = ['Sklad'=>'Выход со склада', 'Rezka'=>'Выход с резки', 'Pechat'=>'Выход из печати', 'Gotovo'=>'Готово'];
-		
+		$productId = $_POST["product_id"];
+		$allStatuses = ['Склад'=>'Выход со склада', 'Резка'=>'Выход с резки', 'Печать'=>'Выход из печати', 'Готово'=>'Готово'];
 		if($_POST['orderType'] == 'paper') {
-			$result = $wpdb->get_row( "SELECT * FROM wp_product_paper WHERE id = '$productId' ");
-			if($_POST["status"] == 'Sklad')	{
-
-					calculate_stock_values('wp_product_paper', $_POST["product_id"], $result->page_count);
-				}
+			$result = $wpdb->get_row("SELECT * FROM wp_order_paper WHERE id = '$productId'");
+			if($_POST["status"] == 'Склад')	{
+				calculate_stock_values('wp_product_paper', $result->material, $result->page_count);
+			}
 				$data = array(
 					"status" =>$_POST["status"]
 				);
@@ -933,17 +941,17 @@ function my_custom_redirect() {
 				array_push($materialCountArray,$form,$foil,$rubber,$lacquer);
 
 				$countStatus = checkProductCount($materialCountArray);
-				if($_POST["status"] == 'Sklad' && $countStatus){
-					materialTransaction($form,$foil,$rubber,$lacquer,$wpdb, "minus");
+				if($_POST["status"] == 'Склад' && isset($countStatus)){
+					materialTransaction($form,$foil,$rubber,$lacquer,$wpdb, 'minus');
 					$wpdb->update("wp_order_paper", $data, $where);
 				}else {
 					$wpdb->update("wp_order_paper", $data, $where);
 				}
 		} else {
-			$result = $wpdb->get_row( "SELECT * FROM wp_product_roll WHERE id = '$productId' ");
-			if($_POST["status"] == 'Sklad')
+			$result = $wpdb->get_row( "SELECT * FROM wp_order_roll WHERE id = '$productId' ");
+			if($_POST["status"] == 'Склад')
 				{
-					calculate_stock_values('wp_product_paper', $_POST["product_id"], $result->page_count);
+					calculate_stock_values('wp_product_roll', $result->material, $result->count_per_page);
 				}
 				$data = array(
 					"status" =>$_POST["status"]
@@ -960,21 +968,23 @@ function my_custom_redirect() {
 
 				$countStatus = checkProductCount($materialCountArray);
 				if($_POST["status"] == 'Склад' && $countStatus){
-					materialTransaction($form,$foil,$rubber,$lacquer,$wpdb, "minus");
+					materialTransaction($form,$foil,$rubber,$lacquer,$wpdb);
 					$wpdb->update("wp_order_roll", $data, $where);
 				}else {
 					$wpdb->update("wp_order_roll", $data, $where);
 				}
 		}
-		foreach($allStatuses as $key=>$value){
-			if($key == $_POST["status"]){
-				$result["option"] .="<option value="."'".$key."'"." disabled selected>".
-						$value."</option>";
-			} else {
-				$result["option"] .="<option value="."'".$key."'".">".$value."</option>";
-			}
-		}
-		wp_send_json($result);
+		//var_dump($allStatuses);
+		// foreach($allStatuses as $key=>$value){
+		// 	if($key == $_POST["status"]){
+		// 		$result["option"] .="<option value=".$key." disabled selected>".
+		// 				$value."</option>";
+		// 	} else {
+		// 		$result["option"] .="<option value=".$key.">".$value."</option>";
+		// 	}
+		// }
+		//echo 'hello'; exit;
+		wp_send_json(true);
 		wp_die();
 	}
 	add_action('wp_ajax_nopriv_ajaxChangeOrderStatus', 'changeOrderStatus');
@@ -1095,7 +1105,6 @@ function my_custom_redirect() {
 			if($value['type'] != ''){
 				$returnResult[$key]['type'] = $value['type'];
 			}
-			$returnResult[$key]['order_type'] = $value['order_type'];
 		}
 		return $returnResult;
 	}
@@ -1231,17 +1240,6 @@ function my_custom_redirect() {
 	}
 	add_action('wp_ajax_nopriv_ajaxCostProductUpdate', 'saveSaleProductData');
 	add_action('wp_ajax_ajaxCostProductUpdate', 'saveSaleProductData');
-
-	function DeleteSaleProduct(){
-		global $wpdb;
-		$table = "wp_sale_".$_POST['tableName']."_product";
-		$orderId= intval($_POST['orderId']);
-		$wpdb->delete( $table, array( 'id' => $orderId ));
-		wp_send_json(true);
-		wp_die();
-	}
-	add_action('wp_ajax_nopriv_ajaxDeleteSaleProduct', 'DeleteSaleProduct');
-	add_action('wp_ajax_ajaxDeleteSaleProduct', 'DeleteSaleProduct');
 
 	function updateCostData(){
 		global $wpdb;

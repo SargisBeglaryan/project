@@ -77,7 +77,7 @@ Template Name: Order paper all
 						global $wpdb;
 						$result = $wpdb->get_results ( "SELECT * FROM wp_order_paper" );
 						$userRoll = apply_filters( 'wp_nav_menu_args', '' )['status'];
-						$allStatuses = ['Sklad'=>'Выход со склада', 'Rezka'=>'Выход с резки', 'Pechat'=>'Выход из печати', 'Gotovo'=>'Готово'];
+						$allStatuses = ['Склад'=>'Выход со склада', 'Резка'=>'Выход с резки', 'Печать'=>'Выход из печати', 'Готово'=>'Готово'];
 						foreach ( $result as $print ) {
 							if($print->status == $userRoll || $userRoll=='all'){
 								if($print->customer == null){
@@ -106,7 +106,6 @@ Template Name: Order paper all
 								<p style="    margin-bottom: 10px; text-align: center;">
 									<select id="status" class="class" name="status" autocomplete="off">
 										<?php
-										var_dump($print->status);
 										if($print->status == "Оформлен"){
 											echo "<option value='' disabled selected>Виберите статус</option>";
 										}
